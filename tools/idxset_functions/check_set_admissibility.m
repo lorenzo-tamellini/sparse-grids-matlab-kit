@@ -1,0 +1,141 @@
+function [adm,C] = check_set_admissibility(I)
+
+% [adm,C] = CHECK_INDEX_ADMISSIBILITY(I)
+%
+% checks whether I is an admissible set. If that is the case, adm=true and C is I ordered in lexicographic order. 
+% If not, adm=false and C is I plus the multiindeces needed, again in lexicographic order
+
+C=I;
+
+% now check amdissibility condition and add what's missing. Print a warning if needed
+row = 0;
+row_max=size(C,1);
+adm=true;
+
+while (row<row_max)
+    
+    % current index
+    row=row+1;
+    idx=C(row,:);
+    [is_adm, completed_set, missing_set] = check_index_admissibility(idx,C);
+    
+    % if it is not admissible, add what's needed to the bottom of C
+    % and increase row_max, so that the new indices will also be checked.
+    % So we don't sort the C after the update, otherwise I am not sure I am
+    % checking everything
+    
+    if ~is_adm
+        % update C and counter
+        C = [C; missing_set];
+        row_max=size(C,1);
+        
+        % print a warning
+        disp(strcat('the opt set is not admissible. Adding: ',num2str(missing_set) ) )
+
+        % record non admissibility has been found
+        adm=false;
+        
+    end
+    
+end
+
+% finally, sort C
+C=sortrows(C);
+
+
+
+
+function [is_adm, completed_set, missing_set] = check_index_admissibility(idx,idx_set,sort_option)
+
+% [is_adm, completed_set, missing_set] = check_index_admissibility(idx,idx_set,sort_option)
+%
+% given an index (row vector) check if it is admissible w.r.t. the index set (matrix with indices as
+% rows). If it is so, is_adm = true. Otherwise is_adm=false and the function will return the completed
+% set and a list of the indices added (missing set). 
+%
+% If sort_option = 'sorting' (optional input), completed and missing set will be sorted in lexicographic order.
+%
+% Please note that the starting point idx_set is supposed to be admissible, so its multi-indices will not 
+% be checked for admissibility. Anyway, being admissible is not necessary for this function to work, 
+% since the core is setdiff, that does not assume any ordering
+
+
+is_adm=true;
+completed_set=idx_set;
+missing_set=[];
+
+% now check if idx is admissible. Note that if this is not the case, the indices needed
+% may not be included in idx_set, too ! 
+% So we add everything we need to check in a queue and keep on checking while the queue is empty
+
+% here's the queue
+the_queue=idx;
+
+
+while ~isempty(the_queue)
+    
+    % consider the first element of the stack
+    i=the_queue(1,:);
+    
+    % build its needed set
+    S = needed_set(i);
+
+    % take the setdiff with idx_set. needed_rows is s.t. missing=needed_set(needed_rows,:)
+    missing = setdiff(S,idx_set,'rows');
+
+    % if missing is not empty, 
+    if ~isempty(missing)
+        
+        % the initial set was not admissible
+        is_adm=false;
+        
+        % add missing to completed_set
+        completed_set=[completed_set; missing];
+        
+        % add missing to missing set
+        missing_set=[missing_set; missing];
+        
+        % add missing to the queue
+        the_queue=[the_queue; missing];
+        
+    end
+    
+    % delete current i from the queue
+    the_queue(1,:)=[];
+end
+    
+
+% if requested, sort in ascending lexicographic order
+if nargin==3 
+    
+    if strcmp(sort_option,'sorting')
+        missing_set=sortrows(missing_set);
+        completed_set=sortrows(completed_set);
+    else
+        error('unknown sorting option')
+    end
+end
+
+
+
+
+function S = needed_set(idx)
+
+% S = needed_set(idx)
+%
+% computes the indices of the form idx-e_j where e_j is the j-th N-dimensional unit vector,
+% and store them as rows of S
+
+N=length(idx);
+
+% I can build the set quickly with matrices operation: [idx; idx; ... ; idx] - eye(N)
+
+S=ones(N,1)*idx - eye(N);
+
+% if idx has 1 inside, like [2 1 1], [3 1 2] etc, care has to be taken: the minimum value for indices is
+% 1, so I don't have to check for [2 0 1], [2 1 0] etc to be in the set. I handle this deleting all rows
+% that contain 0. Note that 0 can be only in the main diagonal of needed_set
+
+D=diag(S);
+S(D==0,:)=[];
+
