@@ -398,7 +398,7 @@ I2=quadrature_on_sparse_grid(@(x)f(x,b) , S2, map);
 disp('----------')
 disp('compare the values')
 
-I==I2
+I-I2
 
 
 % compare with exact value
@@ -493,7 +493,7 @@ I_1d=(2*sqrt(1+b)-2*sqrt(-1+b));
 I_ex = I_1d^N;
 
 
-[X,C] = multiindex_box_set([3 5 2 3],1); % X is C without [3 5]
+[C,X] = multiidx_box_set([3 5 2 3],1); % X is C without [3 5 2 3]
 knots=@(n) knots_uniform(n,-1,1,'nonprob');
 
 S3=smolyak_grid_multiindeces(C,knots,@lev2knots_lin);

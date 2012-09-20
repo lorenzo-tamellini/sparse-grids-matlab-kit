@@ -40,3 +40,6 @@
 %     The alogrithm implemented recasts the sum of lagrange polynomials into a sum of orthornormal polynomials and has 
 %     been found to be more efficient than computing the gPCE coefficients by sparse grid quadrature.
 %     Works for both Legendre and Hermite gPCE 
+%
+% -> multiindex_box_set.m becomes multiidx_box_set.m and the output order has been exchanged. Now the full box set is the first
+%    output, instead of the second

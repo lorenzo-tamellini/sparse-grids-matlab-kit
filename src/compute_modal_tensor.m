@@ -70,7 +70,7 @@ end
 % the modal polynomials to be used are s.t. the corresponding multi-indices have
 % all components less than or equal to the maximum degree
 
-[unused,I] = multiindex_box_set(degrees,0);
+I = multiidx_box_set(degrees,0);
 
 % return multiindex_set as 
 U.multi_indices=I;
