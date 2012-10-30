@@ -34,3 +34,16 @@ for dim=1:N
 end
 
 L=prod(lagrange_monodim_eval,2);
+
+
+
+%     switch type
+%         case 'lagr'
+%             monodim_knots_temp=knots_per_dim{dim};
+%             monodim_knots=monodim_knots_temp(monodim_knots_temp~=current_knot(dim));
+%             % now i compute the lagrange function in the dim-th dimension and evaluate it in the points
+%             lagrange_monodim_eval(:,dim)=lagr_eval(current_knot(dim),monodim_knots,non_grid_points(:,dim));
+%         case 'newton'
+%             versor=(knots_per_dim{dim}==current_knot(dim));
+%             lagrange_monodim_eval(:,dim)=lagr_eval_newton(knots_per_dim{dim},versor,non_grid_points(:,dim)');%lagr_eval(current_knot(dim),monodim_knots,non_grid_points(:,dim));
+%     end
