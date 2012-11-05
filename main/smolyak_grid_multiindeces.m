@@ -7,7 +7,6 @@ function [S,C] = smolyak_grid_multiindeces(C,knots,lev2knots)
 % CHECK_SET_ADMISSIBILITY(C) to verify these properties.
 
 N=size(C,2);
-
 % naif implementation; exploit partial ordering of the sequence of
 % multiindices
 
@@ -43,6 +42,10 @@ N=size(C,2);
 % so the algorithm works like this:
 
 nn=size(C,1);
+
+disp(strcat('using:',num2str(nn),'multiindices'))
+
+
 coeff=ones(1,nn); % initialize coefficients to 1: all c survive
 
 for i=1:nn % scroll c
