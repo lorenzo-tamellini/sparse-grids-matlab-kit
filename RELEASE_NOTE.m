@@ -13,7 +13,7 @@
 %     /docs-examples contains tutorials and examples
 % 
 % -> the function check_set_admissibility has been added. It checks whether an index set satisfies the
-%   admissiilbility condition
+%   admissibility condition
 %
 % -> /tools/polynomials now includes code to generate Legendre and Hermite polynomials. 
 %
@@ -36,7 +36,7 @@
 % 
 % -> knots_trap and midpoint have been removed
 % 
-% -> convert_to_modal.m function now allows to compute the gPCE of a function starting from its sparse grid approximation.
+% -> convert_to_modal.m function allows to compute the gPCE of a function starting from its sparse grid approximation.
 %     The alogrithm implemented recasts the sum of lagrange polynomials into a sum of orthornormal polynomials and has 
 %     been found to be more efficient than computing the gPCE coefficients by sparse grid quadrature.
 %     Works for both Legendre and Hermite gPCE 
