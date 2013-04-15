@@ -90,13 +90,13 @@ while ~isempty(the_queue)
         is_adm=false;
         
         % add missing to completed_set
-        completed_set=[completed_set; missing];
+        completed_set=unique([completed_set; missing],'rows','stable');
         
         % add missing to missing set
-        missing_set=[missing_set; missing];
+        missing_set=unique([missing_set; missing],'rows','stable');
         
         % add missing to the queue
-        the_queue=[the_queue; missing];
+        the_queue=unique([the_queue; missing],'rows','stable');
         
     end
     
