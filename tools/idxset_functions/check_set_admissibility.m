@@ -88,15 +88,44 @@ while ~isempty(the_queue)
         
         % the initial set was not admissible
         is_adm=false;
-        
+
+        % missing had to be added to completed_set, missing_set, and the_queue. 
+        % I have to make sure I don't add duplicates, 
+        % and that the order of completed_set, missing_set, the_queue stays the same!
+        % So I cannot use unique, since it automatically reorders rows
+        % (and old versions of matlab like 2011b do not provide the 'stable'
+        % option that deactivates the ordering).
+        %
+        % setdiff(A,B,'rows') returns the rows from A that are not in B.
+
         % add missing to completed_set
-        completed_set=unique([completed_set; missing],'rows','stable');
+        % completed_set=unique([completed_set; missing],'rows');
+        completed_set=[completed_set; setdiff(missing,completed_set,'rows')]; %#ok<AGROW> 
+
         
         % add missing to missing set
-        missing_set=unique([missing_set; missing],'rows','stable');
+        % missing_set=unique([missing_set; missing],'rows');
+        if isempty(missing_set)
+            missing_set=missing;
+        else
+            missing_set=[missing_set; setdiff(missing,missing_set,'rows')]; %#ok<AGROW>
+        end
         
         % add missing to the queue
-        the_queue=unique([the_queue; missing],'rows','stable');
+        the_queue=[the_queue; setdiff(missing,the_queue,'rows')]; %#ok<AGROW>         
+        
+
+        % version with unique, does not work on R2011b
+        %----------------------------------
+        
+        % add missing to completed_set
+        % completed_set=unique([completed_set; missing],'rows','stable');
+        
+        % add missing to missing set
+        % missing_set=unique([missing_set; missing],'rows','stable');
+        
+        % add missing to the queue
+        % the_queue=unique([the_queue; missing],'rows','stable');
         
     end
     
