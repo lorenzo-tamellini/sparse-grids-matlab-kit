@@ -99,12 +99,10 @@ while ~isempty(the_queue)
         % setdiff(A,B,'rows') returns the rows from A that are not in B.
 
         % add missing to completed_set
-        % completed_set=unique([completed_set; missing],'rows');
         completed_set=[completed_set; setdiff(missing,completed_set,'rows')]; %#ok<AGROW> 
 
         
         % add missing to missing set
-        % missing_set=unique([missing_set; missing],'rows');
         if isempty(missing_set)
             missing_set=missing;
         else
