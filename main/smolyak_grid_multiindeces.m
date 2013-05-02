@@ -43,7 +43,7 @@ N=size(C,2);
 
 nn=size(C,1);
 
-disp(strcat('using:',num2str(nn),'multiindices'))
+% disp(strcat('using:',num2str(nn),'multiindices'))
 
 
 coeff=ones(1,nn); % initialize coefficients to 1: all c survive

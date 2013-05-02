@@ -45,7 +45,7 @@ else
     
     % build the list of multiindices in the set: idxset(i)<=w
     C=multiidx_gen(N,idxset,w,1);
-    disp(['using ',num2str(size(C,1)),' multiindeces'])
+    % disp(['using ',num2str(size(C,1)),' multiindeces'])
 
     % naif implementation; exploit partial ordering of the sequence of
     % multiindices
