@@ -46,7 +46,7 @@ interval_map = get_interval_map(a,b,'uniform');
 Sr.knots=interval_map(Sr.knots);
 
 
-% evaluate a linear comb of Legendre polynomialse on the grid: it should be recovered exactly by the
+% evaluate a linear comb of Legendre polynomials on the grid: it should be recovered exactly by the
 % procedure (with a sufficient number of points in the grid)
 X=Sr.knots;
 
@@ -60,7 +60,7 @@ domain=[a;b];
 [K,modal_coeffs]
 
 
-%% Caso Hermite
+%% Hermite case
 clear
 
 flag='hermite';
@@ -97,5 +97,40 @@ nodal_values = 6-4*herm_eval_multidim(X,[3 1],mu,sig)'+...
 
 domain=[mu;sig];
 [modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,interval_map,flag);
+
+[K,modal_coeffs]
+
+
+
+%% chebyshev case
+
+clear
+
+% left-ends of the intervals
+a=[0 -1];
+% right-ends of the intervals
+b=[2 1];
+
+
+% sparse grid
+N=2; w=5; knots=@(n) knots_uniform(n,-1,1,'nonprob'); lev2knots=@lev2knots_lin; idxset=@(i) sum(i-1);
+[S,C]=smolyak_grid(N,w,knots,lev2knots,idxset);
+Sr=reduce_sparse_grid(S);
+
+% shift sparse grid from -1,1 to (a1,b1), (a2,b2)
+interval_map = get_interval_map(a,b,'uniform');
+Sr.knots=interval_map(Sr.knots);
+
+
+% evaluate a linear comb of Chebyshev polynomials on the grid: it should be recovered exactly by the
+% procedure (with a sufficient number of points in the grid)
+X=Sr.knots;
+
+nodal_values = 6-3*cheb_eval_multidim(X,[3 2],a,b)'+...
+    7*cheb_eval_multidim(X,[1 1],a,b)';
+
+
+domain=[a;b];
+[modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,interval_map,'chebyshev');
 
 [K,modal_coeffs]

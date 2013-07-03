@@ -1,8 +1,8 @@
 function U = compute_modal_tensor(S,S_values,domain,interval_map,flag)
 
-% U=COMPUTE_MODAL_TENSOR(S,S_values,domain,interval_map,'legendre')
-% 
-% or 
+% U=COMPUTE_MODAL_TENSOR(S,S_values,domain,interval_map,'legendre'),
+%
+% U=COMPUTE_MODAL_TENSOR(S,S_values,domain,interval_map,'chebyshev')
 %
 % U=COMPUTE_MODAL_TENSOR(S,S_values,domain,interval_map,'hermite')
 %
@@ -16,7 +16,7 @@ function U = compute_modal_tensor(S,S_values,domain,interval_map,flag)
 %
 % input:
 %
-% for LEGENDRE POLYNOMIALS
+% for LEGENDRE / CHEBYSHEV POLYNOMIALS
 % 
 % domain is a 2xN matrix = [a1, a2, a3, ...; b1, b2, b3, ...] 
 % s.t. the interpolant is defined on (a1,b1) x (a2,b2) x ...  
@@ -98,6 +98,8 @@ for c=1:cols
             vc = lege_eval_multidim(interval_map(S.knots),k,domain(1,:),domain(2,:));
         case 'hermite'
             vc = herm_eval_multidim(interval_map(S.knots),k,domain(1,:),domain(2,:));
+        case 'chebyshev'
+            vc = cheb_eval_multidim(interval_map(S.knots),k,domain(1,:),domain(2,:));            
         otherwise
             error('unknown family of polynomials')
     end    

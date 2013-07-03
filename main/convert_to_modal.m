@@ -8,13 +8,13 @@ function [modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,interval_m
 % the multi-indices of the polynomials appearing in the conversion are
 % stored in matrix K, one row per multi-index
 %
-% flag='legendre','hermite' is optional. Default is legendre
+% flag='legendre','hermite','chebyshev' is optional. Default is legendre
 %
 % -> S is the original grid
 % -> Sr is the reduced grid
 % -> nodal_values are the values of the function on the reduced sparse grid
 %
-% for LEGENDRE polynomials
+% for LEGENDRE and CHEBYSHEV polynomials
 %
 % -> domain is a 2xN matrix = [a1, a2, a3, ...; b1, b2, b3, ...] 
 %   s.t. the interpolant is defined on (a1,b1) x (a2,b2) x ...  
