@@ -43,3 +43,7 @@
 %
 % -> multiindex_box_set.m becomes multiidx_box_set.m and the output order has been exchanged. Now the full box set is the first
 %    output, instead of the second
+%
+% -> interpolate_on_sparse_grid is faster and interpolates vector-valued functions. For example, you can give 
+%    as input a FEM discretization of a function evaluated at the sparse grid nodes and obtain as output the FEM
+%    discretization in a non_grid point!

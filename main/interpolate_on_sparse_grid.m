@@ -1,19 +1,30 @@
 function f_values = interpolate_on_sparse_grid(S,interval_map,Sr,function_on_grid,non_grid_points)
 
-% value = interpolate_on_sparse_grid(S,interval_map,Sr,function_on_grid,non_grid_points)
+% f_values = interpolate_on_sparse_grid(S,interval_map,Sr,function_on_grid,non_grid_points)
 %
-% interpolates a function f defined on the sparse grid S.
+% interpolates a vector-valued function f: R^N -> R^V defined on the sparse grid S.
+%
+% INPUTS
 %
 %   -> S is the original sparse grid
 %   -> interval_map is a @-function that maps the interval containing knots of S to Sr:  Sr.knots=interval_map([S.knots]).
 %           If no map is needed, set interval_map=[];
 %   -> Sr is the reduced version of S
-%   -> function_on_grid is a vector containing the evaluation of the function on the points of the (reduced) grid
+%   -> function_on_grid is a matrix containing the evaluation of the function on the points of the (reduced) grid. Its dimensions are
+%       (number_of_points_in_the_sparse_grid) X V
 %   -> non_grid_points is the set of points (not belonging to the sparse grid) where I want to evaluate the function.
 %           non_grid_points is a matrix, each row is a different point
+%   
+% OUTPUT
+%
+%  f_values is a matrix containing the evaluation of the vector-valued function f in each of the non_grid_points. 
+%  Its dimensions are:
+%
+%  (number_of_non_grid_point) x V
 
+V = size(function_on_grid,2);
 nb_pts   = size(non_grid_points,1);
-f_values = zeros( nb_pts , 1);
+f_values = zeros( nb_pts , V);
 
 nb_grids=length(S);
 
@@ -102,7 +113,7 @@ for i=1:nb_grids
     % polynomial on the non_grid_points, which we will then multiply by the
     % corresponding nodal value and eventually sum everything up.
 
-    % We start by generating the combination of columns. We actally don't
+    % We start by generating the combination of columns. We actually don't
     % need to generate them, but only to recover it from the matrix knots,
     % which already contains all the points of the grid, i.e. all the
     % combinations of 1D points!
@@ -155,10 +166,34 @@ for i=1:nb_grids
 
         % recover F, the corresponding value for the interpolating function in function_on_grid, with the global counter
         position = Sr.n(global_knot_counter);
-        F_value = function_on_grid(position);
+        F_value = function_on_grid(position,:);
         
-        % add the contribution of this knot to the sparse interpolation
-        f_values = f_values + coeff*F_value*f_loc;
+        % add the contribution of this knot to the sparse interpolation.
+        % Its contribution is a matrix, since I am evaluating it on a bunch
+        % of non_grid_points (one per row), and my function to be evaluated is vector-valued
+        % which gives a bunch of columns. 
+        
+        f_values = f_values + coeff*f_loc*F_value;
+        
+        % in other words: f_values is the value of each output component on
+        % each non_grid_point (hence matrix, as tall as non_grid_pts).
+        %
+        % we build it ``lagrange way'' by summing 
+        %
+        % (evaluations of each output component function in each grid point) x (lagrange polynomials evaluated in non_grid_points)
+        % 
+        % the lagrange polynomials are the same for every output component!
+        % 
+        % -) lagrange polynomials eval are in f_loc, it's a tall vector, as tall as non_grid_points. 
+        % -) output components eval are in F_value, it's a fat vector, as fat as the number of outputs (it's a row of function_on_grid) 
+        % 
+        % so for each output component we want to compute
+        %
+        % f_loc * F_value(i) 
+        %
+        % is a tall vector, and we need to create the matrix [f_loc*F_value(1) f_loc*F_value(2) ....] i.e. vertical cat. 
+        % we to this by [f_loc] * [F_value] (column vect by row vect multiplication)
+        % 
         
         % update global counter
         global_knot_counter=global_knot_counter+1;

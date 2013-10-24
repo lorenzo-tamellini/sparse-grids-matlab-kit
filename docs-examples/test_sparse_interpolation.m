@@ -3,11 +3,13 @@ clear
 % dimension 
 N=6;
 
-% function to be interpolated. input column points, out row vector
+% vector-valued function to be interpolated. input column points, out
+% 2-column matrix, one per output component 
 
-f=@(x) 1./(1+0.5/N*sum(x));
-% f=@(x) sum(abs(x).^3);
+f1=@(x) 1./(1+0.5/N*sum(x)); % output is a row
+f2=@(x) sum(abs(x).^3); % output is a row
 
+f=@(x) [f1(x)' f2(x)'];
 
 % define sparse grid
 [lev2knots,idxset]=define_functions_for_rule('TD',N);
@@ -19,8 +21,8 @@ a=-1; b=1;
 % for loop
 
 w_max=6;
-interp_error=[];
-work=[];
+interp_error=zeros(2,w_max+1);
+work=zeros(1,w_max+1);
 
 
 non_grid_points=rand(2000,N)*(b-a)+a;
@@ -45,26 +47,30 @@ for w=0:w_max
     % compute estimate of polynomial size
     pol_size(w+1)=size(C,1);
     
-    % compute the nodal values to be used to interpolate
+    % compute the nodal values to be used to interpolate. It has to be
+    % column vector (more columns for vector-valued output functions)
     function_on_grid=f(Sr.knots);   
     
     % compute interpolated values. Here f_values is column
     f_values = interpolate_on_sparse_grid(S,[],Sr,function_on_grid,non_grid_points);
 
     % compute error
-    interp_error(w+1)=max( abs(  ( f(non_grid_points')' - f_values ) )  ) ;    
+    interp_error(:,w+1)=max( abs(  ( f(non_grid_points') - f_values ) )  ) ;    
 
 end
 
-
+%%
 figure
-semilogy(0:w,interp_error,'-or','DisplayName','Numerical Error, w.r.t. grid level');
+semilogy(0:w,interp_error(1,:),'-or','DisplayName','Numerical Error component 1, w.r.t. grid level');
 hold on
+semilogy(0:w,interp_error(2,:),'-ok','DisplayName','Numerical Error component 2, w.r.t. grid level');
 semilogy(0:w_max,1./exp(0:w_max),'--o','DisplayName','exp(-level)')
 legend show
 
 %%
 figure
-loglog(work,interp_error,'-or','DisplayName','Numerical Error, w.r.t. #points');
+loglog(work,interp_error(1,:),'-or','DisplayName','Numerical Error component 1, w.r.t. #points');
+hold on
+loglog(work,interp_error(2,:),'-ok','DisplayName','Numerical Error component 2, w.r.t. #points');
 legend show
 
