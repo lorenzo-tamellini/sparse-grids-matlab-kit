@@ -2,12 +2,12 @@ function H = herm_eval(x,k,mi,sigma)
 
 % H = herm_eval(x,k,mi,sigma)
 %
-% returns the values of the k-th Hermite polynomial orthoNORMAL in (-inf,+inf) w.r.t to rho=1/sqrt(2 pi sigma) * e^( (x-mi)^2/(2*sigma^2) )  in the points x
+% returns the values of the k-th Hermite polynomial orthoNORMAL in (-inf,+inf) w.r.t to rho=1/sqrt(2 pi sigma) * e^( -(x-mi)^2/(2*sigma^2) )  in the points x
 % ( x can be a matrix as well)
 %
 % N.B. the polynomials start from k=0: L_0(x) = 1, L_1(x) = (x - mi)/sigma
 
-% this function expresses H as a function of the standard Hermite "probabilistic" polynomial (i.e. orthoGONAL w.r.t. rho=1/sqrt(2 pi) * e^(x^2/2) ),
+% this function expresses H as a function of the standard Hermite "probabilistic" polynomial (i.e. orthoGONAL w.r.t. rho=1/sqrt(2 pi) * e^(-x^2/2) ),
 % which are recursively calculated through the function standard_herm_eval, coded below in this .m file
 
 % first compute the transformation of x (referred to N(mi,sigma^2)) to z, the standard gaussian
@@ -40,7 +40,7 @@ function H = standard_herm_eval(x,k)
 
 % L = standard_herm_eval(x) 
 %
-% returns the values of the k-th standard Hermite "probabilistic" polynomial (i.e. orthoGONAL w.r.t. rho=1/sqrt(2 pi) * e^(x^2/2) ), in the points x
+% returns the values of the k-th standard Hermite "probabilistic" polynomial (i.e. orthoGONAL w.r.t. rho=1/sqrt(2 pi) * e^(-x^2/2) ), in the points x
 % ( x can be a vector as well)
 %
 % N.B. the polynomials start from k=0: L_0(x) = 1, L_1(x) = x
