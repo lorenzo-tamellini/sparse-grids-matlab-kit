@@ -15,7 +15,7 @@
 % -> the function check_set_admissibility has been added. It checks whether an index set satisfies the
 %   admissibility condition
 %
-% -> /tools/polynomials now includes code to generate Legendre and Hermite polynomials. 
+% -> /tools/polynomials now includes code to generate Chebyshev, Legendre, Lagrange and Hermite polynomials. 
 %
 % -> The functions to generate Lagrange polynomials are now called lagr_eval, lagr_eval_multidim instead
 %    of monodim_lagrange_function, multidim_lagrange_function, 
@@ -28,7 +28,7 @@
 % 
 % -> the functions to generate knots and weights for uniform and gaussian measures have been modified, from knots_lagrange/hermite/CC_st
 %     to knots_uniform/gaussian/CC. It is now possible to specify the support interval of the rand vars, so that there is no need
-%     to rescale knots and weights after having generated the grid. See the help for more detailss
+%     to rescale knots and weights after having generated the grid. See the help for more details
 %         
 % -> however, for more complex cases (e.g. each rand var lives on its own interval), one still needs to
 %    rescale afterwards. To this end, the function  get_interval_map.m      
@@ -39,7 +39,7 @@
 % -> convert_to_modal.m function allows to compute the gPCE of a function starting from its sparse grid approximation.
 %     The alogrithm implemented recasts the sum of lagrange polynomials into a sum of orthornormal polynomials and has 
 %     been found to be more efficient than computing the gPCE coefficients by sparse grid quadrature.
-%     Works for both Legendre and Hermite gPCE 
+%     Works for Chebyshev, Legendre and Hermite gPCE 
 %
 % -> multiindex_box_set.m becomes multiidx_box_set.m and the output order has been exchanged. Now the full box set is the first
 %    output, instead of the second
