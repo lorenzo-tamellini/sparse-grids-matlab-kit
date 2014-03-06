@@ -1,3 +1,23 @@
+% RELEASE NOTES
+%
+%
+% -> 2014, Mar. 06: it is now possible to recycle evaluations when using a sequence of sparse grids
+%
+% -> 2013, Oct. 24: interpolate_on_sparse_grid  interpolates vector-valued functions. 
+%
+% -> 2013, Jul. 03: added Chebyshev polynomials
+%
+% -> 2013, Apr. 18: fixed bug and backward compatibility for check_set_admissibility (becomes a standalone function on 2013, May 5)
+% 
+% -> 2012, Oct. 30: faster version of interpolate_on_sparse_grid 
+%
+%
+%
+%
+%
+%
+%
+%
 % DIFFERENCES W.R.T. THE PREVIOUS RELEASE : 
 %
 % sparse grid matlab kit august 2012 vs sparse grid toolkit november 2010
@@ -43,7 +63,3 @@
 %
 % -> multiindex_box_set.m becomes multiidx_box_set.m and the output order has been exchanged. Now the full box set is the first
 %    output, instead of the second
-%
-% -> interpolate_on_sparse_grid is faster and interpolates vector-valued functions. For example, you can give 
-%    as input a FEM discretization of a function evaluated at the sparse grid nodes and obtain as output the FEM
-%    discretization in a non_grid point!

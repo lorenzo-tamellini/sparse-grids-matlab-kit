@@ -41,7 +41,7 @@ end
 kk=[S.knots]';
 ww=[S.weights];
 
-% first, I order the rows ok kk in lexicographic order. If I use mysortrows then two rows like
+% first, I order the rows of kk in lexicographic order. If I use mysortrows then two rows like
 %
 % [a b c d]
 % [a-t b c+t d]
@@ -54,7 +54,7 @@ ww=[S.weights];
 
 [kk_ordered,i]=mysortrows(kk,Tol/size(kk,2));
 
-% next I take the difference of two consecutive rows. if the difference is small, than the rows are the same, i.e. the knot is the same
+% next I take the difference of two consecutive rows. if the difference is small, then the rows are the same, i.e. the knot is the same
 dkk_ordered=diff(kk_ordered,1,1);
 
 % I measure the difference with infty norm instead of L2 norm:
@@ -82,7 +82,7 @@ j=find([max(abs(dkk_ordered),[],2)>Tol;2*Tol]);
 % now I can create the reduced knots
 kk_reduced=kk_ordered(j,:);
 
-% in the same way, i pick up only the j entries of the indeces vector i. 
+% in the same way, I pick up only the j entries of the indeces vector i. 
 index_reduced=i(j)';
 % in this way I have a mapping from the original set kk to the reduced set kk_reduced:
 % i.e. kk(index_reduced,:)==kk_reduced.

@@ -19,7 +19,14 @@ if ~exist('dims','var') || isempty(dims)
 end
 
 x=[S.knots];
-h=plot(x(dims(1),:),x(dims(2),:),varargin{:},'LineStyle','none');
+
+if nargin==1
+    % use a default plot style
+    h=plot(x(dims(1),:),x(dims(2),:),'ok','MarkerFaceColor','k');
+else
+    % use style provided
+    h=plot(x(dims(1),:),x(dims(2),:),varargin{:},'LineStyle','none');
+end
 grid on
 
 

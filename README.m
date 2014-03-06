@@ -1,8 +1,8 @@
 %----------------------------------------------------------------------------------
-% CSQI - Sparse Grids Matlab Kit v. August 2012
+% CSQI - Sparse Grids Matlab Kit
 %----------------------------------------------------------------------------------
 
-% This is a new release of the Sparse Grid Toolkit (first released in November 2010)
+
 % For a detailed list of diffrences with the previous version, take a look at RELEASE_NOTE.m
 
 
@@ -31,9 +31,10 @@
 % -> smolyak_grid.m
 % -> smolyak_grid_multiindeces.m
 % -> reduce_sparse_grid.m
+% -> evaluate_on_sparse_grid.m
 % -> interpolate_on_sparse_grid.m
 % -> quadrature_on_sparse_grid.m
-% -> convert_to_modal
+% -> convert_to_modal.m
 %
 % documentation and examples can be found in docs-examples folder. 
 %
