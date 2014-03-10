@@ -1,47 +1,100 @@
-% ============================================================
-%  Generates a Smolyak sparse grid (and corresponding quadrature weights)
+function [S,C] = smolyak_grid(N,w,knots,lev2knots,idxset,map,weights_coeff)
+
+
+%  SMOLYAK_GRID generates a Smolyak sparse grid (and corresponding quadrature weights)
 %  as a linear combination of full tensor grids, employing formula (2.9)
 %  of [Nobile-Tempone-Webster, SINUM 46/5, pages 2309-2345] 
 %
-%  The sparse grid information is stored as a vector of "tensor grids", 
-%  each "tensor grid" S(j) is a three field structure:
-%    S(j).knots: vector containing the tensor grid knots
-%    S(j).weights: vector containing the corresponding weights
-%    S(j).size: size of the tensor grid = prod(m)
-%    S(j).coeff: how many times the tensor grid appears in the sparse grid (with sign)
-%  the index j runs over all points in the level set Y(w,N) 
+%  [S,C] = SMOLYAK_GRID(N,W,KNOTS,LEV2KNOTS,IDXSET) creates a sparse grid in N dimensions
+%       using the multiindex set defined by
 %
-%  usage:
-%   [S,C] = smolyak_grid(N,w,knots,lev2knots,idxset)
-%   input
-%     N: dimension
-%     w: level in the Smolyak formula (w>=0)
-%     knots: function defining the 1D gauss knots
-%        header: [x,w]=knots(m)  (generates m knots and weights)
-%     lev2knots: function defining the relation between level and 
-%        numebr of knots.   header: m=lev2knots(i)
-%     idxset (optional): function defining the index set for the levels
-%        a multiindex is in the set if idxset(i)<=w (default is sum(i-1))
-%   output
-%     S: structure containing the information on the sparse grid 
-%        (vector of tensor grids; see above)
-%     C: multi-index set used to generate the sparse grid  
-% ============================================================
+%       IDXSET(I) <= W,   
+%
+%       where  I is N-dimensional multiindex, W is an integer non-negative value and IDXSET is a function.
+%       IDXSET is an optional argument, the default being IDXSET = @(i) sum(i-1).
+%
+%       KNOTS is either a cell array containing the functions to be used to generate the knots 
+%       in each direction, i.e. KNOTS={@knots_function1, @knots_function2, ... }
+%       or a single function to be used in every direction, i.e.  KNOTS=@knots_function1
+%       In both cases, the header of knots_function is [x,w]=knots_function(m)
+%
+%       LEV2KNOTS is either a cell array containing the functions defining the relation between level 
+%       and number of knots to be used in each direction, i.e. LEV2KNOTS={@m_function1, @m_function2, ... }
+%       or a single function to be used in every direction, i.e. LEV2KNOTS=@m_function1
+%       In both cases, the header of m_function is m=m_function(i)
+%
+%       The sparse grid information is stored as a vector of "tensor grids", 
+%       each "tensor grid" S(j) is a four fields structure:
+%           S(j).knots: vector containing the tensor grid knots
+%           S(j).weights: vector containing the corresponding weights
+%           S(j).size: size of the tensor grid = prod(m)
+%           S(j).coeff: how many times the tensor grid appears in the sparse grid (with sign)
+%               the index j runs over all points in the level set Y(W,N) 
+%
+%       The outputs of SMOLYAK_GRID are 
+%       S: structure containing the information on the sparse grid (vector of tensor grids; see above)
+%       C: multi-index set used to generate the sparse grid  
+%
+%
+%  [S,C] = SMOLYAK_GRID(N,W,KNOTS,LEV2KNOTS,IDXSET,MAP,WEIGHTS_COEFF) can be used as an alternative
+%       to generate a sparse grid on a hyper-rectangle. Instead of typing out one KNOTS function and one
+%       LEV2KNOTS for each dimension, like in
+%
+%       [S,C] = SMOLYAK_GRID(N,W,{@knots1, @knots2, ...},{@m1, @m2 ...}),
+%
+%       one can use 
+%
+%       [S,C] = SMOLYAK_GRID(N,W,@KNOTS,@M,MAP,WEIGHTS_COEFF),
+%
+%       which generates the sparse grid on the hypercube corresponding to @KNOTS and and then shifts it 
+%       according to the mapping defined by MAP, e.g. from (-1,1)^N to (a1,b1)x(a2,b2)x...x(a_N,b_N). 
+%       See also GET_INTERVAL_MAP. Specifying the scalar value WEIGHTS_COEFF will also multiply the 
+%       quadrature weights by WEIGHTS_COEFF. Use IDXSET=[] to use the default value, IDXSET = @(i) sum(i-1).    
 
-function [S,C] = smolyak_grid(N,w,knots,lev2knots,idxset)
 
-if nargin==4
+
+%----------------------------------------------------------
+% input handling
+
+if nargin==4 || (nargin==6 && isempty(idxset)) || (nargin==7 && isempty(idxset))
     idxset=@(i) sum(i-1);
 end
 
+% if knots and  lev2knots are simple function, we replicate them in a cell
+if isa(knots,'function_handle')
+    fknots=knots;
+    knots=cell(1,N);
+    for i=1:N
+        knots{i}=fknots;
+    end
+end
+if isa(lev2knots,'function_handle')
+    f_lev2knots=lev2knots;
+    lev2knots=cell(1,N);
+    for i=1:N
+        lev2knots{i}=f_lev2knots;
+    end
+end
+
+
+
 if w==0
+
+    %----------------------------------------------------------
+    % the trivial case
+
+    
     i = ones(1,N);
-    m = lev2knots(i);
+    m = apply_lev2knots(i,lev2knots,N);
     S(1) = tensor_grid(N,m,knots);
     S(1).coeff=1;
     disp('using 1 multiindex')
     C=i;
 else
+
+    %----------------------------------------------------------
+    % let's go with the sparse construction
+
     
     % build the list of multiindices in the set: idxset(i)<=w
     C=multiidx_gen(N,idxset,w,1);
@@ -99,21 +152,55 @@ else
     for j=1:nn
         if coeff(j)~=0
             i = C(j,:);       % level in each direction
-            m = lev2knots(i); % n. of points in each direction
+            m = apply_lev2knots(i,lev2knots,N); % n. of points in each direction
             S(j) = tensor_grid(N,m,knots);
             S(j).weights=S(j).weights*coeff(j);
         end        
     end
     
+    % finally, shift the points according to map if needed
+    if exist('map','var')
+        for j=1:nn
+            if coeff(j)~=0
+                S(j).knots = map(S(j).knots);
+            end
+        end
+    end
+
+    % and possibly fix weights
+    if exist('weights_coeff','var')
+        for j=1:nn
+            if coeff(j)~=0
+                S(j).weights = S(j).weights*weights_coeff;
+            end
+        end
+    end  
+    
     % now store the coeff value. It has to be stored after the first loop, becuase tensor_grid returns a grid
-    % WITHOUT coeff field, so that if you add it then you get a mismatch between the fields in output and the fields
-    % in the struct array you are using.
+    % WITHOUT coeff field, and Matlab would throw an error (Subscripted assignment between dissimilar structures)
 
     for j=1:nn
         if coeff(j)~=0
             S(j).coeff=coeff(j);
         end        
     end
-        
+            
+end
+
+end
+
+
+
+function m = apply_lev2knots(i,lev2knots,N)
     
+% N could be deduced by N but it's better passed as an input, to speed computation
+% init m to zero vector
+m=0*i;
+
+% next, iterate on each direction 1,...,N. 
+
+for n=1:N
+    m(n) = lev2knots{n}(i(n));
+end
+
 end

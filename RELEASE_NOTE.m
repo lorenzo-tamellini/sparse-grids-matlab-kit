@@ -1,7 +1,23 @@
 % RELEASE NOTES
 %
 %
-% -> 2014, Mar. 06: it is now possible to recycle evaluations when using a sequence of sparse grids
+% -> 2014, Mar. 06: 1) it is now possible to recycle evaluations when using a sequence of sparse grids. The input arguments of
+%                   quadrature_on_sparse_grid have been modified accordingly.
+%
+%                   2) it is now possible to mix random variables along different directions of a sparse grid,
+%                   e.g. create a sparse grid with clenshaw-curtis points in one direction and gauss-hermite
+%                   points in another
+%
+%                   3) interpolate_on_sparse_grid, quadrature_on_sparse_grid, convert_to_modal, compute_modal_tensori do not accept
+%                   any longer MAP and WEIGHTS_COEFF input arguments, that should rather be passed as input to
+%                   SMOLYAK_GRID, SMOLYAK_GRID_MULTIINDICES. Input argument FLAG in convert_to_modal is now
+%                   mandatory
+%
+%                   4) improved graphics handling for plot_grid
+%
+%                   5) help for many functions has been rewritten
+%
+%
 %
 % -> 2013, Oct. 24: interpolate_on_sparse_grid  interpolates vector-valued functions. 
 %

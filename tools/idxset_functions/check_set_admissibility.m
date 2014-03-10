@@ -1,9 +1,8 @@
 function [adm,C] = check_set_admissibility(I)
 
-% [adm,C] = CHECK_SET_ADMISSIBILITY(I)
-%
-% checks whether I is an admissible set. If that is the case, adm=true and C is I ordered in lexicographic order. 
-% If not, adm=false and C is I plus the multiindeces needed, again in lexicographic order
+% [adm,C] = CHECK_SET_ADMISSIBILITY(I) checks whether I is an admissible set. 
+%       If that is the case, adm=true and C contains I ordered in lexicographic order. 
+%       If not, adm=false and C contains I plus the multiindeces needed, again in lexicographic order
 
 C=I;
 

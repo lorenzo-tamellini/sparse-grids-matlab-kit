@@ -1,53 +1,34 @@
-function U = compute_modal_tensor(S,S_values,domain,interval_map,flag)
+function U = compute_modal_tensor(S,S_values,domain,flag)
 
-% U=COMPUTE_MODAL_TENSOR(S,S_values,domain,interval_map,'legendre'),
-%
-% U=COMPUTE_MODAL_TENSOR(S,S_values,domain,interval_map,'chebyshev')
-%
-% U=COMPUTE_MODAL_TENSOR(S,S_values,domain,interval_map,'hermite')
-%
-% given a grid S in domain and the values on it, re-express it 
-% as a modal expansion. 'flag' is optional, default is 'legendre' 
-%
-% output:
-%
-% U is a struct with fields U.size (the number of multi_indices), U.multi_indices, U.coeffs
-%
-%
-% input:
-%
-% for LEGENDRE / CHEBYSHEV POLYNOMIALS
+% COMPUTE_MODAL_TENSOR given a tensor grid and the values on it, re-express the interpolant 
+% as a modal expansion.
 % 
-% domain is a 2xN matrix = [a1, a2, a3, ...; b1, b2, b3, ...] 
-% s.t. the interpolant is defined on (a1,b1) x (a2,b2) x ...  
+% U=COMPUTE_MODAL_TENSOR(S,S_VALUES,DOMAIN,'legendre') considers the tensor grid S on the
+%       hyper-rectangle DOMAIN with associated point evaluations S_VALUES and converts the
+%       resulting lagrangian multivariate interpolant to a sum of Legendre polynomials.
+%       DOMAIN is a 2xN matrix = [a1, a2, a3, ...; b1, b2, b3, ...] 
+%       defining the hyper-rectangluar domain of the sparse grid: (a1,b1) x (a2,b2) x ...  
+%       U is a struct with fields U.size (the number of Legendre polynomials needed), 
+%       U.multi_indices (one multi-index per Legendre polynomial), U.coeffs
 %
-% interval_map is a function that takes knots in S (the original grid, defined
-% on a reference interval) to the knots in Sr (defined on domain). interval_map has to be defined like this:
+% U=COMPUTE_MODAL_TENSOR(S,S_values,domain,'chebyshev') works as the previous call, using 
+%       Chebyshev polynomials
 %
-%   interval_map =@(T) ....
-%
-% where input T is a matrix with one point per column (like the matrix [S.knots]) and the
-% output is a matrix with the same size, and one point per column, shifted to domain
-%
-% for HERMITE POLYNOMIALS
-%
-% domain is a 2XN matrix = [mu1, mu2, mu3, ...; sigma1, sigma2, sigma3,...]
-% the first variable has normal distribution with mean mu1 and std sigma1
-% and so on...
-% interval_map is a function that takes knots in S (the original grid,
-% related to standard variables) to the knots in Sr (with mean and std in domain). interval_map has to be defined like this:
-%
-%   interval_map =@(T) ....
-%
-% where input T is a matrix with one point per column (like the matrix [S.knots]) and the
-% output is a matrix with the same size, and one point per column, shifted
-% to non standard distributions
+% U=COMPUTE_MODAL_TENSOR(S,S_values,domain,'hermite') works as the previous call, using 
+%       Hermite polynomials. Here DOMAIN is a 2XN matrix = [mu1, mu2, mu3, ...; sigma1, sigma2, sigma3,...]
+%       such that the first variable has normal distribution with mean mu1 and std sigma1
+%       and so on.
 
 
-if nargin==4
-    flag='legendre';
+try
+    ismember(flag,{'legendre','chebyshev','hermite'})
+catch
+    error(['Input argument FLAG unrecognized. '...
+        ' Please note that COMPUTE_MODAL_TENSOR does not accept INTERVAL_MAP '...
+        'input argument any longer. '...
+        'Type help convert_to_modal for help. '...
+        'This error message will not be shown in future releases of SPARSE-GRID-MATLAB-KIT'])
 end
-
 
 
 % I will need the knots in each dimension separately. 
@@ -95,11 +76,11 @@ for c=1:cols
     %vc = lege_eval_multidim(interval_map(S.knots),k,domain(1,:),domain(2,:));
     switch flag
         case 'legendre'
-            vc = lege_eval_multidim(interval_map(S.knots),k,domain(1,:),domain(2,:));
+            vc = lege_eval_multidim(S.knots,k,domain(1,:),domain(2,:));
         case 'hermite'
-            vc = herm_eval_multidim(interval_map(S.knots),k,domain(1,:),domain(2,:));
+            vc = herm_eval_multidim(S.knots,k,domain(1,:),domain(2,:));
         case 'chebyshev'
-            vc = cheb_eval_multidim(interval_map(S.knots),k,domain(1,:),domain(2,:));            
+            vc = cheb_eval_multidim(S.knots,k,domain(1,:),domain(2,:));            
         otherwise
             error('unknown family of polynomials')
     end    

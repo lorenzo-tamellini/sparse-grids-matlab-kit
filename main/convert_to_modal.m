@@ -1,56 +1,41 @@
-function [modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,interval_map,flag)
+function [modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,flag)
 
-% [modal_coeffs,K] = CONVERT_TO_MODAL(S,Sr,nodal_values,domain,interval_map)
-%
-% recast a sparse grid interpolant as a sum of orthogonal polynomials
+% CONVERT_TO_MODAL recasts a sparse grid interpolant as a sum of orthogonal polynomials
 % i.e. computes the spectral expansion of the interpolant.
 %
-% the multi-indices of the polynomials appearing in the conversion are
-% stored in matrix K, one row per multi-index
+% 
+% [MODAL_COEFFS,K] = CONVERT_TO_MODAL(S,SR,NODAL_VALUES,DOMAIN,'legendre') returns the Legendre expansion
+%       of the sparse grid interpolant. S is a sparse grid, SR is its reduced counterpart, NODAL_VALUES
+%       are the values of the sparse grid interpolant on the reduced sparse grid (column vector).
+%       DOMAIN is a 2xN matrix = [a1, a2, a3, ...; b1, b2, b3, ...] defining the lower and upper bound
+%       of the hyper-rectangle on which the sparse grid is defined
+%       The function returns the Legendre expansion as a vector of coefficients MODAL_COEFFS, 
+%       and a matrix K containing the associated multi-indices, one per row
 %
-% flag='legendre','hermite','chebyshev' is optional. Default is legendre
-%
-% -> S is the original grid
-% -> Sr is the reduced grid
-% -> nodal_values are the values of the function on the reduced sparse grid
-%
-% for LEGENDRE and CHEBYSHEV polynomials
-%
-% -> domain is a 2xN matrix = [a1, a2, a3, ...; b1, b2, b3, ...] 
-%   s.t. the interpolant is defined on (a1,b1) x (a2,b2) x ...  
-%
-% -> interval_map is a function that takes knots in S (the original grid, defined
-%   on a reference interval) to the knots in Sr (defined on domain). interval_map has to be defined like this:
-%
-%   interval_map =@(T) ....
-%
-%   where input T is a matrix with one point per column (like the matrix [S.knots]) and the
-%   output is a matrix with the same size, and one point per column, shifted to domain. If no map is
-%   needed, set interval_map=[];
+% [MODAL_COEFFS,K] = CONVERT_TO_MODAL(S,SR,NODAL_VALUES,DOMAIN,'chebyshev') returns the Chebyshev expansion
+%        of the sparse grid interpolant. See above for inputs and outputs.
 %
 %
-% for HERMITE polynomials
-%
-% -> domain is a 2XN matrix = [mu1, mu2, mu3, ...; sigma1, sigma2, sigma3,...]
-%   the first variable has normal distribution with mean mu1 and std sigma1
-%   and so on...
-%
-% -> interval_map is a function that takes knots in S (the original grid,
-%   related to standard variables) to the knots in Sr (with mean and std in domain). interval_map has to be defined like this:
-%
-%   interval_map =@(T) ....
-%
-%   where input T is a matrix with one point per column (like the matrix [S.knots]) and the
-%   output is a matrix with the same size, and one point per column, shifted
-%   to non standard distributions. If no map is needed, set interval_map=[];
+% [MODAL_COEFFS,K] = CONVERT_TO_MODAL(S,SR,NODAL_VALUES,DOMAIN,'hermite') returns the Hermite expansion
+%       of the sparse grid interpolant. Here, DOMAIN is a 2XN matrix = [mu1, mu2, mu3, ...; sigma1, sigma2, sigma3,...]
+%       i.e. the n-th variable of the sparse grid space has normal distribution with mean mu_n and std sigma_n
+
 
 
 % fix input 
-if nargin==5
-    flag='legendre';
+errmsg=[' Please note that CONVERT_TO_MODAL does not accept INTERVAL_MAP '...
+        'input argument any longer, and FLAG input argument is now mandatory. '...
+        'Type help convert_to_modal for help. '...
+        'This error message will not be shown in future releases of SPARSE-GRID-MATLAB-KIT'];
+
+if nargin==4
+    error(strcat('not enough input arguments.',errmsg))
 end
-if isempty(interval_map)
-    interval_map = @(t) t;
+
+try
+    ismember(flag,{'legendre','chebyshev','hermite'})
+catch
+    error(strcat('Input argument FLAG unrecognized. ',errmsg))
 end
 
 
@@ -104,7 +89,7 @@ for g = 1: nb_tensor_grids
     global_values_counter = global_values_counter + S(g).size ;
         
     % and compute modal
-    U(g) = compute_modal_tensor(S(g),S_values,domain,interval_map,flag);
+    U(g) = compute_modal_tensor(S(g),S_values,domain,flag);
     
 end
 

@@ -1,16 +1,16 @@
 function [is_adm, completed_set, missing_set] = check_index_admissibility(idx,idx_set,sort_option)
 
-% [is_adm, completed_set, missing_set] = check_index_admissibility(idx,idx_set,sort_option)
+% [IS_ADM, COMPLETED_SET, MISSING_SET] = CHECK_INDEX_ADMISSIBILITY(IDX,IDX_SET) given a multiindex IDX 
+%       as row vector checks if it is admissible w.r.t. the index set IDX_SET (matrix with indices as
+%       rows). If it is so, IS_ADM = true. Otherwise IS_ADM = false and the function will return the 
+%       COMPLETED_SET and a list of the indices added stored in MISSING_SET. 
 %
-% given an index (row vector) check if it is admissible w.r.t. the index set (matrix with indices as
-% rows). If it is so, is_adm = true. Otherwise is_adm=false and the function will return the completed
-% set and a list of the indices added (missing set). 
+%       Note that the starting IDX_SET is supposed to be admissible, so its multi-indices will not 
+%       be checked for admissibility. Anyway, being admissible is not necessary for this function to work, 
+%       since the core is SETDIFF, that does not assume any ordering
 %
-% If sort_option = 'sorting' (optional input), completed and missing set will be sorted in lexicographic order.
-%
-% Please note that the starting point idx_set is supposed to be admissible, so its multi-indices will not 
-% be checked for admissibility. Anyway, being admissible is not necessary for this function to work, 
-% since the core is setdiff, that does not assume any ordering
+% [IS_ADM, COMPLETED_SET, MISSING_SET] = CHECK_INDEX_ADMISSIBILITY(IDX,IDX_SET,'sorting') returns
+%       COMPLETED_SET and MISSING_SET sorted in lexicographic order.
 
 
 is_adm=true;

@@ -1,10 +1,38 @@
-function [S,C] = smolyak_grid_multiindeces(C,knots,lev2knots)
+function [S,C] = smolyak_grid_multiindeces(C,knots,lev2knots,map,weights_coeff)
 
-% [S,C] = smolyak_grid_multiindeces(C,knots,lev2knots)
+% SMOLYAK_GRID_MULTIINDICES produces a sparse grid starting from a multiindex-set rather than
+% from a rule IDXSET(I) <= W.
+% 
+% [S,C] = SMOLYAK_GRID_MULTIINDICES(C,KNOTS,LEV2KNOTS) uses the multiindex set C. C must be
+%       in lexicographic order and admissible. 
 %
-% modification of smolyak grid, to take into account a set of multiindeces C rather than a rule
-% C is the set of multindices used. It has to be admissible and in lexicographic order. Use
-% CHECK_SET_ADMISSIBILITY(C) to verify these properties.
+% [S,C] = SMOLYAK_GRID_MULTIINDICES(C,KNOTS,LEV2KNOTS,MAP,WEIGHTS_COEFF) can be used as an alternative
+%       to generate a sparse grid on a hyper-rectangle, 
+%
+% See also CHECK_SET_ADMISSIBILITY for admissibility check, and SMOLYAK_GRID for further information on 
+% KNOTS, LEV2KNOTS, MAP, WEIGHTS_COEFF and on the sparse grid data structure S
+
+
+N=size(C,2);
+
+% if knots and  lev2knots are simple function, we replicate them in a cell
+if isa(knots,'function_handle')
+    fknots=knots;
+    knots=cell(1,N);
+    for i=1:N
+        knots{i}=fknots;
+    end
+end
+if isa(lev2knots,'function_handle')
+    f_lev2knots=lev2knots;
+    lev2knots=cell(1,N);
+    for i=1:N
+        lev2knots{i}=f_lev2knots;
+    end
+end
+
+
+
 
 N=size(C,2);
 % naif implementation; exploit partial ordering of the sequence of
@@ -22,7 +50,7 @@ N=size(C,2);
 %
 % So the set of all possible grids (non delta grids) is the same set C, but some of them will cancel out
 %
-% C is partially ordered (lexicographis): [x x x x i], are listed increasing with i,
+% C is partially ordered (lexicographic): [x x x x i], are listed increasing with i,
 % [x x x j i] are listed increasing first with j and then with i ...
 % Now take a row of C, c. Because of the ordering, if you take c as a grid index
 % the same grid can appear again only from delta grids coming from rows following.
@@ -63,11 +91,34 @@ end
 for j=1:nn
     if coeff(j)~=0
         i = C(j,:);       % level in each direction
-        m = lev2knots(i); % n. of points in each direction
+        m = apply_lev2knots(i,lev2knots,N); % n. of points in each direction
         S(j) = tensor_grid(N,m,knots);
         S(j).weights=S(j).weights*coeff(j);
     end
 end
+
+
+
+
+% finally, shift the points according to map if needed
+if exist('map','var')
+    for j=1:nn
+        if coeff(j)~=0
+            S(j).knots = map(S(j).knots);
+        end
+    end
+end
+
+% and possibly fix weights
+if exist('weights_coeff','var')
+    for j=1:nn
+        if coeff(j)~=0
+            S(j).weights = S(j).weights*weights_coeff;
+        end
+    end
+end
+
+
 
 % now store the coeff value. It has to be stored after the first loop, becuase tensor_grid returns a grid
 % WITHOUT coeff field, so that if you add it then you get a mismatch between the fields in output and the fields
@@ -79,5 +130,23 @@ for j=1:nn
     end
 end
 
+
+end
+
+
+
+
+
+function m = apply_lev2knots(i,lev2knots,N)
+    
+% N could be deduced by N but it's better passed as an input, to speed computation
+% init m to zero vector
+m=0*i;
+
+% next, iterate on each direction 1,...,N. 
+
+for n=1:N
+    m(n) = lev2knots{n}(i(n));
+end
 
 end

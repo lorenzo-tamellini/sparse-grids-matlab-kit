@@ -1,26 +1,27 @@
-function f_values = interpolate_on_sparse_grid(S,interval_map,Sr,function_on_grid,non_grid_points)
+function f_values = interpolate_on_sparse_grid(S,this_was_once_interval_map,Sr,function_on_grid,non_grid_points) %#ok<INUSL>
 
-% f_values = interpolate_on_sparse_grid(S,interval_map,Sr,function_on_grid,non_grid_points)
-%
-% interpolates a vector-valued function f: R^N -> R^V defined on the sparse grid S.
-%
-% INPUTS
-%
-%   -> S is the original sparse grid
-%   -> interval_map is a @-function that maps the interval containing knots of S to Sr:  Sr.knots=interval_map([S.knots]).
-%           If no map is needed, set interval_map=[];
-%   -> Sr is the reduced version of S
-%   -> function_on_grid is a matrix containing the evaluation of the function on the points of the (reduced) grid. Its dimensions are
-%       (number_of_points_in_the_sparse_grid) X V
-%   -> non_grid_points is the set of points (not belonging to the sparse grid) where I want to evaluate the function.
-%           non_grid_points is a matrix, each row is a different point
-%   
-% OUTPUT
-%
-%  f_values is a matrix containing the evaluation of the vector-valued function f in each of the non_grid_points. 
-%  Its dimensions are:
-%
-%  (number_of_non_grid_point) x V
+% F_VALUES = INTERPOLATE_ON_SPARSE_GRID(S,SR,FUNCTION_ON_GRID,NON_GRID_POINTS) interpolates 
+%   a vector-valued function F: R^N -> R^V defined on the sparse grid S. S is a sparse grid 
+%   and SR is its reduced counterpart.
+%   FUNCTION_ON_GRID is a matrix containing the evaluation of F on the points of SR. 
+%   Its dimensions are: (number_of_points_in_the_sparse_grid) X V
+%   NON_GRID_POINTS is the set of points (not belonging to the sparse grid) where one wants to 
+%   evaluate the function. It is a matrix, each row is a different point.
+%   F_VALUES is a matrix containing the evaluation of the vector-valued function F 
+%   in each of the non_grid_points. Its dimensions are: (number_of_non_grid_point) x V
+
+if nargin == 5
+    errmsg=['too many input arguments. This is likely due to the fact that the new version of '...
+        'interpolate_on_sparse_grid does not accept any longer INTERVAL_MAP as second input argument. '...
+        'The new function call is '...
+        'F_VALUES = INTERPOLATE_ON_SPARSE_GRID(S,SR,FUNCTION_ON_GRID,NON_GRID_POINTS). '...
+        'To fix this, either regenerate your sparse grid using INTERVAL_MAP as input (see help SMOLYAK_GRID) '...
+        'or modify the fields KNOTS of your sparse grid and reduced sparse grid applying INTERVAL_MAP '...
+        '(e.g.  S(i).knots = interval_map(S(i).knots) ) '...
+        'This message will disappear in future releases of SPARSE_GRID_MATLAB_KIT'];
+    error(errmsg)
+end
+
 
 V = size(function_on_grid,2);
 nb_pts   = size(non_grid_points,1);

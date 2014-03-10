@@ -247,9 +247,72 @@ axis([-1 1 -1 1])
 % -> multiindices are row-vector
 
 
+%% PART 1: INTRODUCTION - MODIFY THE DOMAIN OF A SPARSE GRID
+
+% it is easy to modify the domain of a sparse grid from (-1,1)^N to other hyper-rectangles. Two options are available
+
+clc
+clear
+N=2;
+
+% 1) generate knots on the desired hyper-rectangle (here (0,2)^2 )
+knots=@(n) knots_CC(n,0,2,'nonprob');
+w = 4;
+S = smolyak_grid(N,w,knots,@lev2knots_nested);
+
+
+% alternatively, use the standard interval and provide a shifting function to smolyak_grid. 
+map=get_interval_map([0 0],[2 2],'uniform');
+knots=@(n) knots_CC(n,-1,1,'nonprob');
+S2 = smolyak_grid(N,w,knots,@lev2knots_nested,[],map); % uses the default idxset
+
+find([S.knots]~=[S2.knots])
+
+
+
+%% PART 1: INTRODUCTION - MORE ON MODIFYING THE DOMAIN OF A SPARSE GRID
+
+% one can mix different intervals / different knots families on different directions. 
+
+clc
+clear
+N=2;
+
+knots1=@(n) knots_CC(n,0,2,'nonprob');
+knots2=@(n) knots_uniform(n,-1,5,'nonprob');
+w = 4;
+S = smolyak_grid(N,w,{knots1,knots2},{@lev2knots_nested,@lev2knots_lin});
+
+plot_grid(S)
+
+% in case knots and lev2knots functions in the different directions are the same and the only thing that changes
+% is the definition interval, also using the standard interval and providing a shifting function to
+% smolyak_grid works
+
+clc
+clear
+N=2;
+
+knots1=@(n) knots_CC(n,0,2,'nonprob');
+knots2=@(n) knots_CC(n,-1,5,'nonprob');
+w = 4;
+S = smolyak_grid(N,w,{knots1,knots2},@lev2knots_nested);
+
+
+map=get_interval_map([0 -1],[2 5],'uniform');
+knots=@(n) knots_CC(n,-1,1,'nonprob');
+S2 = smolyak_grid(N,w,knots,@lev2knots_nested,[],map); % uses the default idxset
+
+plot_grid(S)
+hold on
+plot_grid(S2,[],'MarkerSize',10,'Marker','o')
+%max(max(abs([S.knots]-[S2.knots])))
+
+
+
 %% PART 1: INTRODUCTION - REDUCE A SPARSE GRID
 
-% Also when using non-nested points, the tensor grids forming the sparse grid may have points in common.
+% The tensor grids forming the sparse grid may have points in common (even when using non-nested points).
 % To save computational time during e.g. evaluation of a function on a sparse grid, it is then important
 % to get rid of these repetions. To this end, use the function reduce_sparse_grid. The quadrature weights
 % are of course consistently modified
@@ -285,7 +348,6 @@ set(legend,'Location','SouthOutside')
 
 
 
-
 %% PART 2: INTEGRATION - BASICS
 
 % In this part we show how to use the Kit to perform high-dimensional quadrature. We consider the
@@ -305,36 +367,23 @@ I_ex = I_1d^N;
 knots=@(n) knots_CC(n,-1,1,'nonprob');
 w = 4;
 S = smolyak_grid(N,w,knots,@lev2knots_nested);
-
+Sr = reduce_sparse_grid(S);
 
 % compute integral
-I=f([S.knots],b)*[S.weights]'
+I=f([Sr.knots],b)*[Sr.weights]'
 
 % alternatively use
-I2=quadrature_on_sparse_grid(@(x)f(x,b) , S);
+I2=quadrature_on_sparse_grid(@(x)f(x,b) , Sr);
 
 disp('----------')
 disp('compare the values')
 
-I==I2
+I-I2
 
 % compare with exact value
 disp('----------')
 disp('quad error')
 abs(I-I_ex)
-
-%% PART 2: INTEGRATION - USING THE REDUCED GRID
-
-% The result for the quadrature does not change (of course) if the reduced grid is used (up to machine
-% precision)
-
-Sr=reduce_sparse_grid(S);
-I3=quadrature_on_sparse_grid(@(x)f(x,b) , Sr);
-
-disp('----------')
-disp('compare the values')
-
-I-I3
 
 
 
@@ -356,8 +405,9 @@ knots=@(n) knots_uniform(n,-1,1,'nonprob');
 w = 4;
 S = smolyak_grid(N,w,knots,@lev2knots_nested);
 
-% alternatively use
-I=quadrature_on_sparse_grid(@(x)f(x,b) , S);
+Sr=reduce_sparse_grid(S);
+
+I=quadrature_on_sparse_grid(@(x)f(x,b) , Sr);
 
 % compare with exact value
 disp('----------')
@@ -370,30 +420,41 @@ abs(I-I_ex)
 clear
 clc
 
-% suppose integrating over (0,2)^N
+% suppose integrating over (-1,3)^N
 f = @(x,b) prod(1./sqrt(x+b));
 b=3;
 N = 4;
 
-I_1d=(2*sqrt(2+b)-2*sqrt(0+b));
+I_1d=(2*sqrt(3+b)-2*sqrt(-1+b));
 I_ex = I_1d^N;
 
-% generate knots in (0,2)
-knots=@(n) knots_CC(n,0,2,'nonprob');
-w = 4;
+% generate knots in (-1,3)
+knots=@(n) knots_CC(n,-1,3,'nonprob');
+w = 6;
 S = smolyak_grid(N,w,knots,@lev2knots_nested);
+Sr= reduce_sparse_grid(S);
 
-I=quadrature_on_sparse_grid(@(x)f(x,b) , S);
+I=quadrature_on_sparse_grid(@(x)f(x,b) , Sr);
 
 
-% alternatively, generate the grid on (-1,1) and shift it afterwards
+% alternatively, use points on (-1,1) and provide a map to smolyak_grid. VERY IMPORTANT: note that since we
+% are using 'nonprob' quadrature weights, we need to modify the quadrature weights as well. More precisely, 
+% since the original interval is -1,1 and the final interval is -1,3, weights in each direction should be 
+% multiplied by 2, which means that the weights of the sparse grid should be multiplied by 2^N. Pass this
+% value as input to smolyak_grid. However, we discourage this procedure and we suggest to use the knots
+% already in their final interval. Modification of weights is not needed when using 'prob' weights which
+% must sum to 1 regardless of the integration interval.
+
+
 knots=@(n) knots_CC(n,-1,1,'nonprob');
-S2 = smolyak_grid(N,w,knots,@lev2knots_nested);
+map=get_interval_map([-1 -1 -1 -1],[3 3 3 3],'uniform');
 
-% to this end, we need a shifting map
-map=get_interval_map([0 0 0 0],[2 2 2 2],'uniform');
 
-I2=quadrature_on_sparse_grid(@(x)f(x,b) , S2, map);
+S2 = smolyak_grid(N,w,knots,@lev2knots_nested,[],map,2^N);
+S2r = reduce_sparse_grid(S2);
+
+
+I2=quadrature_on_sparse_grid(@(x)f(x,b) , S2r);
 
 disp('----------')
 disp('compare the values')
@@ -409,41 +470,53 @@ abs(I-I_ex)
 
 %% PART 2: INTEGRATION - COMPUTE MOMENTS OF RANDOM VARIABLES
 
-% here we compute E[f(x)] = \int_{-1}^1 f(x) 1/2 dx
+% here we compute E[f(x)] = \int_{[-2 1]x[0.5 6]} f(x) 1/(3*5.5) dx, (3*5.5 is the size of the domain)
 
 clc
 clear
 
 f = @(x,b) prod(1./sqrt(x+b));
 b=3;
-N = 4;
+N = 2;
 
-I_1d=(sqrt(1+b)-sqrt(-1+b));
-I_ex = I_1d^N;
+I_ex = 1/3/5.5*(2*sqrt(1+b)-2*sqrt(-2+b))*(2*sqrt(6+b)-2*sqrt(0.5+b))
 
-% the knots function now generates weights for uniform random variables
-knots=@(n) knots_CC(n,-1,1); 
-% knots=@(n) knots_CC(n,-1,1,'prob'); % the same thing
-w = 4;
-S = smolyak_grid(N,w,knots,@lev2knots_nested);
+% the best-practice is to generate knots on (-2,1) and (0.5,6), specifying 'prob' as input to the
+% knots-generatic function
+knots1=@(n) knots_CC(n,-2,1,'prob'); % knots1=@(n) knots_CC(n,-2,1); would work as well as 'prob' is the default value
+knots2=@(n) knots_CC(n,0.5,6,'prob'); % knots2=@(n) knots_CC(n,0.5,6); would work as well as 'prob' is the default value
+w = 7;
+S = smolyak_grid(N,w,{knots1,knots2},@lev2knots_nested);
+Sr = reduce_sparse_grid(S);
+I=quadrature_on_sparse_grid(@(x)f(x,b) , Sr);
 
-% quadrature
-I=quadrature_on_sparse_grid(@(x)f(x,b) , S);
+
+% as an alternative, generate probabilitstic weights on -1,1 and provide a map to smolyak_grid. Note that
+% probabilistic weights always sum to 1, so there is no need to rescale weights
+knots=@(n) knots_CC(n,-1,1);
+map = get_interval_map([-2 0.5],[1 6],'uniform');
+w = 7;
+T = smolyak_grid(N,w,knots,@lev2knots_nested,[],map);
+Tr = reduce_sparse_grid(T);
+I2=quadrature_on_sparse_grid(@(x)f(x,b) , Tr);
 
 
-% as an alternative, generate non probabilitstic weights and rescale the weights afterwards. 
+% clearly, you may as well generate non-probabilitstic weights on -1,1 and provide both a map and a weight_fact to smolyak_grid. 
 knots=@(n) knots_CC(n,-1,1,'nonprob');
-w = 4;
-S = smolyak_grid(N,w,knots,@lev2knots_nested);
+map = get_interval_map([-2 0.5],[1 6],'uniform');
+w = 7;
+R = smolyak_grid(N,w,knots,@lev2knots_nested,[],map,1/2^2);
+Rr = reduce_sparse_grid(R);
+I3=quadrature_on_sparse_grid(@(x)f(x,b) ,Rr);
 
 
-% use weights_fact input in quadrature
-I2=quadrature_on_sparse_grid(@(x)f(x,b) , S, [], 1/2^N);
 
 disp('----------')
 disp('compare the values')
 
-I==I2
+[I;
+I2;
+I3]
 
 
 % compare with exact value

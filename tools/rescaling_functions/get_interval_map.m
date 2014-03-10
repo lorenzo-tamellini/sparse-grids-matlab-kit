@@ -1,29 +1,23 @@
-function interval_map = get_interval_map(a,b,type)
+function map = get_interval_map(a,b,type)
 
-% interval_map = GET_INTERVAL_MAP(a,b,'uniform')
+% MAP defines functions to shift sparse grids.
+% 
+% map = GET_INTERVAL_MAP(a,b,'uniform') where a,b are two vectors, 
+%       returns a function that takes column points from (-1,1)^N to the generic box
 %
-% returns a function that takes points from (-1,1)^N to the generic box
+%       ( a(1) b(1) ) x ( a(2) b(2) ) x ( a(3) b(3) ) ...
 %
-% ( a(1) b(1) ) x ( a(2) b(2) ) x ( a(3) b(3) ) ...
-%
-% a,b are two vectors containing the left and right borders of each side of the box
-%
-%
-%
-% interval_map = GET_INTERVAL_MAP(a,b,'gaussian')
-%
-% returns a function that takes points from R^N chosen according to standard gaussian measure
-% to points in R^N chosen according to a product of non standard gaussians with means
-% in a and stdev in b
-%
+% map = GET_INTERVAL_MAP(a,b,'gaussian') where a,b are two vectors,
+%       returns a function that takes points from R^N chosen according to standard gaussian measure
+%       to points in R^N chosen according to a product of gaussians with means in a and stdev in b
 %
 % in both cases the output function must be used as
 %
 % X = interval_map(T)
 %
-% T is a matrix of points in (-1,1)^N, one point per column (as in the output of reduce_sparse_grid)
-% Similarly X is a matrix of points in ( a(1) b(1) ) x ( a(2) b(2) ) x ( a(3) b(3) ), one point per
-% column
+% where T is a matrix of points in (-1,1)^N, one point per column (as in the output of 
+% reduce_sparse_grid or tensor_grid). Similarly X is a matrix of points in 
+% ( a(1) b(1) ) x ( a(2) b(2) ) x ( a(3) b(3) ), one point per column
 
 
 switch type
@@ -47,7 +41,7 @@ switch type
         end
         
         % finally, define the function
-        interval_map = @(T) D*(T+1)/2+p*ones(1,size(T,2));
+        map = @(T) D*(T+1)/2+p*ones(1,size(T,2));
         
     case 'gaussian'
 
@@ -65,6 +59,6 @@ switch type
         end
         
         % finally, define the function
-        interval_map = @(T) D*T+p*ones(1,size(T,2));
+        map = @(T) D*T+p*ones(1,size(T,2));
 
 end
