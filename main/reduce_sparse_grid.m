@@ -24,6 +24,10 @@ end
 kk=[S.knots]';
 ww=[S.weights];
 
+% first of all, a safety check: are we using a sufficiently fine tol when detecting identical points?
+detect_unsufficient_tolerance(kk,Tol);
+
+
 % first, I order the rows of kk in lexicographic order. If I use mysortrows then two rows like
 %
 % [a b c d]

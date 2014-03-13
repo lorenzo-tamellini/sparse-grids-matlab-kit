@@ -374,11 +374,6 @@ N=2; w=3;
 S=smolyak_grid(N,w,@(n) knots_uniform(n,-1,1),@lev2knots_lin);
 Sr= reduce_sparse_grid(S);
 
-w=4;
-T=smolyak_grid(N,w,@(n) knots_uniform(n,-1,1),@lev2knots_lin);
-Tr= reduce_sparse_grid(T);
-
-
 
 % plain use of evaluate_on_sparse_grid: no recycling, no parallel
 evals_plain_fs=evaluate_on_sparse_grid(fs,Sr);
@@ -469,11 +464,10 @@ plot(evals_3,'o')
 if matlabpool('size')
     matlabpool close
 end
-X=0;
 
 % this command will now throw an error
 %
-%   evals_1=evaluate_on_sparse_grid(f,Tr,[],[],X);
+%   evals_1=evaluate_on_sparse_grid(f,Tr,[],[],0);
 %
 % Error using evaluate_on_sparse_grid>simple_evaluate (line 179)
 % no open matlabpool session detected
@@ -506,7 +500,7 @@ S = smolyak_grid(N,w,knots,@lev2knots_nested);
 Sr = reduce_sparse_grid(S);
 
 % compute integral
-I=f([Sr.knots],b)*[Sr.weights]'
+I=f([Sr.knots],b)*[Sr.weights]'  %#ok<NOPTS>
 
 % alternatively use
 I2=quadrature_on_sparse_grid(@(x)f(x,b) , Sr); % Sr must be reduced here
@@ -514,7 +508,7 @@ I2=quadrature_on_sparse_grid(@(x)f(x,b) , Sr); % Sr must be reduced here
 disp('----------')
 disp('difference between values')
 
-I-I2
+I-I2  %#ok<MNEFF,NOPTS>
 
 % compare with exact value
 disp('----------')
@@ -595,7 +589,7 @@ I2=quadrature_on_sparse_grid(@(x)f(x,b) , S2r);
 disp('----------')
 disp('difference between the two sparse grids')
 
-I-I2
+I-I2  %#ok<MNEFF,NOPTS>
 
 
 % compare with exact value
@@ -615,7 +609,7 @@ f = @(x,b) prod(1./sqrt(x+b));
 b=3;
 N = 2;
 
-I_ex = 1/3/5.5*(2*sqrt(1+b)-2*sqrt(-2+b))*(2*sqrt(6+b)-2*sqrt(0.5+b))
+I_ex = 1/3/5.5*(2*sqrt(1+b)-2*sqrt(-2+b))*(2*sqrt(6+b)-2*sqrt(0.5+b))  %#ok<NOPTS>
 
 % the best-practice is to generate knots on (-2,1) and (0.5,6), specifying 'prob' as input to the
 % knots-generatic function
@@ -652,7 +646,7 @@ disp('compare the values')
 
 [I;
 I2;
-I3]
+I3]  %#ok<NOPTS>
 
 
 % compare with exact value
@@ -706,7 +700,7 @@ IT3=quadrature_on_sparse_grid(@(x)f(x,b),Tr,evals_S,Sr,0);
 
 disp('-------------')
 disp('difference between the results')
-[IT_rec; IT; IT2; IT3]
+[IT_rec; IT; IT2; IT3] %#ok<NOPTS>
 
 %% PART 3: INTEGRATION - HOW TO BUILD MORE COMPLEX SPARSE GRIDS. ANISOTROPIC GRIDS 
 
@@ -752,7 +746,7 @@ I_1d=(2*sqrt(1+b)-2*sqrt(-1+b));
 I_ex = I_1d^N;
 
 
-[C,X] = multiidx_box_set([3 5 2 3],1); % X is C without [3 5 2 3]
+C = multiidx_box_set([3 5 2 3],1); % X is C without [3 5 2 3]
 knots=@(n) knots_uniform(n,-1,1,'nonprob');
 
 S3=smolyak_grid_multiindeces(C,knots,@lev2knots_lin);
@@ -899,4 +893,4 @@ nodal_values = 4*lege_eval_multidim(X,[4 0],-1,1)'+...
 % conversion from the points to the legendre polynomial. I should recover it exactly
 [modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,'legendre');
 
-[K,modal_coeffs]
+[K,modal_coeffs] %#ok<NOPTS>

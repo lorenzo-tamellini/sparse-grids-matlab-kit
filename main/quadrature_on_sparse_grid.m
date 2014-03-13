@@ -11,12 +11,12 @@ function [res,evals] = quadrature_on_sparse_grid(f,S,evals_old,S_old,paral,tol)
 %       matrices as well.
 %
 % res = QUADRATURE_ON_SPARSE_GRID(F,S,EVALS_OLD,S_OLD) recycles available evaluations 
-%       of F on a different sparse grid (SR_OLD). EVALS_OLD is a matrix storing the evaluations 
-%       of F on SR_OLD, where each evaluation stored as a column vector; SR_OLD is a reduced sparse_grid 
+%       of F on a different sparse grid (S_OLD). EVALS_OLD is a matrix storing the evaluations 
+%       of F on S_OLD, where each evaluation stored as a column vector; S_OLD is a reduced sparse_grid 
 %
 % res = QUADRATURE_ON_SPARSE_GRID(F,S,[],[]) is equivalent to res = QUADRATURE_ON_SPARSE_GRID(F,S)
 %
-% res = QUADRATURE_ON_SPARSE_GRID(F,S,EVALS_OLD,SR_OLD,PARAL) specifies the parameter
+% res = QUADRATURE_ON_SPARSE_GRID(F,S,EVALS_OLD,S_OLD,PARAL) specifies the parameter
 %       controlling the use of the parallel computing toolbox, see EVALUATE_ON_SPARSE_GRID. 
 %
 % res = QUADRATURE_ON_SPARSE_GRID(F,S,EVALS_OLD,S_OLD,PARAL,TOL), specifies the tolerance

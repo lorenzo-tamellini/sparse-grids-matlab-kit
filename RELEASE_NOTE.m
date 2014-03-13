@@ -22,9 +22,11 @@
 %                   with V such that f:R^N -> R^V. Also, the size of non_grid_points needs to be N x number_of_queried_evaluations 
 %                   (that is, following the same convention as points in sparse grids)
 %
-%                   6) improved graphics handling for plot_grid
+%                   6) A warning is thrown if reduce_sparse_grid detects a tol which is inappropriately large 
 %
-%                   7) help for many functions has been rewritten
+%                   7) improved graphics handling for plot_grid
+%
+%                   8) help for many functions has been rewritten
 %
 %
 % -> 2013, Oct. 24: INTERPOLATE_ON_SPARSE_GRID  interpolates vector-valued functions. 
