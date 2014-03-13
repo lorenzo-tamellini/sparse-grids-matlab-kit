@@ -1,4 +1,4 @@
-function [modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,flag)
+function [modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,flag,~)
 
 % CONVERT_TO_MODAL recasts a sparse grid interpolant as a sum of orthogonal polynomials
 % i.e. computes the spectral expansion of the interpolant.
@@ -6,7 +6,7 @@ function [modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,flag)
 % 
 % [MODAL_COEFFS,K] = CONVERT_TO_MODAL(S,SR,NODAL_VALUES,DOMAIN,'legendre') returns the Legendre expansion
 %       of the sparse grid interpolant. S is a sparse grid, SR is its reduced counterpart, NODAL_VALUES
-%       are the values of the sparse grid interpolant on the reduced sparse grid (column vector).
+%       are the values of the sparse grid interpolant on the reduced sparse grid (either row or column vector).
 %       DOMAIN is a 2xN matrix = [a1, a2, a3, ...; b1, b2, b3, ...] defining the lower and upper bound
 %       of the hyper-rectangle on which the sparse grid is defined
 %       The function returns the Legendre expansion as a vector of coefficients MODAL_COEFFS, 
@@ -33,9 +33,9 @@ if nargin==4
 end
 
 try
-    ismember(flag,{'legendre','chebyshev','hermite'})
+    ismember(flag,{'legendre','chebyshev','hermite'});
 catch
-    error(strcat('Input argument FLAG unrecognized. ',errmsg))
+    error(strcat('Input argument FLAG unrecognized. ',errmsg));
 end
 
 

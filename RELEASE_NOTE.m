@@ -1,31 +1,39 @@
 % RELEASE NOTES
 %
 %
-% -> 2014, Mar. 06: 1) it is now possible to recycle evaluations when using a sequence of sparse grids. The input arguments of
-%                   quadrature_on_sparse_grid have been modified accordingly.
+% -> 2014, Mar. 06: 1) it is now possible to recycle evaluations when using a sequence of sparse grids, see
+%                   EVALUATE_ON_SPARSE_GRID, which supports Matlab parallel toolbox as well.
+%                   The same features are also available for QUADRATURE_ON_SPARSE_GRID,  see help QUADRATURE_ON_SPARSE_GRID
+%                   (inputs have been modified).
 %
 %                   2) it is now possible to mix random variables along different directions of a sparse grid,
 %                   e.g. create a sparse grid with clenshaw-curtis points in one direction and gauss-hermite
-%                   points in another
+%                   points in another, see help SMOLYAK_GRID, SMOLYAK_GRID_MULTIINDICES
 %
-%                   3) interpolate_on_sparse_grid, quadrature_on_sparse_grid, convert_to_modal, compute_modal_tensori do not accept
+%                   3) INTERPOLATE_ON_SPARSE_GRID, QUADRATURE_ON_SPARSE_GRID, CONVERT_TO_MODAL, COMPUTE_MODAL_TENSOR do not accept
 %                   any longer MAP and WEIGHTS_COEFF input arguments, that should rather be passed as input to
-%                   SMOLYAK_GRID, SMOLYAK_GRID_MULTIINDICES. Input argument FLAG in convert_to_modal is now
-%                   mandatory
+%                   SMOLYAK_GRID, SMOLYAK_GRID_MULTIINDICES. 
 %
-%                   4) improved graphics handling for plot_grid
+%                   4) Input argument FLAG in CONVERT_TO_MODAL is now mandatory
 %
-%                   5) help for many functions has been rewritten
+%                   5) some of the inputs of INTERPOLATE_ON_SPARSE_GRID have been trasposed for consistency with the other
+%                   functions. In particular, the size of FUNCTION_ON_GRID to be V x number_of_points_in_the_sparse_grid
+%                   and consistently the size of the output matrix F_VALUES has been modified to V x (number_of_non_grid_points)
+%                   with V such that f:R^N -> R^V. Also, the size of non_grid_points needs to be N x number_of_queried_evaluations 
+%                   (that is, following the same convention as points in sparse grids)
+%
+%                   6) improved graphics handling for plot_grid
+%
+%                   7) help for many functions has been rewritten
 %
 %
+% -> 2013, Oct. 24: INTERPOLATE_ON_SPARSE_GRID  interpolates vector-valued functions. 
 %
-% -> 2013, Oct. 24: interpolate_on_sparse_grid  interpolates vector-valued functions. 
+% -> 2013, Jul. 03: added functions for CHEBYSHEV polynomials
 %
-% -> 2013, Jul. 03: added Chebyshev polynomials
-%
-% -> 2013, Apr. 18: fixed bug and backward compatibility for check_set_admissibility (becomes a standalone function on 2013, May 5)
+% -> 2013, Apr. 18: fixed bug and backward compatibility for CHECK_SET_ADMISSIBILITY (becomes a standalone function on 2013, May 5)
 % 
-% -> 2012, Oct. 30: faster version of interpolate_on_sparse_grid 
+% -> 2012, Oct. 30: faster version of INTERPOLATE_ON_SPARSE_GRID
 %
 %
 %

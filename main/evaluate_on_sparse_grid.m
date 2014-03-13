@@ -12,15 +12,18 @@ function output = evaluate_on_sparse_grid(f,Sr,evals_old,Sr_old,paral,tol)
 % OUTPUT = EVALUATE_ON_SPARSE_GRID(F,SR,EVALS_OLD,SR_OLD) recycles available evaluations of F on a different
 %           sparse grid, stored respectively in EVALS_OLD and SR_OLD. EVALS_OLD is a matrix storing the 
 %           evaluations of F on SR_OLD, each evaluation being stored as a column vector 
+%           (i.e. EVALS_OLD will be typically a row vector or a matrix with nb.columns = nb. sparse grid points)
 %
 % OUTPUT = EVALUATE_ON_SPARSE_GRID(F,SR,EVALS_OLD,SR_OLD,PARAL) uses the matlab parallel toolbox to speed 
 %           up the computation:
-%               PARAL = NaN means no parallel
+%               PARAL = NaN means no parallel (default)
 %               PARAL = some number X means "use parallel if more than X evals are needed". 
 %                   This is useful for fast evals, in which case parallel may actually be inefficient 
 %                    (due to communication time)
 %           Important:  only function evaluations are processed in parallel; the preliminary
 %           analysis (i.e. looking for recyclable evaluations) is performed in serial
+%           Important: EVALUATE_ON_SPARSE_GRID does not switch on a matlabpool session. However, an error
+%           is thrown if no matlabpool session is detected
 %
 % OUTPUT = EVALUATE_ON_SPARSE_GRID(F,SR,[],[],PARAL) uses the matlab parallel toolbox without recycling  
 %
@@ -108,7 +111,10 @@ n = size(tocomp_list,1);
 evals_new=zeros(s,n);
 
 if n>paral % if no parallel this one becomes n>NaN, which is false for any n
-    disp('solve with parallel, if available')
+    disp('solve with parallel')
+    if ~matlabpool('size')
+        error('no open matlabpool session detected')
+    end
     parfor i=1:n
         % suppress the "variable is indexed but not sliced" warning, which cannot be circumvented in this case
         evals_new(:,i)=f(pts_list(tocomp_list(i),:)'); %#ok<PFBNS> 
@@ -168,7 +174,10 @@ output=zeros(length(probe),n);
 output(:,1)=probe;
 
 if n>paral % if no parallel this one becomes n>NaN, which is false for any n
-    disp('solve with parallel, if available')
+    disp('solve with parallel')
+    if ~matlabpool('size')
+        error('no open matlabpool session detected')
+    end
     parfor i=2:n
         % if ~mod(i,100), disp(i), end        
         output(:,i)=f(Sr.knots(:,i)); %#ok<PFBNS> % suppress the "variable is indexed but not sliced" warning, which cannot be circumvented in this case 

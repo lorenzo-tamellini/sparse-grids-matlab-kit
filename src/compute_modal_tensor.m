@@ -21,13 +21,13 @@ function U = compute_modal_tensor(S,S_values,domain,flag)
 
 
 try
-    ismember(flag,{'legendre','chebyshev','hermite'})
+    ismember(flag,{'legendre','chebyshev','hermite'});
 catch
     error(['Input argument FLAG unrecognized. '...
         ' Please note that COMPUTE_MODAL_TENSOR does not accept INTERVAL_MAP '...
         'input argument any longer. '...
         'Type help convert_to_modal for help. '...
-        'This error message will not be shown in future releases of SPARSE-GRID-MATLAB-KIT'])
+        'This error message will not be shown in future releases of SPARSE-GRID-MATLAB-KIT']);
 end
 
 

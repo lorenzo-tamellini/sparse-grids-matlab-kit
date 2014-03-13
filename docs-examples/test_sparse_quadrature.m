@@ -4,7 +4,7 @@ clear
 
 f = @(x,b) prod(1./sqrt(x+b));
 b=3;
-N = 4;
+N = 6;
 I_1d=(2*sqrt(1+b)-2*sqrt(-1+b));
 I_ex = I_1d^N;
 
@@ -20,17 +20,21 @@ w_max=6;
 q_error=zeros(1,w_max);
 work=zeros(1,w_max);
 
+Sr_old=[];
+evals_old=[];
 
+tic
 for w=0:w_max
 
     disp(w)
 
     % create grid
     [S,C]=smolyak_grid(N,w,knots,lev2knots,idxset);
-    
     Sr=reduce_sparse_grid(S);
 
-    I=quadrature_on_sparse_grid(@(x)f(x,b),S);
+    [I,evals_old]=quadrature_on_sparse_grid(@(x)f(x,b),Sr,evals_old,Sr_old);
+    
+    Sr_old=Sr;
     
     %compute convergence error
     q_error(w+1)=abs(I_ex-I);
@@ -39,7 +43,7 @@ for w=0:w_max
     work(w+1)=size(Sr.knots,2);
         
 end
-
+toc
 
 % error w.r.t. level w
 figure

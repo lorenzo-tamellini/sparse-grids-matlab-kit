@@ -7,7 +7,7 @@ function [S,C] = smolyak_grid_multiindeces(C,knots,lev2knots,map,weights_coeff)
 %       in lexicographic order and admissible. 
 %
 % [S,C] = SMOLYAK_GRID_MULTIINDICES(C,KNOTS,LEV2KNOTS,MAP,WEIGHTS_COEFF) can be used as an alternative
-%       to generate a sparse grid on a hyper-rectangle, 
+%       to generate a sparse grid on a hyper-rectangle. 
 %
 % See also CHECK_SET_ADMISSIBILITY for admissibility check, and SMOLYAK_GRID for further information on 
 % KNOTS, LEV2KNOTS, MAP, WEIGHTS_COEFF and on the sparse grid data structure S

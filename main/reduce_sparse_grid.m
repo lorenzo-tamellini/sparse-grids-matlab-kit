@@ -1,37 +1,20 @@
-% ============================================================
-%  Given a sparse grid and corresponding weights stored as a
-%  list of tensor grids (see smolyak_grid.m)
-%    S(j).knots: vector containing the tensor grid knots
-%    S(j).weights: vector containing the corresponding weights
-%    S(j).size: size of the tensor grid = prod(m)
-%  (the index j running over all points in the level set Y(w,N))
-% generates a reduced structure containing only non repeated points and
-% corresponding weights
-%
-% uses:  mysortrow and a tolerance tol (default 1e-14) to identify
-% coincident points
-%
-% reduced structure:
-%  Sr.knots:  list of non repeated knots
-%  Sr.weights: list of corresponding weights
-%  Sr.m: map from S.knots to [Sr.knots] i.e. for any k [S.knots](:,Sr.m(k))==Sr.knots(:,k)
-%  Sr.n: map form [S.knots] to Sb.knots i.e. 
-%       "the element in position k of [S.knots] goes in position n(k) in Sr.knots"
-%        or [S.knots](:,j)==Sr.knots(:,Sr.n(j)) and in general [S.knots](:,Sr.n==i)==Sr.knot(:,i)
-%                                                               
-%
-%  usage:
-%   [Sr] = reduce_sparse_grid(S,tol)
-%   input
-%     S: structure containing the information on the sparse grid 
-%        (vector of tensor grids; see above)
-%     tol: (optional) tolerance used to identify coincident points 
-%          (default 1e-14)
-%   output
-%     Sr: reduced sparse grid
-% ============================================================
-
 function Sr=reduce_sparse_grid(S,tol)
+
+% REDUCE_SPARSE_GRID given a sparse grid stored as a list of tensor grids (see also SMOLYAK_GRID)
+% generates a reduced structure containing only non repeated points and corresponding weights.
+%
+% SR = REDUCE_SPARSE_GRID(S) operate on the sparse grid S and returns SR, i.e.
+%       a so-called reduced sparse grid, that is a structure with fields
+%       -> Sr.knots:  list of non repeated knots
+%       -> Sr.weights: list of corresponding weights
+%       -> Sr.m: map from S.knots to [Sr.knots] i.e. for any k [S.knots](:,Sr.m(k))==Sr.knots(:,k)
+%       -> Sr.n: map form [S.knots] to Sb.knots i.e. "the element in position k of [S.knots] goes in position n(k) in Sr.knots"
+%        or [S.knots](:,j)==Sr.knots(:,Sr.n(j)) and in general [S.knots](:,Sr.n==i)==Sr.knot(:,i)
+%
+% SR = REDUCE_SPARSE_GRID(S,TOL) uses a tolerance TOL to identify coincident points 
+%       (default value 1e-14)
+
+
 
 Tol=1e-14;  % default value
 if nargin==2

@@ -1,17 +1,21 @@
-function f_values = interpolate_on_sparse_grid(S,this_was_once_interval_map,Sr,function_on_grid,non_grid_points) %#ok<INUSL>
+function f_values = interpolate_on_sparse_grid(S,Sr,function_on_grid,non_grid_points,~) 
 
-% F_VALUES = INTERPOLATE_ON_SPARSE_GRID(S,SR,FUNCTION_ON_GRID,NON_GRID_POINTS) interpolates 
-%   a vector-valued function F: R^N -> R^V defined on the sparse grid S. S is a sparse grid 
-%   and SR is its reduced counterpart.
-%   FUNCTION_ON_GRID is a matrix containing the evaluation of F on the points of SR. 
-%   Its dimensions are: (number_of_points_in_the_sparse_grid) X V
-%   NON_GRID_POINTS is the set of points (not belonging to the sparse grid) where one wants to 
-%   evaluate the function. It is a matrix, each row is a different point.
-%   F_VALUES is a matrix containing the evaluation of the vector-valued function F 
-%   in each of the non_grid_points. Its dimensions are: (number_of_non_grid_point) x V
+% INTERPOLATE_ON_SPARSE_GRID interpolates a function on a sparse grid, i.e. evaluates the sparse  
+% grid polynomial approximation (surrogate model) on a generic point of the parameters space.
+%   
+% F_VALUES = INTERPOLATE_ON_SPARSE_GRID(S,SR,FUNCTION_ON_GRID,NON_GRID_POINTS) evaluates the
+%       sparse grid approximation a vector-valued function F: R^N -> R^V based on the sparse grid S. 
+%       SR is the reduced version of S. 
+%       FUNCTION_ON_GRID is a matrix containing the evaluation of F on the points of SR. 
+%       Its dimensions are: V x number_of_points_in_the_sparse_grid
+%       NON_GRID_POINTS is the set of points where one wants to evaluate the sparse grid polynomial  
+%       approximation. It is a matrix, each column is a different point (i.e. the same convention as 
+%       points stored in the knots field of S and SR).
+%       F_VALUES is a matrix containing the evaluation of the vector-valued function F 
+%       in each of the non_grid_points. Its dimensions are: V x number_of_non_grid_point
 
 if nargin == 5
-    errmsg=['too many input arguments. This is likely due to the fact that the new version of '...
+    errmsg=['Too many input arguments. Note that starting from release 14.3 '...
         'interpolate_on_sparse_grid does not accept any longer INTERVAL_MAP as second input argument. '...
         'The new function call is '...
         'F_VALUES = INTERPOLATE_ON_SPARSE_GRID(S,SR,FUNCTION_ON_GRID,NON_GRID_POINTS). '...
@@ -22,10 +26,38 @@ if nargin == 5
     error(errmsg)
 end
 
+% in previous versions of interpolate_on_sparse_grid we needed
+% function_on_grid to row-oriented, i.e. the evaluation of F on each sparse
+% grid point was a different row, which is does not follow the convention
+% used in other functions, i.e. evaluations being column-vector. We fix
+% this as of march 2014 and throw an error if the previous convention is
+% detected
+[N,nb_points_Sr]=size(Sr.knots);
+if size(function_on_grid,2)~=nb_points_Sr
+    % if this condition is true, then function_on_grid stores
+    % evaluation as rows rather than as columns and we stop the
+    % function
+    error([ 'Incompatible sizes. Starting from release 14.3 function_on_grid needs to store evaluations on grid as columns, '...
+            'i.e. the dimensions of function_on_grid needs to be V x number_of_points_in_the_sparse_grid. '...
+            'Type help INTERPOLATE_ON_SPARSE_GRID for details. Similarly, the size of the output matrix F_VALUES has been modified to '...
+            'V x number_of_non_grid_points. This message will disappear in future releases of sparse-grid-matlab-kit'])
+end
 
-V = size(function_on_grid,2);
-nb_pts   = size(non_grid_points,1);
-f_values = zeros( nb_pts , V);
+% similarly, we have changed the dimensions of non_grid_points to follow
+% the convention that points are stored as columns. Again, we throw an
+% error if the other convention is detected (this also prevents accidental input errors)
+if size(non_grid_points,1)~=N
+    error([ 'Incompatible sizes. Starting from release 14.3 non_grid_points needs to store points as columns, '...
+            'i.e. its dimensions must be N x number_of_queried_evaluations (that is, following the same convention as points'...
+             'stored in the ''knots'' sparse grids field). '...
+            'Type help INTERPOLATE_ON_SPARSE_GRID for details.'])
+end
+
+
+% the other sizes.
+V = size(function_on_grid,1);
+nb_pts   = size(non_grid_points,2);
+f_values = zeros(V, nb_pts);
 
 nb_grids=length(S);
 
@@ -43,17 +75,16 @@ for i=1:nb_grids
     
     % this is the set of points where I build the tensor lagrange function
     knots=S(i).knots;
-    if ~isempty(interval_map)
-        knots=interval_map( knots );
-    end
     
     % I will need the knots in each dimension separately, to collocate the lagrange function.
-    % I compute them once for all. As the number of knots is
-    % different in each direction, I use a cell array
-    dim_tot=size(knots,1);
-    knots_per_dim=cell(1,dim_tot);
+    % I compute them once for all. As the number of knots is different in each direction, I use a cell array
     
-    for dim=1:dim_tot
+    % we had here 
+    % dimtot=size(knots,1);
+    % clearly dimtot==N, hence we sobstitute it everywhere
+    knots_per_dim=cell(1,N);
+    
+    for dim=1:N
         knots_per_dim{dim}=unique(knots(dim,:));
     end
     
@@ -81,40 +112,40 @@ for i=1:nb_grids
     % This is actually all the information that we will need to combine to
     % get the final interpolant value.
     
-    mono_lagr_eval=cell(1,dim_tot);
+    mono_lagr_eval=cell(1,N);
     
     % loop on directions
-    for dim=1:dim_tot
+    for dim=1:N
         
         % this is how many grid points in the current direction for the
         % current tensor grid
         K=length(knots_per_dim{dim});
         
-        % allocate space for evaluations, conisistently with the shape of
-        % non_grid_points (i.e. one point per row, that is all dim-th
-        % coordinates in 1 column)
-        mono_lagr_eval{dim}=zeros(nb_pts,K);
+        % allocate space for evaluations, consistently with the shape of
+        % non_grid_points (i.e. one point per column, that is all dim-th
+        % coordinates in 1 row)
+        mono_lagr_eval{dim}=zeros(K,nb_pts);
         
         % loop on each node of the current dimension and evaluate the corresponding monodim lagr polynomial.
         % We will need an auxiliary vector to pick up the current knot (where the lagr pol is centered) and
         % the remaining knots (where the lagr pol is zero)
         aux=1:K;
         for k=aux
-            mono_lagr_eval{dim}(:,k) = lagr_eval(knots_per_dim{dim}(k),knots_per_dim{dim}(aux~=k),non_grid_points(:,dim));
+            mono_lagr_eval{dim}(k,:) = lagr_eval(knots_per_dim{dim}(k),knots_per_dim{dim}(aux~=k),non_grid_points(dim,:));
         end
         
     end
     
     % now put everything together. We have to take the tensor product of
     % each of the monodim lagr pol we have evaluated. That is, we have to
-    % pick one column for each matrix in the cell array and dot-multiply them.
+    % pick one row for each matrix in the cell array and dot-multiply them.
     % all the possible combinations have to be generated !
     %
     % once this is done, we have the evaluation of each multidim lagr
     % polynomial on the non_grid_points, which we will then multiply by the
     % corresponding nodal value and eventually sum everything up.
 
-    % We start by generating the combination of columns. We actually don't
+    % We start by generating the combination of rows we need to take. We actually don't
     % need to generate them, but only to recover it from the matrix knots,
     % which already contains all the points of the grid, i.e. all the
     % combinations of 1D points!
@@ -131,18 +162,17 @@ for i=1:nb_grids
     
     combi=0*knots;
     
-    % the easiest way to recover combi from knots is to proceed 1 row at a
-    % time, i.e. one dimension at a time, and mark with a different label
-    % (1,2,...P) all the equal points. We need of course as many labels 
+    % the easiest way to recover combi from knots is to proceed one dimension at a time, 
+    % and mark with a different label (1,2,...K) all the equal points. We need of course as many labels 
     % as the number of different points in each dir!
     
-    for dim=1:dim_tot
+    for dim=1:N
         
         % this is how many points per direction
         K=length(knots_per_dim{dim});
     
         % we start from a row of zeroes and we place 1....K in the right
-        % poisitions by summations (each element of the row will be written
+        % positions by summations (each element of the row will be written
         % only once!)
         for k=1:K
             combi(dim,:) = combi(dim,:) + k*( knots(dim,:)==knots_per_dim{dim}(k) );
@@ -151,49 +181,43 @@ for i=1:nb_grids
     end
     
     
-    % Now we can do the dot-multiplications among columns, the
+    % Now we can do the dot-multiplications among rows, the
     % multiplication by nodal values and the final sum! We proceed one
     % knot at a time
     
     for kk=1:S(i).size
         
         % dot-multiply all the lagrangian functions according to the
-        % combi represented by the current knot
+        % combi represented by the current knot. The result F_LOC is a
+        % row-vector
         
-        f_loc=mono_lagr_eval{1}(:,combi(1,kk));
-        for dim=2:dim_tot
-            f_loc=f_loc.*mono_lagr_eval{dim}(:,combi(dim,kk));
+        f_loc=mono_lagr_eval{1}(combi(1,kk),:);
+        for dim=2:N
+            f_loc=f_loc.*mono_lagr_eval{dim}(combi(dim,kk),:);
         end
 
         % recover F, the corresponding value for the interpolating function in function_on_grid, with the global counter
         position = Sr.n(global_knot_counter);
-        F_value = function_on_grid(position,:);
+        F_value = function_on_grid(:,position);
         
         % add the contribution of this knot to the sparse interpolation.
         % Its contribution is a matrix, since I am evaluating it on a bunch
-        % of non_grid_points (one per row), and my function to be evaluated is vector-valued
-        % which gives a bunch of columns. 
+        % of non_grid_points (one per column of f_values), and my function to be evaluated is vector-valued
+        % which gives a bunch of rows in f_values. 
         
-        f_values = f_values + coeff*f_loc*F_value;
+        f_values = f_values + coeff*F_value*f_loc;
         
-        % in other words: f_values is the value of each output component on
-        % each non_grid_point (hence matrix, as tall as non_grid_pts).
-        %
         % we build it ``lagrange way'' by summing 
         %
-        % (evaluations of each output component function in each grid point) x (lagrange polynomials evaluated in non_grid_points)
+        % (lagrange polynomials evaluated in non_grid_points) x (evaluations of each output component function in each grid point)
         % 
         % the lagrange polynomials are the same for every output component!
         % 
-        % -) lagrange polynomials eval are in f_loc, it's a tall vector, as tall as non_grid_points. 
-        % -) output components eval are in F_value, it's a fat vector, as fat as the number of outputs (it's a row of function_on_grid) 
+        % --> output components eval are in F_value, it's a tall vector, as tall as the number of outputs (imagine the solution of linear system) 
+        % --> lagrange polynomials eval are in f_loc, it's a fat vector, as fat as non_grid_points. 
         % 
-        % so for each output component we want to compute
-        %
-        % f_loc * F_value(i) 
-        %
-        % is a tall vector, and we need to create the matrix [f_loc*F_value(1) f_loc*F_value(2) ....] i.e. vertical cat. 
-        % we to this by [f_loc] * [F_value] (column vect by row vect multiplication)
+        % so we need to create the matrix [F_value(1)*f_loc; F_value(2)*f_loc ....] i.e. an horizontal cat. 
+        % we to this by [F_value]*[f_loc] (column vect by row vect multiplication)
         % 
         
         % update global counter
@@ -203,9 +227,6 @@ for i=1:nb_grids
     
     
 end % of for loop on tensor grid
-
-
-
 
 
 % % -------------------------------------------------

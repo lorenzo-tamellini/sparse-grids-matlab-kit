@@ -22,7 +22,7 @@ nodal_values = 4*lege_eval_multidim(X,[4 0],-1,1)'+...
     2*lege_eval_multidim(X,[1 1],-1,1)';
 
 % conversion from the points to the legendre polynomial. I should recover it exactly
-[modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,@(t) t,'legendre');
+[modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,'legendre');
 
 [K,modal_coeffs]
 
@@ -38,12 +38,9 @@ b=[2 1];
 
 % sparse grid
 N=2; w=5; knots=@(n) knots_uniform(n,-1,1,'nonprob'); lev2knots=@lev2knots_lin; idxset=@(i) sum(i-1);
-[S,C]=smolyak_grid(N,w,knots,lev2knots,idxset);
+[S,C]=smolyak_grid(N,w,knots,lev2knots,idxset,get_interval_map(a,b,'uniform'));
 Sr=reduce_sparse_grid(S);
 
-% shift sparse grid from -1,1 to (a1,b1), (a2,b2)
-interval_map = get_interval_map(a,b,'uniform');
-Sr.knots=interval_map(Sr.knots);
 
 
 % evaluate a linear comb of Legendre polynomials on the grid: it should be recovered exactly by the
@@ -55,7 +52,7 @@ nodal_values = 6-3*lege_eval_multidim(X,[3 0],a,b)'+...
 
 
 domain=[a;b];
-[modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,interval_map,'legendre');
+[modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,'legendre');
 
 [K,modal_coeffs]
 
@@ -79,12 +76,10 @@ N=2; w=5;
 knots=@(n) knots_gaussian(n,0,1); 
 lev2knots=@lev2knots_lin; 
 idxset=@(i) sum(i-1);
-S=smolyak_grid(N,w,knots,lev2knots,idxset);
+S=smolyak_grid(N,w,knots,lev2knots,idxset,get_interval_map(mu,sig,'gaussian'));
 Sr=reduce_sparse_grid(S);
 
 
-interval_map = get_interval_map(mu,sig,'gaussian');
-Sr.knots=interval_map(Sr.knots);
 
 
 % Same procedure as before, now with a linear comb of Hermite polynomials
@@ -96,7 +91,7 @@ nodal_values = 6-4*herm_eval_multidim(X,[3 1],mu,sig)'+...
 
 
 domain=[mu;sig];
-[modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,interval_map,flag);
+[modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,flag);
 
 [K,modal_coeffs]
 
@@ -114,12 +109,9 @@ b=[2 1];
 
 % sparse grid
 N=2; w=5; knots=@(n) knots_uniform(n,-1,1,'nonprob'); lev2knots=@lev2knots_lin; idxset=@(i) sum(i-1);
-[S,C]=smolyak_grid(N,w,knots,lev2knots,idxset);
+[S,C]=smolyak_grid(N,w,knots,lev2knots,idxset,get_interval_map(a,b,'uniform'));
 Sr=reduce_sparse_grid(S);
 
-% shift sparse grid from -1,1 to (a1,b1), (a2,b2)
-interval_map = get_interval_map(a,b,'uniform');
-Sr.knots=interval_map(Sr.knots);
 
 
 % evaluate a linear comb of Chebyshev polynomials on the grid: it should be recovered exactly by the
@@ -131,6 +123,6 @@ nodal_values = 6-3*cheb_eval_multidim(X,[3 2],a,b)'+...
 
 
 domain=[a;b];
-[modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,interval_map,'chebyshev');
+[modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,'chebyshev');
 
 [K,modal_coeffs]

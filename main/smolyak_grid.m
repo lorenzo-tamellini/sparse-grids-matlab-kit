@@ -14,12 +14,18 @@ function [S,C] = smolyak_grid(N,w,knots,lev2knots,idxset,map,weights_coeff)
 %       IDXSET is an optional argument, the default being IDXSET = @(i) sum(i-1).
 %
 %       KNOTS is either a cell array containing the functions to be used to generate the knots 
-%       in each direction, i.e. KNOTS={@knots_function1, @knots_function2, ... }
-%       or a single function to be used in every direction, i.e.  KNOTS=@knots_function1
+%       in each direction, i.e. 
+%   
+%       KNOTS={@knots_function1, @knots_function2, ... }
+%
+%       or a single function to be used in every direction, i.e.  KNOTS=@knots_function1.
 %       In both cases, the header of knots_function is [x,w]=knots_function(m)
 %
 %       LEV2KNOTS is either a cell array containing the functions defining the relation between level 
-%       and number of knots to be used in each direction, i.e. LEV2KNOTS={@m_function1, @m_function2, ... }
+%       and number of knots to be used in each direction, i.e. 
+%
+%       LEV2KNOTS={@m_function1, @m_function2, ... }
+%
 %       or a single function to be used in every direction, i.e. LEV2KNOTS=@m_function1
 %       In both cases, the header of m_function is m=m_function(i)
 %
@@ -37,8 +43,8 @@ function [S,C] = smolyak_grid(N,w,knots,lev2knots,idxset,map,weights_coeff)
 %
 %
 %  [S,C] = SMOLYAK_GRID(N,W,KNOTS,LEV2KNOTS,IDXSET,MAP,WEIGHTS_COEFF) can be used as an alternative
-%       to generate a sparse grid on a hyper-rectangle. Instead of typing out one KNOTS function and one
-%       LEV2KNOTS for each dimension, like in
+%       to generate a sparse grid on a hyper-rectangle. 
+%       Instead of typing out one KNOTS function and one LEV2KNOTS for each dimension, like in
 %
 %       [S,C] = SMOLYAK_GRID(N,W,{@knots1, @knots2, ...},{@m1, @m2 ...}),
 %

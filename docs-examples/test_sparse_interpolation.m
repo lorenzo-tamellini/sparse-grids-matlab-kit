@@ -4,12 +4,12 @@ clear
 N=6;
 
 % vector-valued function to be interpolated. input column points, out
-% 2-column matrix, one per output component 
+% 2-row matrix, one per output component 
 
-f1=@(x) 1./(1+0.5/N*sum(x)); % output is a row
-f2=@(x) sum(abs(x).^3); % output is a row
+f1=@(x) 1./(1+0.5/N*sum(x)); 
+f2=@(x) sum(abs(x).^3); 
 
-f=@(x) [f1(x)' f2(x)'];
+f=@(x) [f1(x); f2(x)];
 
 % define sparse grid
 [lev2knots,idxset]=define_functions_for_rule('TD',N);
@@ -25,8 +25,8 @@ interp_error=zeros(2,w_max+1);
 work=zeros(1,w_max+1);
 
 
-non_grid_points=rand(2000,N)*(b-a)+a;
-
+%non_grid_points=rand(N,2000)*(b-a)+a;
+non_grid_points=[0.5*ones(N,1), zeros(N,1)];
 
 for w=0:w_max
 
@@ -48,14 +48,14 @@ for w=0:w_max
     pol_size(w+1)=size(C,1);
     
     % compute the nodal values to be used to interpolate. It has to be
-    % column vector (more columns for vector-valued output functions)
+    % row vector (more rows for vector-valued output functions)
     function_on_grid=f(Sr.knots);   
     
-    % compute interpolated values. Here f_values is column
-    f_values = interpolate_on_sparse_grid(S,[],Sr,function_on_grid,non_grid_points);
+    % compute interpolated values. Here f_values is row
+    f_values = interpolate_on_sparse_grid(S,Sr,function_on_grid,non_grid_points);
 
     % compute error
-    interp_error(:,w+1)=max( abs(  ( f(non_grid_points') - f_values ) )  ) ;    
+    interp_error(:,w+1)=max( abs((f(non_grid_points) - f_values)), [],2 ) ;    
 
 end
 
