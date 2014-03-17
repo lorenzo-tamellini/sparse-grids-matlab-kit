@@ -24,7 +24,7 @@ disp('path set')
 N=2; % approximation of two variables
 knots=@(n) knots_CC(n,-1,1,'nonprob'); % knots
 w = 3; %level
-S = smolyak_grid(N,w,knots,@lev2knots_nested); % grid
+S = smolyak_grid(N,w,knots,@lev2knots_doubling); % grid
 
 
 % visualization
@@ -127,11 +127,11 @@ clc
 lev2knots_lin([1 2 3 4 5])
 
 %
-% -> lev2knots_nested 
+% -> lev2knots_doubling 
 %
 % "doubles" the number of points from one level to the next: consecutive rules have 1,3,5,9,17... points
 
-lev2knots_nested([1 2 3 4 5])
+lev2knots_doubling([1 2 3 4 5])
 
 
 % -> lev2knots_kpn
@@ -161,7 +161,7 @@ ii=[3 5];
 knots=@(n) knots_uniform(n,-1,1,'nonprob'); % knots
 
 S_lin=tensor_grid(N,lev2knots_lin(ii),knots);
-S_doub=tensor_grid(N,lev2knots_nested(ii),knots);
+S_doub=tensor_grid(N,lev2knots_doubling(ii),knots);
 
 figure
 
@@ -183,7 +183,7 @@ set(legend,'Location','SouthOutside')
 %
 % by default, idxset is set to @(ii) sum(ii-1). The combination of idxset function and lev2knots function
 % defines the sparse grid type: using @(ii) sum(ii-1) with lev2knots_lin results in the so-called TD
-% (Total Degree) tensor grid, while  @(ii) sum(ii-1) with lev2knots_nested in the original SM (Smolyak) grid.
+% (Total Degree) tensor grid, while  @(ii) sum(ii-1) with lev2knots_doubling in the original SM (Smolyak) grid.
 % Some choices are available by using the function 
 %
 %  [lev2nodes,idxset] = DEFINE_FUNCTIONS_FOR_RULE(rule,rates)
@@ -258,13 +258,13 @@ N=2;
 % 1) generate knots on the desired hyper-rectangle (here (0,2)^2 )
 knots=@(n) knots_CC(n,0,2,'nonprob');
 w = 4;
-S = smolyak_grid(N,w,knots,@lev2knots_nested);
+S = smolyak_grid(N,w,knots,@lev2knots_doubling);
 
 
 % 2) alternatively, use the standard interval and provide a shifting function to smolyak_grid. 
 map=get_interval_map([0 0],[2 2],'uniform');
 knots=@(n) knots_CC(n,-1,1,'nonprob');
-S2 = smolyak_grid(N,w,knots,@lev2knots_nested,[],map); % uses the default idxset
+S2 = smolyak_grid(N,w,knots,@lev2knots_doubling,[],map); % uses the default idxset
 
 disp('maximum difference between corresponding points in the two grids')
 max(max(abs([S.knots]-[S2.knots])))
@@ -285,7 +285,7 @@ N=2;
 knots1=@(n) knots_CC(n,0,2,'nonprob');
 knots2=@(n) knots_uniform(n,-1,5,'nonprob');
 w = 4;
-S = smolyak_grid(N,w,{knots1,knots2},{@lev2knots_nested,@lev2knots_lin});
+S = smolyak_grid(N,w,{knots1,knots2},{@lev2knots_doubling,@lev2knots_lin});
 
 figure
 plot_grid(S);
@@ -301,12 +301,12 @@ N=2;
 knots1=@(n) knots_CC(n,0,2,'nonprob');
 knots2=@(n) knots_CC(n,-1,5,'nonprob');
 w = 4;
-S = smolyak_grid(N,w,{knots1,knots2},@lev2knots_nested);
+S = smolyak_grid(N,w,{knots1,knots2},@lev2knots_doubling);
 
 
 map=get_interval_map([0 -1],[2 5],'uniform');
 knots=@(n) knots_CC(n,-1,1,'nonprob');
-S2 = smolyak_grid(N,w,knots,@lev2knots_nested,[],map); % uses the default idxset
+S2 = smolyak_grid(N,w,knots,@lev2knots_doubling,[],map); % uses the default idxset
 
 figure
 plot_grid(S);
@@ -496,7 +496,7 @@ I_ex = I_1d^N;
 % generate the knots and the SM grid. 'nonprob' means we are integrating w.r.t. the pdf rho(x)=1 and not rho(x)=1/prod(b_i - a_i)
 knots=@(n) knots_CC(n,-1,1,'nonprob');
 w = 4;
-S = smolyak_grid(N,w,knots,@lev2knots_nested);
+S = smolyak_grid(N,w,knots,@lev2knots_doubling);
 Sr = reduce_sparse_grid(S);
 
 % compute integral
@@ -533,7 +533,7 @@ I_ex = I_1d^N;
 
 knots=@(n) knots_uniform(n,-1,1,'nonprob');
 w = 4;
-S = smolyak_grid(N,w,knots,@lev2knots_nested);
+S = smolyak_grid(N,w,knots,@lev2knots_doubling);
 
 Sr=reduce_sparse_grid(S);
 
@@ -561,7 +561,7 @@ I_ex = I_1d^N;
 % generate knots in (-1,3)
 knots=@(n) knots_CC(n,-1,3,'nonprob');
 w = 6;
-S = smolyak_grid(N,w,knots,@lev2knots_nested);
+S = smolyak_grid(N,w,knots,@lev2knots_doubling);
 Sr= reduce_sparse_grid(S);
 
 I=quadrature_on_sparse_grid(@(x)f(x,b) , Sr);
@@ -580,7 +580,7 @@ knots=@(n) knots_CC(n,-1,1,'nonprob');
 map=get_interval_map([-1 -1 -1 -1],[3 3 3 3],'uniform');
 
 
-S2 = smolyak_grid(N,w,knots,@lev2knots_nested,[],map,2^N);
+S2 = smolyak_grid(N,w,knots,@lev2knots_doubling,[],map,2^N);
 S2r = reduce_sparse_grid(S2);
 
 
@@ -616,7 +616,7 @@ I_ex = 1/3/5.5*(2*sqrt(1+b)-2*sqrt(-2+b))*(2*sqrt(6+b)-2*sqrt(0.5+b))  %#ok<NOPT
 knots1=@(n) knots_CC(n,-2,1,'prob'); % knots1=@(n) knots_CC(n,-2,1); would work as well as 'prob' is the default value
 knots2=@(n) knots_CC(n,0.5,6,'prob'); % knots2=@(n) knots_CC(n,0.5,6); would work as well as 'prob' is the default value
 w = 6;
-S = smolyak_grid(N,w,{knots1,knots2},@lev2knots_nested);
+S = smolyak_grid(N,w,{knots1,knots2},@lev2knots_doubling);
 Sr = reduce_sparse_grid(S);
 I=quadrature_on_sparse_grid(@(x)f(x,b) , Sr);
 
@@ -626,7 +626,7 @@ I=quadrature_on_sparse_grid(@(x)f(x,b) , Sr);
 knots=@(n) knots_CC(n,-1,1);
 map = get_interval_map([-2 0.5],[1 6],'uniform');
 w = 7;
-T = smolyak_grid(N,w,knots,@lev2knots_nested,[],map);
+T = smolyak_grid(N,w,knots,@lev2knots_doubling,[],map);
 Tr = reduce_sparse_grid(T);
 I2=quadrature_on_sparse_grid(@(x)f(x,b) , Tr);
 
@@ -635,7 +635,7 @@ I2=quadrature_on_sparse_grid(@(x)f(x,b) , Tr);
 knots=@(n) knots_CC(n,-1,1,'nonprob');
 map = get_interval_map([-2 0.5],[1 6],'uniform');
 w = 7;
-R = smolyak_grid(N,w,knots,@lev2knots_nested,[],map,1/2^2);
+R = smolyak_grid(N,w,knots,@lev2knots_doubling,[],map,1/2^2);
 Rr = reduce_sparse_grid(R);
 I3=quadrature_on_sparse_grid(@(x)f(x,b) ,Rr);
 
@@ -670,14 +670,14 @@ N = 2;
 
 % the starting grid
 w = 7;
-S = smolyak_grid(N,w,@(n) knots_CC(n,-2,1,'prob'),@lev2knots_nested);
+S = smolyak_grid(N,w,@(n) knots_CC(n,-2,1,'prob'),@lev2knots_doubling);
 Sr = reduce_sparse_grid(S);
 [IS,evals_S]=quadrature_on_sparse_grid(@(x)f(x,b), Sr);
 
 
 % the new grid
 w = 8;
-T = smolyak_grid(N,w,@(n) knots_CC(n,-2,1,'prob'),@lev2knots_nested);
+T = smolyak_grid(N,w,@(n) knots_CC(n,-2,1,'prob'),@lev2knots_doubling);
 Tr = reduce_sparse_grid(T);
 % the recycling call. Other optional arguments can turn on parallel
 % evaluation and tune the tolerance for two points to be considered equal.
@@ -829,7 +829,7 @@ max( abs( f_values-f(non_grid_points,b) ) )
 % consider e.g. [0 0 0 0] which belongs to all of the tensor grids
 
 knots=@(n) knots_CC(n,-1,1,'nonprob');
-T = smolyak_grid(N,w,knots,@lev2knots_nested); 
+T = smolyak_grid(N,w,knots,@lev2knots_doubling); 
 Tr=reduce_sparse_grid(T);
 
 non_grid_points=zeros(N,1); 

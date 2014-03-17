@@ -1,32 +1,34 @@
 % RELEASE NOTES
 %
 %
-% -> 2014, Mar. 06: 1) it is now possible to recycle evaluations when using a sequence of sparse grids, see
+% -> 2014, Mar. 06: --> lev2knots_nested has been renamed lev2knots_doubling
+
+%                   --> it is now possible to recycle evaluations when using a sequence of sparse grids, see
 %                   EVALUATE_ON_SPARSE_GRID, which supports Matlab parallel toolbox as well.
 %                   The same features are also available for QUADRATURE_ON_SPARSE_GRID,  see help QUADRATURE_ON_SPARSE_GRID
 %                   (inputs have been modified).
 %
-%                   2) it is now possible to mix random variables along different directions of a sparse grid,
+%                   --> it is now possible to mix random variables along different directions of a sparse grid,
 %                   e.g. create a sparse grid with clenshaw-curtis points in one direction and gauss-hermite
 %                   points in another, see help SMOLYAK_GRID, SMOLYAK_GRID_MULTIINDICES
 %
-%                   3) INTERPOLATE_ON_SPARSE_GRID, QUADRATURE_ON_SPARSE_GRID, CONVERT_TO_MODAL, COMPUTE_MODAL_TENSOR do not accept
+%                   --> INTERPOLATE_ON_SPARSE_GRID, QUADRATURE_ON_SPARSE_GRID, CONVERT_TO_MODAL, COMPUTE_MODAL_TENSOR do not accept
 %                   any longer MAP and WEIGHTS_COEFF input arguments, that should rather be passed as input to
 %                   SMOLYAK_GRID, SMOLYAK_GRID_MULTIINDICES. 
 %
-%                   4) Input argument FLAG in CONVERT_TO_MODAL is now mandatory
+%                   --> Input argument FLAG in CONVERT_TO_MODAL is now mandatory
 %
-%                   5) some of the inputs of INTERPOLATE_ON_SPARSE_GRID have been trasposed for consistency with the other
+%                   --> some of the inputs of INTERPOLATE_ON_SPARSE_GRID have been trasposed for consistency with the other
 %                   functions. In particular, the size of FUNCTION_ON_GRID to be V x number_of_points_in_the_sparse_grid
 %                   and consistently the size of the output matrix F_VALUES has been modified to V x (number_of_non_grid_points)
 %                   with V such that f:R^N -> R^V. Also, the size of non_grid_points needs to be N x number_of_queried_evaluations 
 %                   (that is, following the same convention as points in sparse grids)
 %
-%                   6) A warning is thrown if reduce_sparse_grid detects a tol which is inappropriately large 
+%                   --> A warning is thrown if reduce_sparse_grid detects a tol which is inappropriately large 
 %
-%                   7) improved graphics handling for plot_grid
+%                   --> improved graphics handling for plot_grid
 %
-%                   8) help for many functions has been rewritten
+%                   --> help for many functions has been rewritten
 %
 %
 % -> 2013, Oct. 24: INTERPOLATE_ON_SPARSE_GRID  interpolates vector-valued functions. 

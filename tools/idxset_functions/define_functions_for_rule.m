@@ -34,6 +34,6 @@ switch rule
         lev2nodes=@lev2knots_lin;
         idxset=@(i) prod ( (i).^rates(1:length(i)) );
     case 'SM'
-        lev2nodes=@lev2knots_nested;
+        lev2nodes=@lev2knots_doubling;
         idxset=@(i) sum( rates(1:length(i)) .* (i-1) );
 end

@@ -6,61 +6,64 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>sparse_grids_tutorial</title><meta name="generator" content="MATLAB 7.13"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-03-13"><meta name="DC.source" content="sparse_grids_tutorial.m"><style type="text/css">
+      --><title>sparse_grids_tutorial</title><meta name="generator" content="MATLAB 8.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-03-17"><meta name="DC.source" content="sparse_grids_tutorial.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
-body {
-  background-color: white;
-  margin:10px;
-}
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
 
-h1 {
-  color: #990000; 
-  font-size: x-large;
-}
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
 
-h2 {
-  color: #990000;
-  font-size: medium;
-}
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
 
-/* Make the text shrink to fit narrow windows, but not stretch too far in 
-wide windows. */ 
-p,h1,h2,div.content div {
-  max-width: 600px;
-  /* Hack for IE6 */
-  width: auto !important; width: 600px;
-}
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
 
-pre.codeinput {
-  background: #EEEEEE;
-  padding: 10px;
-}
-@media print {
-  pre.codeinput {word-wrap:break-word; width:100%;}
-} 
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
 
-span.keyword {color: #0000FF}
-span.comment {color: #228B22}
-span.string {color: #A020F0}
-span.untermstring {color: #B20000}
-span.syscmd {color: #B28C00}
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
 
-pre.codeoutput {
-  color: #666666;
-  padding: 10px;
-}
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
 
-pre.error {
-  color: red;
-}
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
 
-p.footer {
-  text-align: right;
-  font-size: xx-small;
-  font-weight: lighter;
-  font-style: italic;
-  color: gray;
-}
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
 
   </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">PART 0: INSTALL / ADD TO PATH</a></li><li><a href="#3">PART 1: INTRODUCTION - WHAT IS A SPARSE GRID</a></li><li><a href="#4">PART 1: INTRODUCTION - INGREDIENTS OF A SPARSE GRID. 1D KNOTS</a></li><li><a href="#5">PART 1: INTRODUCTION - INGREDIENTS OF A SPARSE GRID. LEV2KNOTS FUNCTION.</a></li><li><a href="#6">PART 1: INTRODUCTION - INGREDIENTS OF A SPARSE GRID. MULTI-INDEX SET</a></li><li><a href="#7">PART 1: INTRODUCTION - INGREDIENTS OF A SPARSE GRID. SPECIFYING THE MULTIINDEX SET</a></li><li><a href="#8">PART 1: INTRODUCTION - DATA-STRUCURE</a></li><li><a href="#9">PART 1: INTRODUCTION - MODIFY THE DOMAIN OF A SPARSE GRID</a></li><li><a href="#10">PART 1: INTRODUCTION - REDUCE A SPARSE GRID</a></li><li><a href="#11">PART 2: EVALUATE A FUNCTION ON A SPARSE GRID</a></li><li><a href="#12">PART 2: EVALUATE A FUNCTION ON A SPARSE GRID - USE RECYCLING FEATURE</a></li><li><a href="#13">PART 2: EVALUATE A FUNCTION ON A SPARSE GRID - USE PARALLEL FEATURE</a></li><li><a href="#14">PART 2: EVALUATE A FUNCTION ON A SPARSE GRID</a></li><li><a href="#15">PART 3: INTEGRATION - BASICS</a></li><li><a href="#16">PART 3: INTEGRATION - USE OTHER QUADRATURE KNOTS</a></li><li><a href="#17">PART 3: INTEGRATION - MODIFY QUADRATURE DOMAIN</a></li><li><a href="#18">PART 3: INTEGRATION - COMPUTE MOMENTS OF RANDOM VARIABLES</a></li><li><a href="#19">PART 3: INTEGRATION - RECYCLE EVALUATIONS FROM PREVIOUSLY COMPUTED GRIDS AND PARALLEL COMPUTATION</a></li><li><a href="#20">PART 3: INTEGRATION - HOW TO BUILD MORE COMPLEX SPARSE GRIDS. ANISOTROPIC GRIDS</a></li><li><a href="#21">PART 3: INTEGRATION - HOW TO BUILD MORE COMPLEX SPARSE GRIDS. USE SMOLYAK_MULTIINDICES</a></li><li><a href="#22">PART 3: INTEGRATION - CONVERGENCE STUDY</a></li><li><a href="#23">PART 4: INTERPOLATION ON A SPARSE GRID. BASICS</a></li><li><a href="#24">PART 4: INTERPOLATION ON A SPARSE GRID -  INTERPOLATION ERROR ON SPARSE GRID POINTS</a></li><li><a href="#25">PART 4: INTERPOLATION ON A SPARSE GRID - CONVERGENCE STUDY</a></li><li><a href="#26">PART 5: COMPUTE THE g-PCE OF A FUNCTION GIVEN ITS SPARSE GRID APPROXIMATION</a></li></ul></div><pre class="codeinput"><span class="comment">% Examples of use of Sparse Grid Matlab Kit</span>
 </pre><h2>PART 0: INSTALL / ADD TO PATH<a name="2"></a></h2><pre class="codeinput">clc
@@ -78,7 +81,7 @@ disp(<span class="string">'path set'</span>)
 N=2; <span class="comment">% approximation of two variables</span>
 knots=@(n) knots_CC(n,-1,1,<span class="string">'nonprob'</span>); <span class="comment">% knots</span>
 w = 3; <span class="comment">%level</span>
-S = smolyak_grid(N,w,knots,@lev2knots_nested); <span class="comment">% grid</span>
+S = smolyak_grid(N,w,knots,@lev2knots_doubling); <span class="comment">% grid</span>
 
 
 <span class="comment">% visualization</span>
@@ -172,11 +175,11 @@ clc
 lev2knots_lin([1 2 3 4 5])
 
 <span class="comment">%</span>
-<span class="comment">% -&gt; lev2knots_nested</span>
+<span class="comment">% -&gt; lev2knots_doubling</span>
 <span class="comment">%</span>
 <span class="comment">% "doubles" the number of points from one level to the next: consecutive rules have 1,3,5,9,17... points</span>
 
-lev2knots_nested([1 2 3 4 5])
+lev2knots_doubling([1 2 3 4 5])
 
 
 <span class="comment">% -&gt; lev2knots_kpn</span>
@@ -216,7 +219,7 @@ ii=[3 5];
 knots=@(n) knots_uniform(n,-1,1,<span class="string">'nonprob'</span>); <span class="comment">% knots</span>
 
 S_lin=tensor_grid(N,lev2knots_lin(ii),knots);
-S_doub=tensor_grid(N,lev2knots_nested(ii),knots);
+S_doub=tensor_grid(N,lev2knots_doubling(ii),knots);
 
 figure
 
@@ -235,7 +238,7 @@ set(legend,<span class="string">'Location'</span>,<span class="string">'SouthOut
 <span class="comment">%</span>
 <span class="comment">% by default, idxset is set to @(ii) sum(ii-1). The combination of idxset function and lev2knots function</span>
 <span class="comment">% defines the sparse grid type: using @(ii) sum(ii-1) with lev2knots_lin results in the so-called TD</span>
-<span class="comment">% (Total Degree) tensor grid, while  @(ii) sum(ii-1) with lev2knots_nested in the original SM (Smolyak) grid.</span>
+<span class="comment">% (Total Degree) tensor grid, while  @(ii) sum(ii-1) with lev2knots_doubling in the original SM (Smolyak) grid.</span>
 <span class="comment">% Some choices are available by using the function</span>
 <span class="comment">%</span>
 <span class="comment">%  [lev2nodes,idxset] = DEFINE_FUNCTIONS_FOR_RULE(rule,rates)</span>
@@ -300,13 +303,13 @@ N=2;
 <span class="comment">% 1) generate knots on the desired hyper-rectangle (here (0,2)^2 )</span>
 knots=@(n) knots_CC(n,0,2,<span class="string">'nonprob'</span>);
 w = 4;
-S = smolyak_grid(N,w,knots,@lev2knots_nested);
+S = smolyak_grid(N,w,knots,@lev2knots_doubling);
 
 
 <span class="comment">% 2) alternatively, use the standard interval and provide a shifting function to smolyak_grid.</span>
 map=get_interval_map([0 0],[2 2],<span class="string">'uniform'</span>);
 knots=@(n) knots_CC(n,-1,1,<span class="string">'nonprob'</span>);
-S2 = smolyak_grid(N,w,knots,@lev2knots_nested,[],map); <span class="comment">% uses the default idxset</span>
+S2 = smolyak_grid(N,w,knots,@lev2knots_doubling,[],map); <span class="comment">% uses the default idxset</span>
 
 disp(<span class="string">'maximum difference between corresponding points in the two grids'</span>)
 max(max(abs([S.knots]-[S2.knots])))
@@ -327,7 +330,7 @@ N=2;
 knots1=@(n) knots_CC(n,0,2,<span class="string">'nonprob'</span>);
 knots2=@(n) knots_uniform(n,-1,5,<span class="string">'nonprob'</span>);
 w = 4;
-S = smolyak_grid(N,w,{knots1,knots2},{@lev2knots_nested,@lev2knots_lin});
+S = smolyak_grid(N,w,{knots1,knots2},{@lev2knots_doubling,@lev2knots_lin});
 
 figure
 plot_grid(S);
@@ -343,12 +346,12 @@ N=2;
 knots1=@(n) knots_CC(n,0,2,<span class="string">'nonprob'</span>);
 knots2=@(n) knots_CC(n,-1,5,<span class="string">'nonprob'</span>);
 w = 4;
-S = smolyak_grid(N,w,{knots1,knots2},@lev2knots_nested);
+S = smolyak_grid(N,w,{knots1,knots2},@lev2knots_doubling);
 
 
 map=get_interval_map([0 -1],[2 5],<span class="string">'uniform'</span>);
 knots=@(n) knots_CC(n,-1,1,<span class="string">'nonprob'</span>);
-S2 = smolyak_grid(N,w,knots,@lev2knots_nested,[],map); <span class="comment">% uses the default idxset</span>
+S2 = smolyak_grid(N,w,knots,@lev2knots_doubling,[],map); <span class="comment">% uses the default idxset</span>
 
 figure
 plot_grid(S);
@@ -413,11 +416,6 @@ fv=@(x) 2*x;
 N=2; w=3;
 S=smolyak_grid(N,w,@(n) knots_uniform(n,-1,1),@lev2knots_lin);
 Sr= reduce_sparse_grid(S);
-
-w=4;
-T=smolyak_grid(N,w,@(n) knots_uniform(n,-1,1),@lev2knots_lin);
-Tr= reduce_sparse_grid(T);
-
 
 
 <span class="comment">% plain use of evaluate_on_sparse_grid: no recycling, no parallel</span>
@@ -522,21 +520,19 @@ plot(evals_3,<span class="string">'o'</span>)
 <span class="keyword">if</span> matlabpool(<span class="string">'size'</span>)
     matlabpool <span class="string">close</span>
 <span class="keyword">end</span>
-X=0;
 
 <span class="comment">% this command will now throw an error</span>
 <span class="comment">%</span>
-<span class="comment">%   evals_1=evaluate_on_sparse_grid(f,Tr,[],[],X);</span>
+<span class="comment">%   evals_1=evaluate_on_sparse_grid(f,Tr,[],[],0);</span>
 <span class="comment">%</span>
 <span class="comment">% Error using evaluate_on_sparse_grid&gt;simple_evaluate (line 179)</span>
 <span class="comment">% no open matlabpool session detected</span>
-</pre><pre class="codeoutput">Starting matlabpool using the 'local' configuration ... connected to 8 labs.
-solve with parallel
+</pre><pre class="codeoutput">solve with parallel
 solve with parallel
 solve with serial
 new evaluation needed:28 recycled evaluations:25 discarded evaluations:4
 solve with serial
-Sending a stop signal to all the labs ... stopped.
+Sending a stop signal to all the workers ... stopped.
 </pre><img vspace="5" hspace="5" src="sparse_grids_tutorial_13.png" alt=""> <h2>PART 2: EVALUATE A FUNCTION ON A SPARSE GRID<a name="14"></a></h2><p>see test_evaluate_on_sparse_grids.m for more examples</p><h2>PART 3: INTEGRATION - BASICS<a name="15"></a></h2><pre class="codeinput"><span class="comment">% In this part we show how to use the Kit to perform high-dimensional quadrature. We consider the</span>
 <span class="comment">% following function, for which we know the analytic expression of the integral</span>
 <span class="comment">%</span>
@@ -553,11 +549,11 @@ I_ex = I_1d^N;
 <span class="comment">% generate the knots and the SM grid. 'nonprob' means we are integrating w.r.t. the pdf rho(x)=1 and not rho(x)=1/prod(b_i - a_i)</span>
 knots=@(n) knots_CC(n,-1,1,<span class="string">'nonprob'</span>);
 w = 4;
-S = smolyak_grid(N,w,knots,@lev2knots_nested);
+S = smolyak_grid(N,w,knots,@lev2knots_doubling);
 Sr = reduce_sparse_grid(S);
 
 <span class="comment">% compute integral</span>
-I=f([Sr.knots],b)*[Sr.weights]'
+I=f([Sr.knots],b)*[Sr.weights]'  <span class="comment">%#ok&lt;NOPTS&gt;</span>
 
 <span class="comment">% alternatively use</span>
 I2=quadrature_on_sparse_grid(@(x)f(x,b) , Sr); <span class="comment">% Sr must be reduced here</span>
@@ -565,7 +561,7 @@ I2=quadrature_on_sparse_grid(@(x)f(x,b) , Sr); <span class="comment">% Sr must b
 disp(<span class="string">'----------'</span>)
 disp(<span class="string">'difference between values'</span>)
 
-I-I2
+I-I2  <span class="comment">%#ok&lt;MNEFF,NOPTS&gt;</span>
 
 <span class="comment">% compare with exact value</span>
 disp(<span class="string">'----------'</span>)
@@ -605,7 +601,7 @@ I_ex = I_1d^N;
 
 knots=@(n) knots_uniform(n,-1,1,<span class="string">'nonprob'</span>);
 w = 4;
-S = smolyak_grid(N,w,knots,@lev2knots_nested);
+S = smolyak_grid(N,w,knots,@lev2knots_doubling);
 
 Sr=reduce_sparse_grid(S);
 
@@ -637,7 +633,7 @@ I_ex = I_1d^N;
 <span class="comment">% generate knots in (-1,3)</span>
 knots=@(n) knots_CC(n,-1,3,<span class="string">'nonprob'</span>);
 w = 6;
-S = smolyak_grid(N,w,knots,@lev2knots_nested);
+S = smolyak_grid(N,w,knots,@lev2knots_doubling);
 Sr= reduce_sparse_grid(S);
 
 I=quadrature_on_sparse_grid(@(x)f(x,b) , Sr);
@@ -656,7 +652,7 @@ knots=@(n) knots_CC(n,-1,1,<span class="string">'nonprob'</span>);
 map=get_interval_map([-1 -1 -1 -1],[3 3 3 3],<span class="string">'uniform'</span>);
 
 
-S2 = smolyak_grid(N,w,knots,@lev2knots_nested,[],map,2^N);
+S2 = smolyak_grid(N,w,knots,@lev2knots_doubling,[],map,2^N);
 S2r = reduce_sparse_grid(S2);
 
 
@@ -665,7 +661,7 @@ I2=quadrature_on_sparse_grid(@(x)f(x,b) , S2r);
 disp(<span class="string">'----------'</span>)
 disp(<span class="string">'difference between the two sparse grids'</span>)
 
-I-I2
+I-I2  <span class="comment">%#ok&lt;MNEFF,NOPTS&gt;</span>
 
 
 <span class="comment">% compare with exact value</span>
@@ -686,7 +682,7 @@ quad error
 
 ans =
 
-     1.807929450592383e-08
+     1.807927674235543e-08
 
 </pre><h2>PART 3: INTEGRATION - COMPUTE MOMENTS OF RANDOM VARIABLES<a name="18"></a></h2><pre class="codeinput"><span class="comment">% here we compute E[f(x)] = \int_{[-2 1]x[0.5 6]} f(x) 1/(3*5.5) dx, (3*5.5 is the size of the domain)</span>
 
@@ -697,14 +693,14 @@ f = @(x,b) prod(1./sqrt(x+b));
 b=3;
 N = 2;
 
-I_ex = 1/3/5.5*(2*sqrt(1+b)-2*sqrt(-2+b))*(2*sqrt(6+b)-2*sqrt(0.5+b))
+I_ex = 1/3/5.5*(2*sqrt(1+b)-2*sqrt(-2+b))*(2*sqrt(6+b)-2*sqrt(0.5+b))  <span class="comment">%#ok&lt;NOPTS&gt;</span>
 
 <span class="comment">% the best-practice is to generate knots on (-2,1) and (0.5,6), specifying 'prob' as input to the</span>
 <span class="comment">% knots-generatic function</span>
 knots1=@(n) knots_CC(n,-2,1,<span class="string">'prob'</span>); <span class="comment">% knots1=@(n) knots_CC(n,-2,1); would work as well as 'prob' is the default value</span>
 knots2=@(n) knots_CC(n,0.5,6,<span class="string">'prob'</span>); <span class="comment">% knots2=@(n) knots_CC(n,0.5,6); would work as well as 'prob' is the default value</span>
 w = 6;
-S = smolyak_grid(N,w,{knots1,knots2},@lev2knots_nested);
+S = smolyak_grid(N,w,{knots1,knots2},@lev2knots_doubling);
 Sr = reduce_sparse_grid(S);
 I=quadrature_on_sparse_grid(@(x)f(x,b) , Sr);
 
@@ -714,7 +710,7 @@ I=quadrature_on_sparse_grid(@(x)f(x,b) , Sr);
 knots=@(n) knots_CC(n,-1,1);
 map = get_interval_map([-2 0.5],[1 6],<span class="string">'uniform'</span>);
 w = 7;
-T = smolyak_grid(N,w,knots,@lev2knots_nested,[],map);
+T = smolyak_grid(N,w,knots,@lev2knots_doubling,[],map);
 Tr = reduce_sparse_grid(T);
 I2=quadrature_on_sparse_grid(@(x)f(x,b) , Tr);
 
@@ -723,7 +719,7 @@ I2=quadrature_on_sparse_grid(@(x)f(x,b) , Tr);
 knots=@(n) knots_CC(n,-1,1,<span class="string">'nonprob'</span>);
 map = get_interval_map([-2 0.5],[1 6],<span class="string">'uniform'</span>);
 w = 7;
-R = smolyak_grid(N,w,knots,@lev2knots_nested,[],map,1/2^2);
+R = smolyak_grid(N,w,knots,@lev2knots_doubling,[],map,1/2^2);
 Rr = reduce_sparse_grid(R);
 I3=quadrature_on_sparse_grid(@(x)f(x,b) ,Rr);
 
@@ -734,7 +730,7 @@ disp(<span class="string">'compare the values'</span>)
 
 [I;
 I2;
-I3]
+I3]  <span class="comment">%#ok&lt;NOPTS&gt;</span>
 
 
 <span class="comment">% compare with exact value</span>
@@ -777,14 +773,14 @@ N = 2;
 
 <span class="comment">% the starting grid</span>
 w = 7;
-S = smolyak_grid(N,w,@(n) knots_CC(n,-2,1,<span class="string">'prob'</span>),@lev2knots_nested);
+S = smolyak_grid(N,w,@(n) knots_CC(n,-2,1,<span class="string">'prob'</span>),@lev2knots_doubling);
 Sr = reduce_sparse_grid(S);
 [IS,evals_S]=quadrature_on_sparse_grid(@(x)f(x,b), Sr);
 
 
 <span class="comment">% the new grid</span>
 w = 8;
-T = smolyak_grid(N,w,@(n) knots_CC(n,-2,1,<span class="string">'prob'</span>),@lev2knots_nested);
+T = smolyak_grid(N,w,@(n) knots_CC(n,-2,1,<span class="string">'prob'</span>),@lev2knots_doubling);
 Tr = reduce_sparse_grid(T);
 <span class="comment">% the recycling call. Other optional arguments can turn on parallel</span>
 <span class="comment">% evaluation and tune the tolerance for two points to be considered equal.</span>
@@ -807,12 +803,12 @@ IT3=quadrature_on_sparse_grid(@(x)f(x,b),Tr,evals_S,Sr,0);
 
 disp(<span class="string">'-------------'</span>)
 disp(<span class="string">'difference between the results'</span>)
-[IT_rec; IT; IT2; IT3]
+[IT_rec; IT; IT2; IT3] <span class="comment">%#ok&lt;NOPTS&gt;</span>
 </pre><pre class="codeoutput">solve with serial
 new evaluation needed:832 recycled evaluations:705 discarded evaluations:0
 solve with serial
 solve with serial
-Starting matlabpool using the 'local' configuration ... connected to 8 labs.
+Starting matlabpool using the 'local' profile ... connected to 4 workers.
 solve with parallel
 new evaluation needed:832 recycled evaluations:705 discarded evaluations:0
 solve with parallel
@@ -821,10 +817,10 @@ difference between the results
 
 ans =
 
-   0.228763833671747
-   0.228763833671747
-   0.228763833671747
-   0.228763833671747
+   0.228763833671746
+   0.228763833671746
+   0.228763833671746
+   0.228763833671746
 
 </pre><h2>PART 3: INTEGRATION - HOW TO BUILD MORE COMPLEX SPARSE GRIDS. ANISOTROPIC GRIDS<a name="20"></a></h2><pre class="codeinput">clear
 clc
@@ -872,7 +868,7 @@ I_1d=(2*sqrt(1+b)-2*sqrt(-1+b));
 I_ex = I_1d^N;
 
 
-[C,X] = multiidx_box_set([3 5 2 3],1); <span class="comment">% X is C without [3 5 2 3]</span>
+C = multiidx_box_set([3 5 2 3],1); <span class="comment">% X is C without [3 5 2 3]</span>
 knots=@(n) knots_uniform(n,-1,1,<span class="string">'nonprob'</span>);
 
 S3=smolyak_grid_multiindeces(C,knots,@lev2knots_lin);
@@ -958,7 +954,7 @@ max( abs( f_values-f(non_grid_points,b) ) )
 <span class="comment">% consider e.g. [0 0 0 0] which belongs to all of the tensor grids</span>
 
 knots=@(n) knots_CC(n,-1,1,<span class="string">'nonprob'</span>);
-T = smolyak_grid(N,w,knots,@lev2knots_nested);
+T = smolyak_grid(N,w,knots,@lev2knots_doubling);
 Tr=reduce_sparse_grid(T);
 
 non_grid_points=zeros(N,1);
@@ -1027,7 +1023,7 @@ nodal_values = 4*lege_eval_multidim(X,[4 0],-1,1)'+<span class="keyword">...</sp
 <span class="comment">% conversion from the points to the legendre polynomial. I should recover it exactly</span>
 [modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,<span class="string">'legendre'</span>);
 
-[K,modal_coeffs]
+[K,modal_coeffs] <span class="comment">%#ok&lt;NOPTS&gt;</span>
 </pre><pre class="codeoutput">
 ans =
 
@@ -1042,8 +1038,7 @@ ans =
      3     0     0
      4     0     4
 
-</pre><p class="footer"><br>
-      Published with MATLAB&reg; 7.13<br></p></div><!--
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2012b</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 % Examples of use of Sparse Grid Matlab Kit
 
@@ -1071,7 +1066,7 @@ disp('path set')
 N=2; % approximation of two variables
 knots=@(n) knots_CC(n,-1,1,'nonprob'); % knots
 w = 3; %level
-S = smolyak_grid(N,w,knots,@lev2knots_nested); % grid
+S = smolyak_grid(N,w,knots,@lev2knots_doubling); % grid
 
 
 % visualization
@@ -1174,11 +1169,11 @@ clc
 lev2knots_lin([1 2 3 4 5])
 
 %
-% -> lev2knots_nested 
+% -> lev2knots_doubling 
 %
 % "doubles" the number of points from one level to the next: consecutive rules have 1,3,5,9,17... points
 
-lev2knots_nested([1 2 3 4 5])
+lev2knots_doubling([1 2 3 4 5])
 
 
 % -> lev2knots_kpn
@@ -1208,7 +1203,7 @@ ii=[3 5];
 knots=@(n) knots_uniform(n,-1,1,'nonprob'); % knots
 
 S_lin=tensor_grid(N,lev2knots_lin(ii),knots);
-S_doub=tensor_grid(N,lev2knots_nested(ii),knots);
+S_doub=tensor_grid(N,lev2knots_doubling(ii),knots);
 
 figure
 
@@ -1230,7 +1225,7 @@ set(legend,'Location','SouthOutside')
 %
 % by default, idxset is set to @(ii) sum(ii-1). The combination of idxset function and lev2knots function
 % defines the sparse grid type: using @(ii) sum(ii-1) with lev2knots_lin results in the so-called TD
-% (Total Degree) tensor grid, while  @(ii) sum(ii-1) with lev2knots_nested in the original SM (Smolyak) grid.
+% (Total Degree) tensor grid, while  @(ii) sum(ii-1) with lev2knots_doubling in the original SM (Smolyak) grid.
 % Some choices are available by using the function 
 %
 %  [lev2nodes,idxset] = DEFINE_FUNCTIONS_FOR_RULE(rule,rates)
@@ -1305,13 +1300,13 @@ N=2;
 % 1) generate knots on the desired hyper-rectangle (here (0,2)^2 )
 knots=@(n) knots_CC(n,0,2,'nonprob');
 w = 4;
-S = smolyak_grid(N,w,knots,@lev2knots_nested);
+S = smolyak_grid(N,w,knots,@lev2knots_doubling);
 
 
 % 2) alternatively, use the standard interval and provide a shifting function to smolyak_grid. 
 map=get_interval_map([0 0],[2 2],'uniform');
 knots=@(n) knots_CC(n,-1,1,'nonprob');
-S2 = smolyak_grid(N,w,knots,@lev2knots_nested,[],map); % uses the default idxset
+S2 = smolyak_grid(N,w,knots,@lev2knots_doubling,[],map); % uses the default idxset
 
 disp('maximum difference between corresponding points in the two grids')
 max(max(abs([S.knots]-[S2.knots])))
@@ -1332,7 +1327,7 @@ N=2;
 knots1=@(n) knots_CC(n,0,2,'nonprob');
 knots2=@(n) knots_uniform(n,-1,5,'nonprob');
 w = 4;
-S = smolyak_grid(N,w,{knots1,knots2},{@lev2knots_nested,@lev2knots_lin});
+S = smolyak_grid(N,w,{knots1,knots2},{@lev2knots_doubling,@lev2knots_lin});
 
 figure
 plot_grid(S);
@@ -1348,12 +1343,12 @@ N=2;
 knots1=@(n) knots_CC(n,0,2,'nonprob');
 knots2=@(n) knots_CC(n,-1,5,'nonprob');
 w = 4;
-S = smolyak_grid(N,w,{knots1,knots2},@lev2knots_nested);
+S = smolyak_grid(N,w,{knots1,knots2},@lev2knots_doubling);
 
 
 map=get_interval_map([0 -1],[2 5],'uniform');
 knots=@(n) knots_CC(n,-1,1,'nonprob');
-S2 = smolyak_grid(N,w,knots,@lev2knots_nested,[],map); % uses the default idxset
+S2 = smolyak_grid(N,w,knots,@lev2knots_doubling,[],map); % uses the default idxset
 
 figure
 plot_grid(S);
@@ -1420,11 +1415,6 @@ fv=@(x) 2*x;
 N=2; w=3;
 S=smolyak_grid(N,w,@(n) knots_uniform(n,-1,1),@lev2knots_lin);
 Sr= reduce_sparse_grid(S);
-
-w=4;
-T=smolyak_grid(N,w,@(n) knots_uniform(n,-1,1),@lev2knots_lin);
-Tr= reduce_sparse_grid(T);
-
 
 
 % plain use of evaluate_on_sparse_grid: no recycling, no parallel
@@ -1516,11 +1506,10 @@ plot(evals_3,'o')
 if matlabpool('size')
     matlabpool close
 end
-X=0;
 
 % this command will now throw an error
 %
-%   evals_1=evaluate_on_sparse_grid(f,Tr,[],[],X);
+%   evals_1=evaluate_on_sparse_grid(f,Tr,[],[],0);
 %
 % Error using evaluate_on_sparse_grid>simple_evaluate (line 179)
 % no open matlabpool session detected
@@ -1549,11 +1538,11 @@ I_ex = I_1d^N;
 % generate the knots and the SM grid. 'nonprob' means we are integrating w.r.t. the pdf rho(x)=1 and not rho(x)=1/prod(b_i - a_i)
 knots=@(n) knots_CC(n,-1,1,'nonprob');
 w = 4;
-S = smolyak_grid(N,w,knots,@lev2knots_nested);
+S = smolyak_grid(N,w,knots,@lev2knots_doubling);
 Sr = reduce_sparse_grid(S);
 
 % compute integral
-I=f([Sr.knots],b)*[Sr.weights]'
+I=f([Sr.knots],b)*[Sr.weights]'  %#ok<NOPTS>
 
 % alternatively use
 I2=quadrature_on_sparse_grid(@(x)f(x,b) , Sr); % Sr must be reduced here
@@ -1561,7 +1550,7 @@ I2=quadrature_on_sparse_grid(@(x)f(x,b) , Sr); % Sr must be reduced here
 disp('REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH')
 disp('difference between values')
 
-I-I2
+I-I2  %#ok<MNEFF,NOPTS>
 
 % compare with exact value
 disp('REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH')
@@ -1586,7 +1575,7 @@ I_ex = I_1d^N;
 
 knots=@(n) knots_uniform(n,-1,1,'nonprob');
 w = 4;
-S = smolyak_grid(N,w,knots,@lev2knots_nested);
+S = smolyak_grid(N,w,knots,@lev2knots_doubling);
 
 Sr=reduce_sparse_grid(S);
 
@@ -1614,7 +1603,7 @@ I_ex = I_1d^N;
 % generate knots in (-1,3)
 knots=@(n) knots_CC(n,-1,3,'nonprob');
 w = 6;
-S = smolyak_grid(N,w,knots,@lev2knots_nested);
+S = smolyak_grid(N,w,knots,@lev2knots_doubling);
 Sr= reduce_sparse_grid(S);
 
 I=quadrature_on_sparse_grid(@(x)f(x,b) , Sr);
@@ -1633,7 +1622,7 @@ knots=@(n) knots_CC(n,-1,1,'nonprob');
 map=get_interval_map([-1 -1 -1 -1],[3 3 3 3],'uniform');
 
 
-S2 = smolyak_grid(N,w,knots,@lev2knots_nested,[],map,2^N);
+S2 = smolyak_grid(N,w,knots,@lev2knots_doubling,[],map,2^N);
 S2r = reduce_sparse_grid(S2);
 
 
@@ -1642,7 +1631,7 @@ I2=quadrature_on_sparse_grid(@(x)f(x,b) , S2r);
 disp('REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH')
 disp('difference between the two sparse grids')
 
-I-I2
+I-I2  %#ok<MNEFF,NOPTS>
 
 
 % compare with exact value
@@ -1662,14 +1651,14 @@ f = @(x,b) prod(1./sqrt(x+b));
 b=3;
 N = 2;
 
-I_ex = 1/3/5.5*(2*sqrt(1+b)-2*sqrt(-2+b))*(2*sqrt(6+b)-2*sqrt(0.5+b))
+I_ex = 1/3/5.5*(2*sqrt(1+b)-2*sqrt(-2+b))*(2*sqrt(6+b)-2*sqrt(0.5+b))  %#ok<NOPTS>
 
 % the best-practice is to generate knots on (-2,1) and (0.5,6), specifying 'prob' as input to the
 % knots-generatic function
 knots1=@(n) knots_CC(n,-2,1,'prob'); % knots1=@(n) knots_CC(n,-2,1); would work as well as 'prob' is the default value
 knots2=@(n) knots_CC(n,0.5,6,'prob'); % knots2=@(n) knots_CC(n,0.5,6); would work as well as 'prob' is the default value
 w = 6;
-S = smolyak_grid(N,w,{knots1,knots2},@lev2knots_nested);
+S = smolyak_grid(N,w,{knots1,knots2},@lev2knots_doubling);
 Sr = reduce_sparse_grid(S);
 I=quadrature_on_sparse_grid(@(x)f(x,b) , Sr);
 
@@ -1679,7 +1668,7 @@ I=quadrature_on_sparse_grid(@(x)f(x,b) , Sr);
 knots=@(n) knots_CC(n,-1,1);
 map = get_interval_map([-2 0.5],[1 6],'uniform');
 w = 7;
-T = smolyak_grid(N,w,knots,@lev2knots_nested,[],map);
+T = smolyak_grid(N,w,knots,@lev2knots_doubling,[],map);
 Tr = reduce_sparse_grid(T);
 I2=quadrature_on_sparse_grid(@(x)f(x,b) , Tr);
 
@@ -1688,7 +1677,7 @@ I2=quadrature_on_sparse_grid(@(x)f(x,b) , Tr);
 knots=@(n) knots_CC(n,-1,1,'nonprob');
 map = get_interval_map([-2 0.5],[1 6],'uniform');
 w = 7;
-R = smolyak_grid(N,w,knots,@lev2knots_nested,[],map,1/2^2);
+R = smolyak_grid(N,w,knots,@lev2knots_doubling,[],map,1/2^2);
 Rr = reduce_sparse_grid(R);
 I3=quadrature_on_sparse_grid(@(x)f(x,b) ,Rr);
 
@@ -1699,7 +1688,7 @@ disp('compare the values')
 
 [I;
 I2;
-I3]
+I3]  %#ok<NOPTS>
 
 
 % compare with exact value
@@ -1723,14 +1712,14 @@ N = 2;
 
 % the starting grid
 w = 7;
-S = smolyak_grid(N,w,@(n) knots_CC(n,-2,1,'prob'),@lev2knots_nested);
+S = smolyak_grid(N,w,@(n) knots_CC(n,-2,1,'prob'),@lev2knots_doubling);
 Sr = reduce_sparse_grid(S);
 [IS,evals_S]=quadrature_on_sparse_grid(@(x)f(x,b), Sr);
 
 
 % the new grid
 w = 8;
-T = smolyak_grid(N,w,@(n) knots_CC(n,-2,1,'prob'),@lev2knots_nested);
+T = smolyak_grid(N,w,@(n) knots_CC(n,-2,1,'prob'),@lev2knots_doubling);
 Tr = reduce_sparse_grid(T);
 % the recycling call. Other optional arguments can turn on parallel
 % evaluation and tune the tolerance for two points to be considered equal.
@@ -1753,7 +1742,7 @@ IT3=quadrature_on_sparse_grid(@(x)f(x,b),Tr,evals_S,Sr,0);
 
 disp('REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-')
 disp('difference between the results')
-[IT_rec; IT; IT2; IT3]
+[IT_rec; IT; IT2; IT3] %#ok<NOPTS>
 
 %% PART 3: INTEGRATION - HOW TO BUILD MORE COMPLEX SPARSE GRIDS. ANISOTROPIC GRIDS 
 
@@ -1799,7 +1788,7 @@ I_1d=(2*sqrt(1+b)-2*sqrt(-1+b));
 I_ex = I_1d^N;
 
 
-[C,X] = multiidx_box_set([3 5 2 3],1); % X is C without [3 5 2 3]
+C = multiidx_box_set([3 5 2 3],1); % X is C without [3 5 2 3]
 knots=@(n) knots_uniform(n,-1,1,'nonprob');
 
 S3=smolyak_grid_multiindeces(C,knots,@lev2knots_lin);
@@ -1882,7 +1871,7 @@ max( abs( f_values-f(non_grid_points,b) ) )
 % consider e.g. [0 0 0 0] which belongs to all of the tensor grids
 
 knots=@(n) knots_CC(n,-1,1,'nonprob');
-T = smolyak_grid(N,w,knots,@lev2knots_nested); 
+T = smolyak_grid(N,w,knots,@lev2knots_doubling); 
 Tr=reduce_sparse_grid(T);
 
 non_grid_points=zeros(N,1); 
@@ -1946,7 +1935,7 @@ nodal_values = 4*lege_eval_multidim(X,[4 0],-1,1)'+...
 % conversion from the points to the legendre polynomial. I should recover it exactly
 [modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,'legendre');
 
-[K,modal_coeffs]
+[K,modal_coeffs] %#ok<NOPTS>
 
 ##### SOURCE END #####
 --></body></html>
