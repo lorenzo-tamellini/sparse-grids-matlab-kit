@@ -110,23 +110,24 @@ output=zeros(s,N);
 n = size(tocomp_list,1);
 evals_new=zeros(s,n);
 
-if n>paral % if no parallel this one becomes n>NaN, which is false for any n
-    disp('solve with parallel')
-    if ~matlabpool('size')
-        error('no open matlabpool session detected')
-    end
-    parfor i=1:n
-        % suppress the "variable is indexed but not sliced" warning, which cannot be circumvented in this case
-        evals_new(:,i)=f(pts_list(tocomp_list(i),:)'); %#ok<PFBNS> 
-    end    
-else
-    % either no parallel available or no parallel wanted, so we just go with a for
-    disp('solve with serial')
-    for i=1:n
-        evals_new(:,i)=f(pts_list(tocomp_list(i),:)');
+if ~isempty(tocomp_list)
+    if n>paral % if no parallel this one becomes n>NaN, which is false for any n
+        disp('solve with parallel')
+        if ~matlabpool('size')
+            error('no open matlabpool session detected')
+        end
+        parfor i=1:n
+            % suppress the "variable is indexed but not sliced" warning, which cannot be circumvented in this case
+            evals_new(:,i)=f(pts_list(tocomp_list(i),:)'); %#ok<PFBNS>
+        end
+    else
+        % either no parallel available or no parallel wanted, so we just go with a for
+        disp('solve with serial')
+        for i=1:n
+            evals_new(:,i)=f(pts_list(tocomp_list(i),:)');
+        end
     end
 end
-
 
 % the two parts together 
 % ------------------------------------
