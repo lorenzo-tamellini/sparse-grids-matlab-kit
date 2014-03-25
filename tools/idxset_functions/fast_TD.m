@@ -1,13 +1,8 @@
-function I = fast_TD(N,w,base)
+function I = fast_TD_idxset(N,w)
 
-% I = fast_TD(N,w) 
-% 
-% returns the matrix of multiindex set TD(w) in N dimensions (one row per multiindex)
-% for SG (base index=0)
-%
-% I = fast_TD(N,w,base) 
-%
-% adds I=I+basis (base=1 for collocation). NB when base=1, this produces the set: sum(i-1)<w
+% I = fast_TD(N,w) returns the set of multiindex set TD(w) in N dimensions 
+% (one row per multiindex) i.e. {ii in N_+ : sum(ii-1) <= w} 
+
 
 % initialize I
 TDsize=nchoosek(N+w,N);
