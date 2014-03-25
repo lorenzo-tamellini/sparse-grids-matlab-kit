@@ -1,15 +1,16 @@
-function [S,C] = smolyak_grid_multiindeces(C,knots,lev2knots,map,weights_coeff)
+function [S,C] = final_smolyak_grid_multiindeces(C,knots,lev2knots,map,weights_coeff)
 
 % SMOLYAK_GRID_MULTIINDICES produces a sparse grid starting from a multiindex-set rather than
 % from a rule IDXSET(I) <= W.
-% 
+%
 % [S,C] = SMOLYAK_GRID_MULTIINDICES(C,KNOTS,LEV2KNOTS) uses the multiindex set C. C must be
 %       in lexicographic order and admissible. 
 %
 % [S,C] = SMOLYAK_GRID_MULTIINDICES(C,KNOTS,LEV2KNOTS,MAP,WEIGHTS_COEFF) can be used as an alternative
-%       to generate a sparse grid on a hyper-rectangle. 
+%       to generate a sparse grid on a hyper-rectangle.
 %
-% See also CHECK_SET_ADMISSIBILITY for admissibility check, and SMOLYAK_GRID for further information on 
+%
+% See also CHECK_SET_ADMISSIBILITY for admissibility check, and SMOLYAK_GRID for further information on
 % KNOTS, LEV2KNOTS, MAP, WEIGHTS_COEFF and on the sparse grid data structure S
 
 
@@ -35,8 +36,6 @@ end
 
 
 N=size(C,2);
-% naif implementation; exploit partial ordering of the sequence of
-% multiindices
 
 %-----------------------------------------------
 
@@ -70,68 +69,81 @@ N=size(C,2);
 % so the algorithm works like this:
 
 nn=size(C,1);
-
-% disp(strcat('using:',num2str(nn),'multiindices'))
-
-
 coeff=ones(1,nn); % initialize coefficients to 1: all c survive
 
+
+
+% I can at least restrict the search to multiindices whose first component is c(i) + 2, so I define
+[~,bookmarks]=unique(C(:,1),'first');
+bk = [bookmarks(3:end)'-1 nn nn];
+% i.e. those who begin with 1 end at bookmark(3)-1, those who begin with 2-1 end at bookmark(4) and so on,
+% until there's no multiindex with c(i)+2
+%
+% an old piece of code I still want to have written somewhere
+% range = i+ find( C(i+1:end,1)==cc(1)+2, 1 ) - 1;
+
+
 for i=1:nn % scroll c
-    for j=i+1:nn % scroll c2, the following rows
-        d=C(j,:)-C(i,:);
-        if d<=1 & d>=0
+    cc = C(i,:);
+    % recover the range in which we have to look. Observe that the first column of C contains necessarily 1,2,3 ...
+    % so we can use them to access bk
+    range=bk(cc(1));
+    for j=i+1:range
+        % scroll c2, the following rows
+        d=C(j,:)-cc;
+        if max(d)<=1 && min(d)>=0  % much faster to check then if only 0 and 1 appears. Also, && is short-circuited,
+            % so if max(d)<=1 is false the other condition is not even checked
             coeff(i)=coeff(i) + (-1)^sum(d);
         end
     end
-
 end
 
-% now for those c who survived, compute the grid, and multiply with appropriate coefficients
+
+
+% now we can store only those grids who survived, i.e. coeff~=0
+%------------------------------------------------------
+
+nb_grids=sum(coeff~=0);
+empty_cells=cell(1,nb_grids);
+S=struct('knots',empty_cells,'weights',empty_cells,'size',empty_cells);
+coeff_condensed=zeros(1,nb_grids);
+ss=1;
+
 
 for j=1:nn
     if coeff(j)~=0
-        i = C(j,:);       % level in each direction
-        m = apply_lev2knots(i,lev2knots,N); % n. of points in each direction
-        S(j) = tensor_grid(N,m,knots);
-        S(j).weights=S(j).weights*coeff(j);
+        i = C(j,:);
+        m =apply_lev2knots(i,lev2knots,N); % n. of points in each direction
+        S(ss) = tensor_grid_pattern(N,m,knots);
+        S(ss).weights=S(ss).weights*coeff(j);
+        coeff_condensed(ss)=coeff(j);
+        ss=ss+1;
     end
 end
 
-
-
-
 % finally, shift the points according to map if needed
-if exist('map','var')
-    for j=1:nn
-        if coeff(j)~=0
-            S(j).knots = map(S(j).knots);
-        end
+if exist('map','var') && ~isempty(map)
+    for ss=1:nb_grids
+        S(ss).knots = map(S(ss).knots);
     end
 end
 
 % and possibly fix weights
-if exist('weights_coeff','var')
-    for j=1:nn
-        if coeff(j)~=0
-            S(j).weights = S(j).weights*weights_coeff;
-        end
+if exist('weights_coeff','var') && ~isempty(weights_coeff)
+    for ss=1:nb_grids
+        S(ss).weights = S(ss).weights*weights_coeff;
     end
 end
-
-
 
 % now store the coeff value. It has to be stored after the first loop, becuase tensor_grid returns a grid
-% WITHOUT coeff field, so that if you add it then you get a mismatch between the fields in output and the fields
-% in the struct array you are using.
+% WITHOUT coeff field, and Matlab would throw an error (Subscripted assignment between dissimilar structures)
 
-for j=1:nn
-    if coeff(j)~=0
-        S(j).coeff=coeff(j);
-    end
+for ss=1:nb_grids
+    S(ss).coeff=coeff_condensed(ss);
 end
 
-
 end
+
 
 
 

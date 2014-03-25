@@ -1,4 +1,4 @@
-function [S,C] = smolyak_grid(N,w,knots,lev2knots,idxset,map,weights_coeff)
+function [S,C] = final_smolyak_grid(N,w,knots,lev2knots,idxset,map,weights_coeff)
 
 
 %  SMOLYAK_GRID generates a Smolyak sparse grid (and corresponding quadrature weights)
@@ -42,6 +42,7 @@ function [S,C] = smolyak_grid(N,w,knots,lev2knots,idxset,map,weights_coeff)
 %       C: multi-index set used to generate the sparse grid  
 %
 %
+%
 %  [S,C] = SMOLYAK_GRID(N,W,KNOTS,LEV2KNOTS,IDXSET,MAP,WEIGHTS_COEFF) can be used as an alternative
 %       to generate a sparse grid on a hyper-rectangle. 
 %       Instead of typing out one KNOTS function and one LEV2KNOTS for each dimension, like in
@@ -62,9 +63,12 @@ function [S,C] = smolyak_grid(N,w,knots,lev2knots,idxset,map,weights_coeff)
 %----------------------------------------------------------
 % input handling
 
-if nargin==4 || (nargin==6 && isempty(idxset)) || (nargin==7 && isempty(idxset))
+if nargin==4 || (nargin==6 && isempty(idxset)) || (nargin==7 && isempty(idxset)) 
     idxset=@(i) sum(i-1);
 end
+
+
+
 
 % if knots and  lev2knots are simple function, we replicate them in a cell
 if isa(knots,'function_handle')
@@ -96,109 +100,142 @@ if w==0
     S(1).coeff=1;
     disp('using 1 multiindex')
     C=i;
+
 else
 
+    
     %----------------------------------------------------------
     % let's go with the sparse construction
-
     
-    % build the list of multiindices in the set: idxset(i)<=w
+    
+    % build the list of multiindices in the set: idxset(i)<=w.
     C=multiidx_gen(N,idxset,w,1);
-    % disp(['using ',num2str(size(C,1)),' multiindeces'])
 
-    % naif implementation; exploit partial ordering of the sequence of
-    % multiindices
     
+    % now compute the tensor grids out of the delta operators listed in C.
+    % Exploit partial ordering of the sequence of multiindices
     %-----------------------------------------------
-    
-    % each multiindex of C is a delta grid. Given say [i1 i2 i3] i will get 
-    % (i1 - i1-1) x (i2 - i2-1) x (i3 - i3-1) 
+    %
+    % each multiindex of C is a delta grid. Given say [i1 i2 i3] i will get
+    % (i1 - i1-1) x (i2 - i2-1) x (i3 - i3-1)
     % that is the grids associated to
     % [i1 i2 i3],[i1-1 i2 13],[i1 i2-1 i3],[i1-1 i2-1 i3] and so on
     %
-    % note that all of these multiindeces are also included in the initial set C 
+    % note that all of these multiindeces are also included in the initial set C
     % (if [i1 i2 i3] ratisfies the rule, all other will, because their indeces are equal or lower)
     %
     % So the set of all possible grids (non delta grids) is the same set C, but some of them will cancel out
     %
-    % C is partially ordered (lexicographis): [x x x x i], are listed increasing with i, 
+    % C is partially ordered (lexicographis): [x x x x i], are listed increasing with i,
     % [x x x j i] are listed increasing first with j and then with i ...
-    % Now take a row of C, c. Because of the ordering, if you take c as a grid index 
+    % Now take a row of C, c. Because of the ordering, if you take c as a grid index
     % the same grid can appear again only from delta grids coming from rows following.
-    % 
-    % Now we scroll these rows following (say c2) and compute how many times c will be generated, and with
-    % what sign. It has to be that d=c2-c has only 0 or 1 
     %
-    % if this is the case, the sign of this new appearence of c could be both + or - . 
+    % Now we scroll these rows following (say c2) and compute how many times c will be generated, and with
+    % what sign. It has to be that d=c2-c has only 0 or 1
+    %
+    % if this is the case, the sign of this new appearence of c could be both + or - .
     % To determine the sign, start with + and switch it every time a 1 appears in d
     %
-    % d=[0 1 0 0 1] => sign= + 
+    % d=[0 1 0 0 1] => sign= +
     %
     % the formula is (-1)^sum(d) ( d with even appearences of 1 gives a + , odd gives a -)
     %
     % and just sum all the coefficients to see if c will survive or cancel out
-    %
-    % so the algorithm works like this:   
     
     nn=size(C,1);
     coeff=ones(1,nn); % initialize coefficients to 1: all c survive
     
+    % I can at least restrict the search to multiindices whose first component is c(i) + 2, so I define
+    [~,bookmarks]=unique(C(:,1),'first');
+    bk = [bookmarks(3:end)'-1 nn nn];
+    % i.e. those who begin with 1 end at bookmark(3)-1, those who begin with 2-1 end at bookmark(4) and so on, 
+    % until there's no multiindex with c(i)+2
+
     for i=1:nn % scroll c
-        for j=i+1:nn % scroll c2, the following rows
-            d=C(j,:)-C(i,:); 
-            if d<=1 & d>=0 
+        cc = C(i,:);
+        % recover the range in which we have to look. Observe that the first column of C contains necessarily 1,2,3 ...
+        % so we can use them to access bk
+        range=bk(cc(1));    
+        for j=i+1:range
+            % scroll c2, the following rows
+            d=C(j,:)-cc;
+            if max(d)<=1 && min(d)>=0  % much faster to check then if only 0 and 1 appears. Also, && is short-circuited,
+                % so if max(d)<=1 is false the other condition is not even checked
                 coeff(i)=coeff(i) + (-1)^sum(d);
             end
-        end
-        
-    end
-    
-    % now for those c who survived, compute the grid, and multiply with appropriate coefficients
-    
-    for j=1:nn
-        if coeff(j)~=0
-            i = C(j,:);       % level in each direction
-            m = apply_lev2knots(i,lev2knots,N); % n. of points in each direction
-            S(j) = tensor_grid(N,m,knots);
-            S(j).weights=S(j).weights*coeff(j);
-        end        
-    end
-    
-    % finally, shift the points according to map if needed
-    if exist('map','var')
-        for j=1:nn
-            if coeff(j)~=0
-                S(j).knots = map(S(j).knots);
-            end
-        end
+        end 
     end
 
-    % and possibly fix weights
-    if exist('weights_coeff','var')
-        for j=1:nn
-            if coeff(j)~=0
-                S(j).weights = S(j).weights*weights_coeff;
-            end
+        
+    % now we can store only those grids who survived, i.e. coeff~=0
+    %------------------------------------------------------
+    
+    nb_grids=sum(coeff~=0);
+    empty_cells=cell(1,nb_grids);
+    S=struct('knots',empty_cells,'weights',empty_cells,'size',empty_cells);
+    coeff_condensed=zeros(1,nb_grids);
+    ss=1;
+
+
+
+
+    for j=1:nn
+        if coeff(j)~=0
+            i = C(j,:);
+            m =apply_lev2knots(i,lev2knots,N); % n. of points in each direction
+            S(ss) = tensor_grid_pattern(N,m,knots);
+            S(ss).weights=S(ss).weights*coeff(j);
+            coeff_condensed(ss)=coeff(j);
+            ss=ss+1;
         end
-    end  
+    end
+    
+        
+    % finally, shift the points according to map if needed
+    if exist('map','var') && ~isempty(map)
+        for ss=1:nb_grids
+            S(ss).knots = map(S(ss).knots);
+        end
+    end
+    
+    % and possibly fix weights
+    if exist('weights_coeff','var') && ~isempty(weights_coeff)
+        for ss=1:nb_grids
+            S(ss).weights = S(ss).weights*weights_coeff;
+        end
+    end
     
     % now store the coeff value. It has to be stored after the first loop, becuase tensor_grid returns a grid
     % WITHOUT coeff field, and Matlab would throw an error (Subscripted assignment between dissimilar structures)
-
-    for j=1:nn
-        if coeff(j)~=0
-            S(j).coeff=coeff(j);
-        end        
+    
+    for ss=1:nb_grids
+        S(ss).coeff=coeff_condensed(ss);
     end
-            
-end
+     
 
-end
+
+end % this end closes if w == 0
+
+
+end % this end closes the function
+
+
+
+
+
+
 
 
 
 function m = apply_lev2knots(i,lev2knots,N)
     
+% m = apply_lev2knots(i,lev2knots,N)
+%
+% return a vector m s.t. m(n) = m(i(n)). m has to be single (or double) precision or following functions won't work 
+% (more specifically, prod is not defined for intXY classes)
+
+
 % N could be deduced by N but it's better passed as an input, to speed computation
 % init m to zero vector
 m=0*i;
@@ -206,7 +243,8 @@ m=0*i;
 % next, iterate on each direction 1,...,N. 
 
 for n=1:N
-    m(n) = lev2knots{n}(i(n));
+    m(n) = lev2knots{n}(i(n)); 
 end
 
 end
+
