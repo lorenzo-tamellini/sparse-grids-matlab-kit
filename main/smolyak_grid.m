@@ -1,4 +1,4 @@
-function [S,C] = final_smolyak_grid(N,w,knots,lev2knots,idxset,map,weights_coeff)
+function [S,C] = smolyak_grid(N,w,knots,lev2knots,idxset,map,weights_coeff)
 
 
 %  SMOLYAK_GRID generates a Smolyak sparse grid (and corresponding quadrature weights)

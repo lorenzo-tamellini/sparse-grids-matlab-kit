@@ -1,12 +1,12 @@
-function [S,C] = final_smolyak_grid_multiindeces(C,knots,lev2knots,map,weights_coeff)
+function [S,C] = smolyak_grid_multiidx_set(C,knots,lev2knots,map,weights_coeff)
 
-% SMOLYAK_GRID_MULTIINDICES produces a sparse grid starting from a multiindex-set rather than
+% SMOLYAK_GRID_MULTIIDX_SET produces a sparse grid starting from a multiindex-set rather than
 % from a rule IDXSET(I) <= W.
 %
-% [S,C] = SMOLYAK_GRID_MULTIINDICES(C,KNOTS,LEV2KNOTS) uses the multiindex set C. C must be
+% [S,C] = SMOLYAK_GRID_MULTIIIDX_SET(C,KNOTS,LEV2KNOTS) uses the multiindex set C. C must be
 %       in lexicographic order and admissible. 
 %
-% [S,C] = SMOLYAK_GRID_MULTIINDICES(C,KNOTS,LEV2KNOTS,MAP,WEIGHTS_COEFF) can be used as an alternative
+% [S,C] = SMOLYAK_GRID_MULTIIDX_SET(C,KNOTS,LEV2KNOTS,MAP,WEIGHTS_COEFF) can be used as an alternative
 %       to generate a sparse grid on a hyper-rectangle.
 %
 %

@@ -196,10 +196,10 @@ N=2;
 knots=@(n) knots_uniform(n,-1,1,'nonprob'); 
 w = 5; %level
 
-[lev2knots,idxset]=define_functions_for_rule('TD',2);
+[lev2knots,idxset]=define_functions_for_rule('TD',N);
 S_TD = smolyak_grid(N,w,knots,lev2knots,idxset); % grid
 
-[lev2knots,idxset]=define_functions_for_rule('HC',2);
+[lev2knots,idxset]=define_functions_for_rule('HC',N);
 S_HC = smolyak_grid(N,w,knots,lev2knots,idxset); % grid
 
 % plot the grid itself
@@ -227,7 +227,7 @@ C=[
 
 [adm,C] = check_set_admissibility(C);
 
-S_M = smolyak_grid_multiindeces(C,knots,lev2knots);
+S_M = smolyak_grid_multiidx_set(C,knots,lev2knots);
 
 figure
 plot_grid(S_M,[],'color','b','marker','d','MarkerFaceColor','b');
@@ -749,7 +749,7 @@ I_ex = I_1d^N;
 C = multiidx_box_set([3 5 2 3],1); % X is C without [3 5 2 3]
 knots=@(n) knots_uniform(n,-1,1,'nonprob');
 
-S3=smolyak_grid_multiindeces(C,knots,@lev2knots_lin);
+S3=smolyak_grid_multiidx_set(C,knots,@lev2knots_lin);
 
 
 

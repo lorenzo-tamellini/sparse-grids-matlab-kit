@@ -1,6 +1,6 @@
-function I = fast_TD_idxset(N,w)
+function I = fast_TD_set(N,w)
 
-% I = fast_TD(N,w) returns the set of multiindex set TD(w) in N dimensions 
+% I = fast_TD_set(N,w) returns the multiindex set TD(w) in N dimensions 
 % (one row per multiindex) i.e. {ii in N_+ : sum(ii-1) <= w} 
 
 
@@ -28,9 +28,12 @@ end
 % sort rows to get lexicographic order. Note that this is not much time consuming
 I = sortrows(I);
 
-if nargin==3
-    I=I+base;
-end
+% if nargin==3
+%     I=I+base;
+% end
+
+I=I+1;
+
 
 
 function I = fast_TD_rec(N,w,rows)

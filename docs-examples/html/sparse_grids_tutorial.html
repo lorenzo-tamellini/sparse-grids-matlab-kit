@@ -6,64 +6,61 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>sparse_grids_tutorial</title><meta name="generator" content="MATLAB 8.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-03-17"><meta name="DC.source" content="sparse_grids_tutorial.m"><style type="text/css">
-html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+      --><title>sparse_grids_tutorial</title><meta name="generator" content="MATLAB 7.13"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-03-25"><meta name="DC.source" content="sparse_grids_tutorial.m"><style type="text/css">
 
-html { min-height:100%; margin-bottom:1px; }
-html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
-html body td { vertical-align:top; text-align:left; }
+body {
+  background-color: white;
+  margin:10px;
+}
 
-h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
-h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
-h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
 
-a { color:#005fce; text-decoration:none; }
-a:hover { color:#005fce; text-decoration:underline; }
-a:visited { color:#004aa0; text-decoration:none; }
+h2 {
+  color: #990000;
+  font-size: medium;
+}
 
-p { padding:0px; margin:0px 0px 20px; }
-img { padding:0px; margin:0px 0px 20px; border:none; }
-p img, pre img, tt img, li img { margin-bottom:0px; } 
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
 
-ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
-ul li { padding:0px; margin:0px 0px 7px 0px; }
-ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
-ul li ol li { list-style:decimal; }
-ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
-ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
-ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
-ol li ol li { list-style-type:lower-alpha; }
-ol li ul { padding-top:7px; }
-ol li ul li { list-style:square; }
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
 
-.content { font-size:1.2em; line-height:140%; padding: 20px; }
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
 
-pre, tt, code { font-size:12px; }
-pre { margin:0px 0px 20px; }
-pre.error { color:red; }
-pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
-pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
 
-@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+pre.error {
+  color: red;
+}
 
-span.keyword { color:#0000FF }
-span.comment { color:#228B22 }
-span.string { color:#A020F0 }
-span.untermstring { color:#B20000 }
-span.syscmd { color:#B28C00 }
-
-.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
-.footer p { margin:0px; }
-.footer a { color:#878787; }
-.footer a:hover { color:#878787; text-decoration:underline; }
-.footer a:visited { color:#878787; }
-
-table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
-table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
-
-
-
-
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
 
   </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">PART 0: INSTALL / ADD TO PATH</a></li><li><a href="#3">PART 1: INTRODUCTION - WHAT IS A SPARSE GRID</a></li><li><a href="#4">PART 1: INTRODUCTION - INGREDIENTS OF A SPARSE GRID. 1D KNOTS</a></li><li><a href="#5">PART 1: INTRODUCTION - INGREDIENTS OF A SPARSE GRID. LEV2KNOTS FUNCTION.</a></li><li><a href="#6">PART 1: INTRODUCTION - INGREDIENTS OF A SPARSE GRID. MULTI-INDEX SET</a></li><li><a href="#7">PART 1: INTRODUCTION - INGREDIENTS OF A SPARSE GRID. SPECIFYING THE MULTIINDEX SET</a></li><li><a href="#8">PART 1: INTRODUCTION - DATA-STRUCURE</a></li><li><a href="#9">PART 1: INTRODUCTION - MODIFY THE DOMAIN OF A SPARSE GRID</a></li><li><a href="#10">PART 1: INTRODUCTION - REDUCE A SPARSE GRID</a></li><li><a href="#11">PART 2: EVALUATE A FUNCTION ON A SPARSE GRID</a></li><li><a href="#12">PART 2: EVALUATE A FUNCTION ON A SPARSE GRID - USE RECYCLING FEATURE</a></li><li><a href="#13">PART 2: EVALUATE A FUNCTION ON A SPARSE GRID - USE PARALLEL FEATURE</a></li><li><a href="#14">PART 2: EVALUATE A FUNCTION ON A SPARSE GRID</a></li><li><a href="#15">PART 3: INTEGRATION - BASICS</a></li><li><a href="#16">PART 3: INTEGRATION - USE OTHER QUADRATURE KNOTS</a></li><li><a href="#17">PART 3: INTEGRATION - MODIFY QUADRATURE DOMAIN</a></li><li><a href="#18">PART 3: INTEGRATION - COMPUTE MOMENTS OF RANDOM VARIABLES</a></li><li><a href="#19">PART 3: INTEGRATION - RECYCLE EVALUATIONS FROM PREVIOUSLY COMPUTED GRIDS AND PARALLEL COMPUTATION</a></li><li><a href="#20">PART 3: INTEGRATION - HOW TO BUILD MORE COMPLEX SPARSE GRIDS. ANISOTROPIC GRIDS</a></li><li><a href="#21">PART 3: INTEGRATION - HOW TO BUILD MORE COMPLEX SPARSE GRIDS. USE SMOLYAK_MULTIINDICES</a></li><li><a href="#22">PART 3: INTEGRATION - CONVERGENCE STUDY</a></li><li><a href="#23">PART 4: INTERPOLATION ON A SPARSE GRID. BASICS</a></li><li><a href="#24">PART 4: INTERPOLATION ON A SPARSE GRID -  INTERPOLATION ERROR ON SPARSE GRID POINTS</a></li><li><a href="#25">PART 4: INTERPOLATION ON A SPARSE GRID - CONVERGENCE STUDY</a></li><li><a href="#26">PART 5: COMPUTE THE g-PCE OF A FUNCTION GIVEN ITS SPARSE GRID APPROXIMATION</a></li></ul></div><pre class="codeinput"><span class="comment">% Examples of use of Sparse Grid Matlab Kit</span>
 </pre><h2>PART 0: INSTALL / ADD TO PATH<a name="2"></a></h2><pre class="codeinput">clc
@@ -251,10 +248,10 @@ N=2;
 knots=@(n) knots_uniform(n,-1,1,<span class="string">'nonprob'</span>);
 w = 5; <span class="comment">%level</span>
 
-[lev2knots,idxset]=define_functions_for_rule(<span class="string">'TD'</span>,2);
+[lev2knots,idxset]=define_functions_for_rule(<span class="string">'TD'</span>,N);
 S_TD = smolyak_grid(N,w,knots,lev2knots,idxset); <span class="comment">% grid</span>
 
-[lev2knots,idxset]=define_functions_for_rule(<span class="string">'HC'</span>,2);
+[lev2knots,idxset]=define_functions_for_rule(<span class="string">'HC'</span>,N);
 S_HC = smolyak_grid(N,w,knots,lev2knots,idxset); <span class="comment">% grid</span>
 
 <span class="comment">% plot the grid itself</span>
@@ -282,7 +279,7 @@ C=[
 
 [adm,C] = check_set_admissibility(C);
 
-S_M = smolyak_grid_multiindeces(C,knots,lev2knots);
+S_M = smolyak_grid_multiidx_set(C,knots,lev2knots);
 
 figure
 plot_grid(S_M,[],<span class="string">'color'</span>,<span class="string">'b'</span>,<span class="string">'marker'</span>,<span class="string">'d'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'b'</span>);
@@ -477,7 +474,7 @@ solve with serial
 
 ans =
 
-     8.653718960559769e-17
+   8.6537e-17
 
 </pre><h2>PART 2: EVALUATE A FUNCTION ON A SPARSE GRID - USE PARALLEL FEATURE<a name="13"></a></h2><pre class="codeinput"><span class="comment">% parallel computation can be used both with and without recycling. The parallel procedure gets activated only</span>
 <span class="comment">% if at least X evaluations are queried,  with X specified by the user. This is because parallel computations have some</span>
@@ -527,12 +524,13 @@ plot(evals_3,<span class="string">'o'</span>)
 <span class="comment">%</span>
 <span class="comment">% Error using evaluate_on_sparse_grid&gt;simple_evaluate (line 179)</span>
 <span class="comment">% no open matlabpool session detected</span>
-</pre><pre class="codeoutput">solve with parallel
+</pre><pre class="codeoutput">Starting matlabpool using the 'local' configuration ... connected to 8 labs.
+solve with parallel
 solve with parallel
 solve with serial
 new evaluation needed:28 recycled evaluations:25 discarded evaluations:4
 solve with serial
-Sending a stop signal to all the workers ... stopped.
+Sending a stop signal to all the labs ... stopped.
 </pre><img vspace="5" hspace="5" src="sparse_grids_tutorial_13.png" alt=""> <h2>PART 2: EVALUATE A FUNCTION ON A SPARSE GRID<a name="14"></a></h2><p>see test_evaluate_on_sparse_grids.m for more examples</p><h2>PART 3: INTEGRATION - BASICS<a name="15"></a></h2><pre class="codeinput"><span class="comment">% In this part we show how to use the Kit to perform high-dimensional quadrature. We consider the</span>
 <span class="comment">% following function, for which we know the analytic expression of the integral</span>
 <span class="comment">%</span>
@@ -570,7 +568,7 @@ abs(I-I_ex)
 </pre><pre class="codeoutput">
 I =
 
-   1.883984044753591
+    1.8840
 
 solve with serial
 ----------
@@ -578,14 +576,14 @@ difference between values
 
 ans =
 
-     4.440892098500626e-16
+   4.4409e-16
 
 ----------
 quad error
 
 ans =
 
-     5.270941016988218e-08
+   5.2709e-08
 
 </pre><h2>PART 3: INTEGRATION - USE OTHER QUADRATURE KNOTS<a name="16"></a></h2><pre class="codeinput"><span class="comment">% as already seen in the introduction, other quadrature knots are available</span>
 
@@ -617,7 +615,7 @@ quad error
 
 ans =
 
-     2.358824247039593e-10
+   2.3588e-10
 
 </pre><h2>PART 3: INTEGRATION - MODIFY QUADRATURE DOMAIN<a name="17"></a></h2><pre class="codeinput">clear
 clc
@@ -682,7 +680,7 @@ quad error
 
 ans =
 
-     1.807927674235543e-08
+   1.8079e-08
 
 </pre><h2>PART 3: INTEGRATION - COMPUTE MOMENTS OF RANDOM VARIABLES<a name="18"></a></h2><pre class="codeinput"><span class="comment">% here we compute E[f(x)] = \int_{[-2 1]x[0.5 6]} f(x) 1/(3*5.5) dx, (3*5.5 is the size of the domain)</span>
 
@@ -740,7 +738,7 @@ abs(I-I_ex)
 </pre><pre class="codeoutput">
 I_ex =
 
-   0.273738498572856
+    0.2737
 
 solve with serial
 solve with serial
@@ -750,16 +748,16 @@ compare the values
 
 ans =
 
-   0.273738498571860
-   0.273738498572856
-   0.273738498572856
+    0.2737
+    0.2737
+    0.2737
 
 ----------
 quad error
 
 ans =
 
-     9.954259638789154e-13
+   9.9543e-13
 
 </pre><h2>PART 3: INTEGRATION - RECYCLE EVALUATIONS FROM PREVIOUSLY COMPUTED GRIDS AND PARALLEL COMPUTATION<a name="19"></a></h2><pre class="codeinput"><span class="comment">% just as evaluate_on_sparse_grid, quadrature_on_sparse_grid provides evaluation recycling and</span>
 <span class="comment">% parallel evaluation</span>
@@ -805,10 +803,12 @@ disp(<span class="string">'-------------'</span>)
 disp(<span class="string">'difference between the results'</span>)
 [IT_rec; IT; IT2; IT3] <span class="comment">%#ok&lt;NOPTS&gt;</span>
 </pre><pre class="codeoutput">solve with serial
+Warning: more than 255 points are asked in one direction, using uint16 to handle this 
+Warning: more than 255 points are asked in one direction, using uint16 to handle this 
 new evaluation needed:832 recycled evaluations:705 discarded evaluations:0
 solve with serial
 solve with serial
-Starting matlabpool using the 'local' profile ... connected to 4 workers.
+Starting matlabpool using the 'local' configuration ... connected to 8 labs.
 solve with parallel
 new evaluation needed:832 recycled evaluations:705 discarded evaluations:0
 solve with parallel
@@ -817,10 +817,10 @@ difference between the results
 
 ans =
 
-   0.228763833671746
-   0.228763833671746
-   0.228763833671746
-   0.228763833671746
+    0.2288
+    0.2288
+    0.2288
+    0.2288
 
 </pre><h2>PART 3: INTEGRATION - HOW TO BUILD MORE COMPLEX SPARSE GRIDS. ANISOTROPIC GRIDS<a name="20"></a></h2><pre class="codeinput">clear
 clc
@@ -853,7 +853,7 @@ quad error
 
 ans =
 
-     1.456974987823489e-04
+   1.4570e-04
 
 </pre><h2>PART 3: INTEGRATION - HOW TO BUILD MORE COMPLEX SPARSE GRIDS. USE SMOLYAK_MULTIINDICES<a name="21"></a></h2><pre class="codeinput"><span class="comment">% As seen in the introduction, specify directly the set of multiindices involved.</span>
 <span class="comment">% Here, we generate the box set of all multiindices &lt;= of [3 5  2 3] in lexicographic order</span>
@@ -871,7 +871,7 @@ I_ex = I_1d^N;
 C = multiidx_box_set([3 5 2 3],1); <span class="comment">% X is C without [3 5 2 3]</span>
 knots=@(n) knots_uniform(n,-1,1,<span class="string">'nonprob'</span>);
 
-S3=smolyak_grid_multiindeces(C,knots,@lev2knots_lin);
+S3=smolyak_grid_multiidx_set(C,knots,@lev2knots_lin);
 
 
 
@@ -888,7 +888,7 @@ quad error
 
 ans =
 
-     6.552113139615123e-04
+   6.5521e-04
 
 </pre><h2>PART 3: INTEGRATION - CONVERGENCE STUDY<a name="22"></a></h2><pre class="codeinput"><span class="comment">% see test_sparse_quadrature.m</span>
 </pre><h2>PART 4: INTERPOLATION ON A SPARSE GRID. BASICS<a name="23"></a></h2><pre class="codeinput"><span class="comment">% the sparse grid also provides an interpolant / surrogate model for the original function. The</span>
@@ -922,7 +922,7 @@ Interpolation error
 
 ans =
 
-     5.228585919780926e-08
+   5.2286e-08
 
 </pre><h2>PART 4: INTERPOLATION ON A SPARSE GRID -  INTERPOLATION ERROR ON SPARSE GRID POINTS<a name="24"></a></h2><pre class="codeinput"><span class="comment">% since the sparse grid is a linear combination of several tensor grid interpolants, the interpolation</span>
 <span class="comment">% error in a point of the sparse grid is not necessarily zero, unless all tensor interpolats</span>
@@ -971,14 +971,14 @@ Interpolation error - non-nested grid
 
 ans =
 
-     8.556139706378252e-06
+   8.5561e-06
 
 ----------
 Interpolation error - nested grid
 
 ans =
 
-     2.775557561562891e-16
+   2.7756e-16
 
 </pre><h2>PART 4: INTERPOLATION ON A SPARSE GRID - CONVERGENCE STUDY<a name="25"></a></h2><pre class="codeinput"><span class="comment">% see test_sparse_interpolation.m</span>
 </pre><h2>PART 5: COMPUTE THE g-PCE OF A FUNCTION GIVEN ITS SPARSE GRID APPROXIMATION<a name="26"></a></h2><pre class="codeinput"><span class="comment">% the kit provides a function to compute the generalized Polynomial Cahos Expansion (g-PCE) of a function</span>
@@ -1038,7 +1038,8 @@ ans =
      3     0     0
      4     0     4
 
-</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2012b</a><br></p></div><!--
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.13<br></p></div><!--
 ##### SOURCE BEGIN #####
 % Examples of use of Sparse Grid Matlab Kit
 
@@ -1238,10 +1239,10 @@ N=2;
 knots=@(n) knots_uniform(n,-1,1,'nonprob'); 
 w = 5; %level
 
-[lev2knots,idxset]=define_functions_for_rule('TD',2);
+[lev2knots,idxset]=define_functions_for_rule('TD',N);
 S_TD = smolyak_grid(N,w,knots,lev2knots,idxset); % grid
 
-[lev2knots,idxset]=define_functions_for_rule('HC',2);
+[lev2knots,idxset]=define_functions_for_rule('HC',N);
 S_HC = smolyak_grid(N,w,knots,lev2knots,idxset); % grid
 
 % plot the grid itself
@@ -1269,7 +1270,7 @@ C=[
 
 [adm,C] = check_set_admissibility(C);
 
-S_M = smolyak_grid_multiindeces(C,knots,lev2knots);
+S_M = smolyak_grid_multiidx_set(C,knots,lev2knots);
 
 figure
 plot_grid(S_M,[],'color','b','marker','d','MarkerFaceColor','b');
@@ -1791,7 +1792,7 @@ I_ex = I_1d^N;
 C = multiidx_box_set([3 5 2 3],1); % X is C without [3 5 2 3]
 knots=@(n) knots_uniform(n,-1,1,'nonprob');
 
-S3=smolyak_grid_multiindeces(C,knots,@lev2knots_lin);
+S3=smolyak_grid_multiidx_set(C,knots,@lev2knots_lin);
 
 
 
