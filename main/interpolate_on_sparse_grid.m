@@ -54,10 +54,13 @@ if size(non_grid_points,1)~=N
 end
 
 
-% the other sizes.
+% the other sizes. Observe that, although we have changed the orientation of the inputs for consistency
+% matlab processes faster matrices when working column-wise, so we transpose everything to gain efficiency
 V = size(function_on_grid,1);
 nb_pts   = size(non_grid_points,2);
-f_values = zeros(V, nb_pts);
+f_values = zeros(nb_pts,V); 
+function_on_grid = function_on_grid';
+non_grid_points = non_grid_points';
 
 nb_grids=length(S);
 
@@ -121,31 +124,32 @@ for i=1:nb_grids
         % current tensor grid
         K=length(knots_per_dim{dim});
         
-        % allocate space for evaluations, consistently with the shape of
-        % non_grid_points (i.e. one point per column, that is all dim-th
-        % coordinates in 1 row)
-        mono_lagr_eval{dim}=zeros(K,nb_pts);
+        % allocate space for evaluations. Since I will be accessing it one lagrangian polynomial at a time
+        % i.e. one knot at a time, it's better to have all information for the same lagrange polynomial
+        % on the same column, for speed purposes
+        mono_lagr_eval{dim}=zeros(nb_pts,K);
         
         % loop on each node of the current dimension and evaluate the corresponding monodim lagr polynomial.
         % We will need an auxiliary vector to pick up the current knot (where the lagr pol is centered) and
-        % the remaining knots (where the lagr pol is zero)
+        % the remaining knots (where the lagr pol is zero). Here we see that mono_lagr_eval it's written 
+        % one column at a time
         aux=1:K;
         for k=aux
-            mono_lagr_eval{dim}(k,:) = lagr_eval(knots_per_dim{dim}(k),knots_per_dim{dim}(aux~=k),non_grid_points(dim,:));
+            mono_lagr_eval{dim}(:,k) = lagr_eval(knots_per_dim{dim}(k),knots_per_dim{dim}(aux~=k),non_grid_points(:,dim));
         end
         
     end
     
     % now put everything together. We have to take the tensor product of
     % each of the monodim lagr pol we have evaluated. That is, we have to
-    % pick one row for each matrix in the cell array and dot-multiply them.
+    % pick one column for each matrix in the cell array and dot-multiply them.
     % all the possible combinations have to be generated !
     %
     % once this is done, we have the evaluation of each multidim lagr
     % polynomial on the non_grid_points, which we will then multiply by the
     % corresponding nodal value and eventually sum everything up.
 
-    % We start by generating the combination of rows we need to take. We actually don't
+    % We start by generating the combination of column we need to take. We actually don't
     % need to generate them, but only to recover it from the matrix knots,
     % which already contains all the points of the grid, i.e. all the
     % combinations of 1D points!
@@ -189,36 +193,29 @@ for i=1:nb_grids
         
         % dot-multiply all the lagrangian functions according to the
         % combi represented by the current knot. The result F_LOC is a
-        % row-vector
+        % column vector
         
-        f_loc=mono_lagr_eval{1}(combi(1,kk),:);
+        f_loc=mono_lagr_eval{1}(:,combi(1,kk));
         for dim=2:N
-            f_loc=f_loc.*mono_lagr_eval{dim}(combi(dim,kk),:);
+            f_loc=f_loc.*mono_lagr_eval{dim}(:,combi(dim,kk));
         end
+
 
         % recover F, the corresponding value for the interpolating function in function_on_grid, with the global counter
         position = Sr.n(global_knot_counter);
-        F_value = function_on_grid(:,position);
+        F_value = function_on_grid(position,:);
         
         % add the contribution of this knot to the sparse interpolation.
         % Its contribution is a matrix, since I am evaluating it on a bunch
-        % of non_grid_points (one per column of f_values), and my function to be evaluated is vector-valued
-        % which gives a bunch of rows in f_values. 
+        % of non_grid_points (one per row of f_values, will be trasposed later), 
+        % and my function to be evaluated is vector-valued
+        % which gives a bunch of rows in columns in f_values.
+        % 
+        % we generate this matrix as outer product of f_loc (column vector with lagr pol values) and F_value
+        % (row vector with function evaluations)
         
-        f_values = f_values + coeff*F_value*f_loc;
+        f_values = f_values + coeff*f_loc*F_value; 
         
-        % we build it ``lagrange way'' by summing 
-        %
-        % (lagrange polynomials evaluated in non_grid_points) x (evaluations of each output component function in each grid point)
-        % 
-        % the lagrange polynomials are the same for every output component!
-        % 
-        % --> output components eval are in F_value, it's a tall vector, as tall as the number of outputs (imagine the solution of linear system) 
-        % --> lagrange polynomials eval are in f_loc, it's a fat vector, as fat as non_grid_points. 
-        % 
-        % so we need to create the matrix [F_value(1)*f_loc; F_value(2)*f_loc ....] i.e. an horizontal cat. 
-        % we to this by [F_value]*[f_loc] (column vect by row vect multiplication)
-        % 
         
         % update global counter
         global_knot_counter=global_knot_counter+1;
@@ -227,6 +224,10 @@ for i=1:nb_grids
     
     
 end % of for loop on tensor grid
+
+% finally, transpose to comply with output orientation
+f_values=f_values';
+
 
 
 % % -------------------------------------------------
