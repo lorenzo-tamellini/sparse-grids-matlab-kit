@@ -1,20 +1,24 @@
-function output = evaluate_on_sparse_grid(f,Sr,evals_old,Sr_old,paral,tol)
+function [f_eval,new_points,tocomp_list] = evaluate_on_sparse_grid(f,Sr,evals_old,Sr_old,paral,tol)
 
 %EVALUATE_ON_SPARSE_GRID evaluates a function on a sparse grid, possibly recycling previous calls
 % 
-% OUTPUT = EVALUATE_ON_SPARSE_GRID(F,SR) evaluates a function F on a sparse grid SR, without recycling. 
+% F_EVAL = EVALUATE_ON_SPARSE_GRID(F,SR) evaluates a function F on a sparse grid SR, without recycling. 
 %           SR must be a reduced sparse grid. F is a function that takes as input a column vector point 
 %           and returns either a scalar or a column vector. F will be evaluated one point at a time 
 %           so there's no need for F to accept as input matrices as well.
-%           OUTPUT is a matrix storing the evaluations of F on SR, each evaluation being stored as a column 
+%           F_EVAL is a matrix storing the evaluations of F on SR, each evaluation being stored as a column 
 %           vector 
 %
-% OUTPUT = EVALUATE_ON_SPARSE_GRID(F,SR,EVALS_OLD,SR_OLD) recycles available evaluations of F on a different
+% F_EVAL = EVALUATE_ON_SPARSE_GRID(F,SR,EVALS_OLD,SR_OLD) recycles available evaluations of F on a different
 %           sparse grid, stored respectively in EVALS_OLD and SR_OLD. EVALS_OLD is a matrix storing the 
 %           evaluations of F on SR_OLD, each evaluation being stored as a column vector 
 %           (i.e. EVALS_OLD will be typically a row vector or a matrix with nb.columns = nb. sparse grid points)
 %
-% OUTPUT = EVALUATE_ON_SPARSE_GRID(F,SR,EVALS_OLD,SR_OLD,PARAL) uses the matlab parallel toolbox to speed 
+% [F_EVAL,NEW_POINTS,IDX] = EVALUATE_ON_SPARSE_GRID(F,SR,EVALS_OLD,SR_OLD) also returns NEW_POINTS, the list of points 
+%           where f has been evaluated (i.e. the new points w.r.t. the previous grid), and IDX, that contains
+%           the position of NEW_POINTS in SR.KNOTS, i.e. SR.KNOTS(:,IDX) = NEW_POINTS
+%
+% F_EVAL = EVALUATE_ON_SPARSE_GRID(F,SR,EVALS_OLD,SR_OLD,PARAL) uses the matlab parallel toolbox to speed 
 %           up the computation:
 %               PARAL = NaN means no parallel (default)
 %               PARAL = some number X means "use parallel if more than X evals are needed". 
@@ -25,9 +29,9 @@ function output = evaluate_on_sparse_grid(f,Sr,evals_old,Sr_old,paral,tol)
 %           Important: EVALUATE_ON_SPARSE_GRID does not switch on a matlabpool session. However, an error
 %           is thrown if no matlabpool session is detected
 %
-% OUTPUT = EVALUATE_ON_SPARSE_GRID(F,SR,[],[],PARAL) uses the matlab parallel toolbox without recycling  
+% F_EVAL = EVALUATE_ON_SPARSE_GRID(F,SR,[],[],PARAL) uses the matlab parallel toolbox without recycling  
 %
-% OUTPUT = EVALUATE_ON_SPARSE_GRID(F,SR,EVALS_OLD,SR_OLD,PARAL,TOL) specifies the tolerance to be used when 
+% F_EVAL = EVALUATE_ON_SPARSE_GRID(F,SR,EVALS_OLD,SR_OLD,PARAL,TOL) specifies the tolerance to be used when 
 %            testing whether two points are equal or not (default 1e-14)
 
 
@@ -49,7 +53,7 @@ switch nargin
 
     case 2
         % evaluate_on_sparse_grid(f,Sr)
-        output = simple_evaluate(f,Sr);
+        f_eval = simple_evaluate(f,Sr);
         return
 
     case 4
@@ -57,7 +61,7 @@ switch nargin
         % or
         % evaluate_on_sparse_grid(f,Sr,[],[])
         if isempty(evals_old) && isempty(Sr_old)
-            output = simple_evaluate(f,Sr);
+            f_eval = simple_evaluate(f,Sr);
             return
         end
         if ~isreduced(Sr_old)
@@ -71,7 +75,7 @@ switch nargin
         % or
         % evaluate_on_sparse_grid(f,Sr,evals_old,Sr_old,paral)
         if isempty(evals_old) && isempty(Sr_old)
-            output = simple_evaluate(f,Sr,paral);
+            f_eval = simple_evaluate(f,Sr,paral);
             return
         end
         if ~isreduced(Sr_old)
@@ -97,6 +101,8 @@ pts_list_old = Sr_old.knots';
 
 [tocomp_list,recycle_list,recycle_list_old] = lookup_merge_and_diff(pts_list,pts_list_old,tol);
 
+new_points=pts_list(tocomp_list,:)';
+
 
 % do the evaluation 
 % ------------------------------------
@@ -105,7 +111,7 @@ pts_list_old = Sr_old.knots';
 N=size(pts_list,1);
 s = size(evals_old,1);
 
-output=zeros(s,N);
+f_eval=zeros(s,N);
 
 n = size(tocomp_list,1);
 evals_new=zeros(s,n);
@@ -133,8 +139,8 @@ end
 % ------------------------------------
 
 
-output(:,tocomp_list)= evals_new;
-output(:,recycle_list)= evals_old(:,recycle_list_old);
+f_eval(:,tocomp_list)= evals_new;
+f_eval(:,recycle_list)= evals_old(:,recycle_list_old);
 
 
 end
