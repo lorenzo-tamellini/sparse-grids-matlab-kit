@@ -1,7 +1,7 @@
 % RELEASE NOTES
 %
 %
-% -> 2014, Mar. 06: --> LEV2KNOTS_NESTED has been renamed LEV2KNOTS_DOUBLING
+% -> 2014, Apr. 01: --> LEV2KNOTS_NESTED has been renamed LEV2KNOTS_DOUBLING
 %
 %                   --> SMOLYAK_GRID_MULTIINDECES has been renamed SMOLYAK_GRID_MULTIIDX_SET
 %
