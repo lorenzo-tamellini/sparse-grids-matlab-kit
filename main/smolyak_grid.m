@@ -192,7 +192,7 @@ else
         if coeff(j)~=0
             i = C(j,:);
             m =apply_lev2knots(i,lev2knots,N); % n. of points in each direction
-            S(ss) = tensor_grid_pattern(N,m,knots);
+            S(ss) = tensor_grid(N,m,knots);
             S(ss).weights=S(ss).weights*coeff(j);
             coeff_condensed(ss)=coeff(j);
             ss=ss+1;

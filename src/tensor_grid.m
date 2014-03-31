@@ -20,6 +20,7 @@ function S = tensor_grid(N,m,knots)
 %           S.size: size of the tensor grid = prod(m)
 
 
+
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
 % Copyright (c) 2009-2014 L. Tamellini, F. Nobile
@@ -36,12 +37,25 @@ if isa(knots,'function_handle')
     end
 end
 
-[S.knots,S.weights] = knots{1}(m(1));   
-for i=2:N
- [Xi,Wi] = knots{i}(m(i));
- S.knots = combvec(S.knots,Xi);         
- S.weights = combvec(S.weights,Wi);
- S.weights = prod(S.weights);
-end
+sz=prod(m);
 
-S.size = prod(m);
+S.knots=zeros(N,sz);
+S.weights=ones(1,sz);
+
+% generate the pattern that will be used for knots and weights matrices, e.g.
+% 
+% pattern = [1 1 1 1 2 2 2 2;
+%            1 1 2 2 1 1 2 2;
+%            1 2 1 2 1 2 1 2]
+%
+% meaning "first node d-dim uses node 1 in direction 1, 2 and 3, second d-dim  node uses node 1 in 
+% direction 1 and 2 and node 2 in direction 3 ...
+
+pattern=generate_pattern(m);
+
+for n=1:N
+    [xx,ww] = knots{n}(m(n));
+    S.knots(n,:) = xx(pattern(n,:));
+    S.weights = S.weights.*ww(pattern(n,:));
+end
+S.size = sz;

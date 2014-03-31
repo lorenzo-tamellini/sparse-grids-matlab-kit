@@ -26,9 +26,7 @@ function pattern = generate_pattern(m)
 
 N=length(m);
 
-% it is convenient from a computational point of view to generate the pattern as uint16 which allows for
-% up to 65000 points each dim (note that uint8 would not be enough as the maximum of 255 would be 
-% below e.g. lev2knots_doubling(9) = 257
+% it is convenient from a computational point of view to generate the pattern as unsigned int to create the pattern
 if max(m)<=intmax('uint8')
     pattern=zeros(N,prod(m),'uint8');
 elseif max(m) <=intmax('uint16')
