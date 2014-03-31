@@ -8,6 +8,15 @@ function L = lagr_eval(current_knot,other_knots,non_grid_points)
 %
 % and returns L=L(non_grid_points)
 
+
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
+
+
+
 % each monodim lagrange function is a product of K terms like (x-x_k)/(current_knot-x_k),
 % so i compute it with a for loop
 

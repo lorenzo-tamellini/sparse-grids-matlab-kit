@@ -20,6 +20,13 @@ function map = get_interval_map(a,b,type)
 % ( a(1) b(1) ) x ( a(2) b(2) ) x ( a(3) b(3) ), one point per column
 
 
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
+
+
 switch type
     
     case 'uniform'

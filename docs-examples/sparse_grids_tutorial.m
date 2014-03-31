@@ -1,6 +1,12 @@
 % Examples of use of Sparse Grid Matlab Kit
 
 
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
+
 
 
 %% PART 0: INSTALL / ADD TO PATH

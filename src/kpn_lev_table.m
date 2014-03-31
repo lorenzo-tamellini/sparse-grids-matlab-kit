@@ -17,6 +17,14 @@ function A = kpn_lev_table(rows,cols)
 %
 % this function returns the (row,col) submatrix of M
 
+
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
+
+
 M=[
 0     0     0   0
 1     1     1   1

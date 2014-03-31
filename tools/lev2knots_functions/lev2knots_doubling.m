@@ -10,6 +10,13 @@ function m = lev2knots_doubling(i)
 % i.e. m(i)=2*m(i-1)-1
 
 
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
+
+
 m = 2.^(i-1)+1;
 for k=1:length(m(:))
     if i(k)==1 

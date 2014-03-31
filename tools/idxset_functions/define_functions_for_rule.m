@@ -14,6 +14,15 @@ function [lev2nodes,idxset] = define_functions_for_rule(rule,input2)
 % 
 % The outputs are anonymous function , lev2nodes =@(i) ... and idxset=@(i) ...
 
+
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
+
+
+
 if isscalar(input2)
     % here input2 is the number of variables
     N=input2;

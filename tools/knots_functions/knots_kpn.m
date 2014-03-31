@@ -1,8 +1,16 @@
-function [x,w] = kpn_knots(n)
+function [x,w] = knots_kpn(n)
 
-% [x,w] = kpn_knots(n)
+% [x,w] = knots_kpn(n)
 %
 % returns knots and weights for kpn for given number of points
+
+
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
+
 
 
 % first recover the i-level

@@ -13,6 +13,13 @@ function [is_adm, completed_set, missing_set] = check_index_admissibility(idx,id
 %       COMPLETED_SET and MISSING_SET sorted in lexicographic order.
 
 
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
+
+
 is_adm=true;
 completed_set=idx_set;
 missing_set=[];

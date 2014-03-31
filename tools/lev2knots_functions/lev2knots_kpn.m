@@ -5,6 +5,16 @@ function nb_knots = lev2knots_kpn(I)
 % returns the number of knots corresponding to the i-level i, 
 % via the i2l map tabulated as in kpn_lev_table
 
+
+
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
+
+
+
 % are there non tabulated levels?
 non_tab=I(I>5);
 

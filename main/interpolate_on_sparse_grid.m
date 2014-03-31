@@ -14,6 +14,14 @@ function f_values = interpolate_on_sparse_grid(S,Sr,function_on_grid,non_grid_po
 %       F_VALUES is a matrix containing the evaluation of the vector-valued function F 
 %       in each of the non_grid_points. Its dimensions are: V x number_of_non_grid_point
 
+
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
+
+
 if nargin == 5
     errmsg=['Too many input arguments. Note that starting from release 14.3 '...
         'interpolate_on_sparse_grid does not accept any longer INTERVAL_MAP as second input argument. '...

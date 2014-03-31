@@ -10,6 +10,14 @@ function [x,w]=knots_gaussian(n,mi,sigma)
 % with mean mi and standard deviation sigma
 
 
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
+
+
+
 if (n==1) 
       % the point (traslated if needed) 
       x=mi;

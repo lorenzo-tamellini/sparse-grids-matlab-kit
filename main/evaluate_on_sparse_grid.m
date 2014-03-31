@@ -35,6 +35,13 @@ function [f_eval,new_points,tocomp_list] = evaluate_on_sparse_grid(f,Sr,evals_ol
 %            testing whether two points are equal or not (default 1e-14)
 
 
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
+
+
 
 % safety check and input handling
 % ------------------------------------

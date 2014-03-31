@@ -20,6 +20,14 @@ function [x,w]=knots_uniform(n,x_a,x_b,whichrho)
 % and the weights (w) for the gaussian integration 
 % w.r.t to the weight function rho(x)=1
 
+
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
+
+
 if nargin==3
     whichrho='prob';
 end
@@ -41,7 +49,7 @@ else
     [W,X]=eig(JacM);
     x=diag(X)';
     wt=W(1,:).^2;
-    [x,ind]=sort(x);  %#ok<UDIM>
+    [x,ind]=sort(x);  %#ok<TRSRT>
     wt=wt(ind);
     
     % modifies points according to the distribution and its interval x_a, x_b

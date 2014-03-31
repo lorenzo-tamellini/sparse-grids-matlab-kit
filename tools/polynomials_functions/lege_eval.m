@@ -7,6 +7,14 @@ function L = lege_eval(x,k,a,b)
 %
 % N.B. the polynomials start from k=0: L_0(x) = 1, L_1(x) = x
 
+
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
+
+
 % this function expresses L as a function of the standard Legendre polynomial (i.e. polynomials orthogonal in -1,1 w.r.t to rho=1 !! ),
 % which are recursively calculated through the function standard_lege_eval, coded below in this .m file
 

@@ -15,6 +15,13 @@ function Sr=reduce_sparse_grid(S,tol)
 %       (default value 1e-14)
 
 
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
+
+
 
 Tol=1e-14;  % default value
 if nargin==2

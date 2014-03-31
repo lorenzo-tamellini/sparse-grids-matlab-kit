@@ -19,6 +19,15 @@ function S = tensor_grid_pattern(N,m,knots)
 %           S.weights: vector containing the corresponding weights
 %           S.size: size of the tensor grid = prod(m)
 
+
+
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
+
+
 % if knots is a simple function, we replicate it in a cell
 if isa(knots,'function_handle')
     fknots=knots;

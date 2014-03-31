@@ -20,6 +20,11 @@ function S = tensor_grid(N,m,knots)
 %           S.size: size of the tensor grid = prod(m)
 
 
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
 
 
 % if knots is a simple function, we replicate it in a cell

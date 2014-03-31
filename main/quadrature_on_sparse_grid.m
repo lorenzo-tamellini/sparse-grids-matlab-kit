@@ -25,6 +25,14 @@ function [res,evals] = quadrature_on_sparse_grid(f,S,evals_old,S_old,paral,tol)
 % [res,evals] = QUADRATURE_ON_SPARSE_GRID(...) returns the evaluations of the function F 
 %       over the points of the sparse grid S
 
+
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
+
+
 switch nargin
     case 1
         error('not enough input arguments')

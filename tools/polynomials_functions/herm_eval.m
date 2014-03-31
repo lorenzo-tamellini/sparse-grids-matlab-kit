@@ -7,12 +7,22 @@ function H = herm_eval(x,k,mi,sigma)
 %
 % N.B. the polynomials start from k=0: L_0(x) = 1, L_1(x) = (x - mi)/sigma
 
+
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
+
+
+
 % this function expresses H as a function of the standard Hermite "probabilistic" polynomial (i.e. orthoGONAL w.r.t. rho=1/sqrt(2 pi) * e^(-x^2/2) ),
 % which are recursively calculated through the function standard_herm_eval, coded below in this .m file
 
 % first compute the transformation of x (referred to N(mi,sigma^2)) to z, the standard gaussian
 
 % sigma=sqrt(sigma2);
+
 
 z = ( x - mi ) / sigma ;
 

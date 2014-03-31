@@ -12,6 +12,15 @@ function L= lagr_eval_multidim(current_knot,knots_per_dim,non_grid_points)
 %                [0 0.2 0.4 0.6 0.8 1] }
 % it has to contain current_knot
 
+
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
+
+
+
 % we are working on P points in N dimensions,
 [P,N]=size(non_grid_points);
 

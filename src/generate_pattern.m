@@ -16,6 +16,14 @@ function pattern = generate_pattern(m)
 %       1      1      1      1      1      1      2      2      2      2      2      2
 
 
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
+
+
+
 N=length(m);
 
 % it is convenient from a computational point of view to generate the pattern as uint16 which allows for

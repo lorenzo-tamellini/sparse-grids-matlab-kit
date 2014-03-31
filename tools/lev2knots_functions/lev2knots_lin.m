@@ -1,12 +1,18 @@
-% ========================================================
+function [m] = lev2knots_lin(i)
+
+
 %   relation level / number of points:
 %    m = i
-% ========================================================
 %
 %   [m] = lev2knots_lin(i)
 %   i: level in each direction
 %   m: number of points to be used in each direction
 
-function [m] = lev2knots_lin(i)
+
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
 
 m = i;

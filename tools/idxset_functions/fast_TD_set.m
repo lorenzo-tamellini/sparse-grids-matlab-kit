@@ -4,6 +4,14 @@ function I = fast_TD_set(N,w)
 % (one row per multiindex) i.e. {ii in N_+ : sum(ii-1) <= w} 
 
 
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
+
+
+
 % initialize I
 TDsize=nchoosek(N+w,N);
 

@@ -4,7 +4,13 @@ function H = herm_eval_multidim(X,k,mu,sig)
 %
 % evaluates the multidim Hermite polynomial order k (multi-index) orthonormal on [-inf,+inf]^N 
 % on the list of points X (each column is a point in R^N)
-%
+
+
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
 
 
 [N, nb_pts] = size(X); % N here is the number of dimensions

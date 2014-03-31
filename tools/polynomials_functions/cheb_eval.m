@@ -5,6 +5,14 @@ function L = cheb_eval(x,k,a,b)
 % returns the values of the k-th Chebyshev polynomial of the first kind
 % on [a,b] (i.e. T_n(a)=(-1)^n, T_n(b)=1), evaluated at x (vector)
 
+
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
+
+
 % first compute the transformation of x in (a,b) to t in (-1,1)
 t = ( 2*x - a - b ) / (b - a ) ;
 

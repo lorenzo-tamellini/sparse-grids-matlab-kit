@@ -19,6 +19,13 @@ function [x,w] = knots_CC(nn,x_a,x_b,whichrho)
 % w.r.t to the weight function rho(x)=1
 
 
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
+
+
 
 if nargin==3
     whichrho='prob';

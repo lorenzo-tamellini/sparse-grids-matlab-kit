@@ -8,6 +8,13 @@ function is_unsuf = detect_unsufficient_tolerance(pts,tol)
 % then tol is too large and a warning is thrown
 
 
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
+
+
 N=size(pts,2);
 is_unsuf=false;
 

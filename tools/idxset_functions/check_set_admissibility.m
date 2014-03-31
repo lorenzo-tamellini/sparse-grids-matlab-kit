@@ -4,6 +4,15 @@ function [adm,C] = check_set_admissibility(I)
 %       If that is the case, adm=true and C contains I ordered in lexicographic order. 
 %       If not, adm=false and C contains I plus the multiindeces needed, again in lexicographic order
 
+
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
+
+
+
 C=I;
 
 % now check amdissibility condition and add what's missing. Print a warning if needed

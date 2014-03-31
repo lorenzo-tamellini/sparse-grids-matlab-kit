@@ -21,6 +21,12 @@ function [modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,flag,~)
 %       i.e. the n-th variable of the sparse grid space has normal distribution with mean mu_n and std sigma_n
 
 
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
+
 
 % fix input 
 errmsg=[' Please note that CONVERT_TO_MODAL does not accept INTERVAL_MAP '...

@@ -14,6 +14,14 @@ function [S,C] = smolyak_grid_multiidx_set(C,knots,lev2knots,map,weights_coeff)
 % KNOTS, LEV2KNOTS, MAP, WEIGHTS_COEFF and on the sparse grid data structure S
 
 
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
+
+
+
 N=size(C,2);
 
 % if knots and  lev2knots are simple function, we replicate them in a cell

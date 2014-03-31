@@ -7,6 +7,13 @@ function MULTI_IDX = multiidx_gen(L,rule,w,base,multiidx,MULTI_IDX)
 % indices will start from base (either 0 or 1)
 
 
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
+
+
 % multiidx_gen works recursively, exploring in depth the tree of all possible multiindexes. 
 % the current multi-index is passed as 4-th input argument, and eventually stored in MULTI_IDX.
 % The starting point is the empty multiidx: [], and MULTI_IDX is empty at the first call of the function.

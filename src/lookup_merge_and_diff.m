@@ -5,6 +5,14 @@ function [tocomp_list,recycle_list,recycle_list_old] = lookup_merge_and_diff(pts
 % looks for points of pts_list in pts_list_old using the same algorithm as reduce_sparse_grid. tol is
 % the tolerance for two points to be considered equal
 
+
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
+
+
 if nargin==2
     Tol=1e-14;
 end

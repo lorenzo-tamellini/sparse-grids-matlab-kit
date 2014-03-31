@@ -9,6 +9,15 @@ function C = cheb_eval_multidim(X,k,a,b)
 % [a1,b1] x [a2,b2] x [a3,b3] x ... [aN,bN] 
 % in this case, a,b are defined as vectors, each with N components
 
+
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
+
+
+
 [N, nb_pts] = size(X); % N here is the number of dimensions
 
 C = zeros(1,nb_pts);

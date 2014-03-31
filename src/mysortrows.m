@@ -1,4 +1,5 @@
-% ============================================================
+function [A,i_ord]=mysortrows(A,Tol,i,i_ord,n)
+
 % Similar to Matlab builtin function sortrows. Given a matrix A
 % of real numbers, sorts the rows in lexicographic order; entries 
 % that differ less than Tol are treated as equal (default Tol is 1e-14).
@@ -17,9 +18,16 @@
 % recursive call: [A,i_ord]=mysortrows(A,Tol,i,i_ord,n)
 % sorts the submatrix A(i,n:end); modifies the matrix itself and 
 % stores the rows permutation in the global vector i_ord.
-% ============================================================
 
-function [A,i_ord]=mysortrows(A,Tol,i,i_ord,n)
+
+
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
+
+
 
 if nargin==1
     Tol=1e-14;

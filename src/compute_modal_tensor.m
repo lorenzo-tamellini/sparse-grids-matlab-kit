@@ -20,6 +20,13 @@ function U = compute_modal_tensor(S,S_values,domain,flag)
 %       and so on.
 
 
+%----------------------------------------------------
+% Sparse Grid Matlab Kit
+% Copyright (c) 2009-2014 L. Tamellini, F. Nobile
+% See LICENSE.txt for license
+%----------------------------------------------------
+
+
 try
     ismember(flag,{'legendre','chebyshev','hermite'});
 catch
