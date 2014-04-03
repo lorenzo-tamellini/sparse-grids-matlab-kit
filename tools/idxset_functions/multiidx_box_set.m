@@ -1,10 +1,9 @@
 function [C_with,C_without] = multiidx_box_set(shape,min_idx)
 
-% [C_with,C_without] = MULTIIDX_BOX_SET(shape,min_idx)
+% [C_with,C_without] = MULTIIDX_BOX_SET(ii,min_idx)
 %
-% given an index shape, generates C_with, the box indeces set up to that i.
-% min_idx is either 0 or 1. C_without is C_with without the shape_midx
-% itself
+% given an index ii, generates C_with, the box indeces set up to that ii.
+% min_idx is either 0 or 1. C_without is C_with without ii itself
 
 
 %----------------------------------------------------
