@@ -17,6 +17,15 @@ addpath(genpath(pwd)) % do not use addpath(genpath(./)), it won't work properly
 disp('path set')
 
 
+% to suppress most of text output on screen use
+%
+% global MATLAB_SPARSE_KIT_VERBOSE;
+% MATLAB_SPARSE_KIT_VERBOSE = 0;
+%
+% to resume text output, set
+%
+% MATLAB_SPARSE_KIT_VERBOSE = 1;
+
 
 %% PART 1: INTRODUCTION - WHAT IS A SPARSE GRID
 

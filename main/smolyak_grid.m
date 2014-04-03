@@ -106,7 +106,7 @@ if w==0
     m = apply_lev2knots(i,lev2knots,N);
     S(1) = tensor_grid(N,m,knots);
     S(1).coeff=1;
-    disp('using 1 multiindex')
+    %disp('using 1 multiindex')
     C=i;
 
 else

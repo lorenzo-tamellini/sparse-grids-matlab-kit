@@ -10,7 +10,8 @@
 %
 % -> 2014, Apr. 01: --> LEV2KNOTS_NESTED has been renamed LEV2KNOTS_DOUBLING
 %
-%                   --> SMOLYAK_GRID_MULTIINDECES has been renamed SMOLYAK_GRID_MULTIIDX_SET
+%                   --> SMOLYAK_GRID_MULTIINDECES has been renamed SMOLYAK_GRID_MULTIIDX_SET. An error is thrown if the 
+%                       multi-index set used is not sorted in lexicographic order
 %
 %                   --> SMOLYAK_GRID and SMOLYAK_GRID_MULTIIDX_SET have been rewritten and are now 2~3 times faster
 %
@@ -25,6 +26,10 @@
 %                   --> it is now possible to mix random variables along different directions of a sparse grid,
 %                       e.g. create a sparse grid with clenshaw-curtis points in one direction and gauss-hermite
 %                       points in another, see help SMOLYAK_GRID, SMOLYAK_GRID_MULTIINDICES
+%
+%                   --> text ouput on screen is controlled by the boolean global variable MATLAB_SPARSE_KIT_VERBOSE
+%                       (default value = 1 , i.e. output on screen is allowed)
+%
 %
 %                   --> INTERPOLATE_ON_SPARSE_GRID, QUADRATURE_ON_SPARSE_GRID, CONVERT_TO_MODAL, COMPUTE_MODAL_TENSOR do not accept
 %                       any longer MAP and WEIGHTS_COEFF input arguments, that should rather be passed as input to

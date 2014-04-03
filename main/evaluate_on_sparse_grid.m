@@ -33,6 +33,8 @@ function [f_eval,new_points,tocomp_list] = evaluate_on_sparse_grid(f,Sr,evals_ol
 %
 % F_EVAL = EVALUATE_ON_SPARSE_GRID(F,SR,EVALS_OLD,SR_OLD,PARAL,TOL) specifies the tolerance to be used when 
 %            testing whether two points are equal or not (default 1e-14)
+%
+% F_EVAL = EVALUATE_ON_SPARSE_GRID(F,SR,[],[],PARAL,TOL) uses the matlab parallel toolbox without recycling  
 
 
 %----------------------------------------------------
@@ -41,6 +43,13 @@ function [f_eval,new_points,tocomp_list] = evaluate_on_sparse_grid(f,Sr,evals_ol
 % See LICENSE.txt for license
 %----------------------------------------------------
 
+
+
+% declare a global variable controlling verbosity
+global MATLAB_SPARSE_KIT_VERBOSE
+if isempty(MATLAB_SPARSE_KIT_VERBOSE)
+    MATLAB_SPARSE_KIT_VERBOSE=1;
+end
 
 
 % safety check and input handling
@@ -61,14 +70,21 @@ switch nargin
     case 2
         % evaluate_on_sparse_grid(f,Sr)
         f_eval = simple_evaluate(f,Sr);
+        new_points = Sr.knots;
+        tocomp_list = 1:length(Sr.weights);
         return
 
+    case 3
+        error('EVALUATE_ON_SPARSE_GRID does not accept 3 inputs')
+        
     case 4
         % evaluate_on_sparse_grid(f,Sr,evals_old,Sr_old)
         % or
         % evaluate_on_sparse_grid(f,Sr,[],[])
         if isempty(evals_old) && isempty(Sr_old)
             f_eval = simple_evaluate(f,Sr);
+            new_points = Sr.knots;
+            tocomp_list = 1:length(Sr.weights);
             return
         end
         if ~isreduced(Sr_old)
@@ -83,6 +99,8 @@ switch nargin
         % evaluate_on_sparse_grid(f,Sr,evals_old,Sr_old,paral)
         if isempty(evals_old) && isempty(Sr_old)
             f_eval = simple_evaluate(f,Sr,paral);
+            new_points = Sr.knots;
+            tocomp_list = 1:length(Sr.weights);
             return
         end
         if ~isreduced(Sr_old)
@@ -90,6 +108,17 @@ switch nargin
         end
         tol=1e-14;
 
+    case 6
+        % evaluate_on_sparse_grid(f,Sr,[],[],paral,tol)
+        % or
+        % evaluate_on_sparse_grid(f,Sr,evals_old,Sr_old,paral,tol)
+        if isempty(evals_old) && isempty(Sr_old)
+            f_eval = simple_evaluate(f,Sr,paral);
+            new_points = Sr.knots;
+            tocomp_list = 1:length(Sr.weights);            
+            return
+        end
+        
 end
 
 
@@ -125,7 +154,9 @@ evals_new=zeros(s,n);
 
 if ~isempty(tocomp_list)
     if n>paral % if no parallel this one becomes n>NaN, which is false for any n
-        disp('solve with parallel')
+        if MATLAB_SPARSE_KIT_VERBOSE,   
+            disp('using parallel')
+        end
         if ~matlabpool('size')
             error('no open matlabpool session detected')
         end
@@ -135,7 +166,9 @@ if ~isempty(tocomp_list)
         end
     else
         % either no parallel available or no parallel wanted, so we just go with a for
-        disp('solve with serial')
+        if MATLAB_SPARSE_KIT_VERBOSE
+            disp('using serial')
+        end
         for i=1:n
             evals_new(:,i)=f(pts_list(tocomp_list(i),:)');
         end
@@ -175,6 +208,13 @@ function output = simple_evaluate(f,Sr,paral)
 %
 % does not exploit the previous sparse grids evaluations
 
+% declare a global variable controlling verbosity
+
+global MATLAB_SPARSE_KIT_VERBOSE
+if isempty(MATLAB_SPARSE_KIT_VERBOSE)
+    MATLAB_SPARSE_KIT_VERBOSE=1;
+end
+
 
 if nargin==2,
     paral=NaN;
@@ -188,7 +228,9 @@ output=zeros(length(probe),n);
 output(:,1)=probe;
 
 if n>paral % if no parallel this one becomes n>NaN, which is false for any n
-    disp('solve with parallel')
+    if MATLAB_SPARSE_KIT_VERBOSE
+        disp('using parallel')
+    end
     if ~matlabpool('size')
         error('no open matlabpool session detected')
     end
@@ -198,7 +240,9 @@ if n>paral % if no parallel this one becomes n>NaN, which is false for any n
     end    
 else
     % either no parallel available or no parallel wanted, so we just go with a for
-    disp('solve with serial')
+    if MATLAB_SPARSE_KIT_VERBOSE
+        disp('using serial')
+    end
     for i=2:n
         % if ~mod(i,100), disp(i), end
         output(:,i)=f(Sr.knots(:,i)); 

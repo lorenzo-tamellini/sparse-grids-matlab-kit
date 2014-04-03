@@ -21,6 +21,14 @@ function [S,C] = smolyak_grid_multiidx_set(C,knots,lev2knots,map,weights_coeff)
 %----------------------------------------------------
 
 
+% first a check on C being sorted. Observe that the function sortrows used is very efficient
+% so the cost of this preliminary analysis is negligible (e.g. it takes 0.02 sec to verify
+% that a TD set with w=5 and N=30, i.e. ~340600 indices is sorted,  and only 0.00027 sec that
+% the matrix A=randi(20,300000,30) is unsorted.
+
+if ~issorted(C,'rows'),
+    error('the multiindex set C is not sorted')
+end
 
 N=size(C,2);
 

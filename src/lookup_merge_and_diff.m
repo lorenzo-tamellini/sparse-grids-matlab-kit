@@ -12,6 +12,11 @@ function [tocomp_list,recycle_list,recycle_list_old] = lookup_merge_and_diff(pts
 % See LICENSE.txt for license
 %----------------------------------------------------
 
+% declare a global variable controlling verbosity
+global MATLAB_SPARSE_KIT_VERBOSE
+if isempty(MATLAB_SPARSE_KIT_VERBOSE)
+    MATLAB_SPARSE_KIT_VERBOSE=1;
+end
 
 if nargin==2
     Tol=1e-14;
@@ -163,8 +168,9 @@ if diff_eq(L) % short-hand for diff_eq(L)==1,
 end
 
 % show some statistics
-display(strcat('new evaluation needed:',num2str(j),' recycled evaluations:',num2str(i),' discarded evaluations:',num2str(discard)))
-
+if MATLAB_SPARSE_KIT_VERBOSE
+    disp(strcat('new evaluation needed:',num2str(j),' recycled evaluations:',num2str(i),' discarded evaluations:',num2str(discard)))
+end
 
 
 % remove the extra entries of tocomp_list and recycle_lists. Pay attention to special cases
