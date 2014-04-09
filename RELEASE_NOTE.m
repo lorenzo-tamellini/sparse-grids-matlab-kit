@@ -5,10 +5,10 @@
 %----------------------------------------------------------------------------------
 
 
-% RELEASE NOTES
+% RELEASE NOTES version 14.4
 %
 %
-% -> 2014, Apr. 01: --> LEV2KNOTS_NESTED has been renamed LEV2KNOTS_DOUBLING
+% -> 2014, Apr. 09: --> LEV2KNOTS_NESTED has been renamed LEV2KNOTS_DOUBLING
 %
 %                   --> SMOLYAK_GRID_MULTIINDECES has been renamed SMOLYAK_GRID_MULTIIDX_SET. An error is thrown if the 
 %                       multi-index set used is not sorted in lexicographic order
@@ -62,10 +62,6 @@
 %
 %
 %
-%
-%
-%
-% DIFFERENCES W.R.T. THE PREVIOUS RELEASE : 
 %
 % sparse grid matlab kit august 2012 vs sparse grid toolkit november 2010
 % 

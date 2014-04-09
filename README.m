@@ -31,7 +31,7 @@
 % The functionalty provided are: 
 %
 % -> smolyak_grid.m
-% -> smolyak_grid_multiindeces.m
+% -> smolyak_grid_multiidx_set.m
 % -> reduce_sparse_grid.m
 % -> evaluate_on_sparse_grid.m
 % -> interpolate_on_sparse_grid.m
