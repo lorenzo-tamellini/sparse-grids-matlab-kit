@@ -1,9 +1,10 @@
-function [tocomp_list,recycle_list,recycle_list_old] = lookup_merge_and_diff(pts_list,pts_list_old,Tol)
+function [tocomp_list,recycle_list,recycle_list_old,discard_list] = lookup_merge_and_diff(pts_list,pts_list_old,Tol)
 
-% [tocomp_list,recycle_list,recycle_list_old] = lookup_merge_and_diff(pts_list,pts_list_old,Tol)
+% [tocomp_list,recycle_list,recycle_list_old,discard_list] = lookup_merge_and_diff(pts_list,pts_list_old,Tol)
 %
 % looks for points of pts_list in pts_list_old using the same algorithm as reduce_sparse_grid. tol is
-% the tolerance for two points to be considered equal
+% the tolerance for two points to be considered equal. discard_list is the list of points that no longer belong to the grid
+% (may happen for non-nested grids)
 
 
 %----------------------------------------------------
@@ -32,7 +33,7 @@ tocomp_list=zeros(N,1);
 % positions  in the old grid and in the new one
 recycle_list_old=zeros(N_old,1);
 recycle_list=zeros(N,1);
-
+discard_list=zeros(N_old,1);
 
 
 % first, merge the two lists 
@@ -127,6 +128,7 @@ while k<=L
            tocomp_list(j)=flags_sorted(k);
        else
            discard=discard+1;
+           discard_list(discard)=-flags_sorted(k);
        end
        
        % then move to the following
@@ -164,6 +166,7 @@ if diff_eq(L) % short-hand for diff_eq(L)==1,
         tocomp_list(j)=flags_sorted(L+1);
     else % then it's an old point and has to be discarded
         discard=discard+1;
+        discard_list(discard)=-flags_sorted(k);
     end
 end
 
@@ -173,7 +176,7 @@ if MATLAB_SPARSE_KIT_VERBOSE
 end
 
 
-% remove the extra entries of tocomp_list and recycle_lists. Pay attention to special cases
+% remove the extra entries of tocomp_list, recycle_lists, discard_list. Pay attention to special cases
 
 if j~=N % in this case there are no points to recycle and we have completely filled  tocomp_list
     if tocomp_list(j+1)~=0,
@@ -200,6 +203,12 @@ if i~=length(recycle_list_old) % in this case we haven't exhausted the old_grid 
     if recycle_list_old(i+1)~=0,error('recycle_list_old(j+1)~=0'),end
     recycle_list_old(i+1:end)=[];
 end
+
+if discard~=N_old % in this case we are discarding completely the old grid (non-nested case)
+    if discard_list(discard+1)~=0,error('discard_list(discard+1)~=0'),end
+    discard_list(discard+1:end)=[];
+end
+
 
 % safety checks
 if length(recycle_list)~=length(recycle_list_old),
