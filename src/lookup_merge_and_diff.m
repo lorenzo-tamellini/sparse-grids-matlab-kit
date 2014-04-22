@@ -210,7 +210,12 @@ if discard~=N_old % in this case we are discarding completely the old grid (non-
 end
 
 
+
 % safety checks
+if i+discard~=N_old
+    error('The code has lost track of some points of the old grid, i+discard~=N_old')
+end
+
 if length(recycle_list)~=length(recycle_list_old),
     error('mismatch between the two sets of recycling points. length(recycle_list)~=length(recycle_list_old)'),
 end
@@ -218,7 +223,7 @@ if ~isempty( setxor( [tocomp_list; recycle_list], 1:N ) ),
     error([ 'The code has lost track of some points of the new grid, ',...
             'or some points from the old grid have been mistaken as points of the new grid. ',...
             'Double check the values of tolerances use to detect identical points (both here and in reduce_sparse_grid) ',...
-            'and try to rerun the code. ~isempty(setxor([tocomp_list recycle_list],1:N))']),
+tr            'and try to rerun the code. ~isempty(setxor([tocomp_list recycle_list],1:N))']),
 end
 
 

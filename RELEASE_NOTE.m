@@ -7,6 +7,8 @@
 
 % RELEASE NOTES version 14.4
 %
+% -> 2014, Apr. 17  --> EVALUATE_ON_SPARSE_GRID now returns also the list of discarded points.
+%
 %
 % -> 2014, Apr. 09: --> LEV2KNOTS_NESTED has been renamed LEV2KNOTS_DOUBLING
 %

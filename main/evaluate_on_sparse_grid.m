@@ -1,4 +1,4 @@
-function [f_eval,new_points,tocomp_list] = evaluate_on_sparse_grid(f,Sr,evals_old,Sr_old,paral,tol)
+function [f_eval,new_points,tocomp_list,discard_points,discard_list] = evaluate_on_sparse_grid(f,Sr,evals_old,Sr_old,paral,tol)
 
 %EVALUATE_ON_SPARSE_GRID evaluates a function on a sparse grid, possibly recycling previous calls
 % 
@@ -14,9 +14,14 @@ function [f_eval,new_points,tocomp_list] = evaluate_on_sparse_grid(f,Sr,evals_ol
 %           evaluations of F on SR_OLD, each evaluation being stored as a column vector 
 %           (i.e. EVALS_OLD will be typically a row vector or a matrix with nb.columns = nb. sparse grid points)
 %
-% [F_EVAL,NEW_POINTS,IDX] = EVALUATE_ON_SPARSE_GRID(F,SR,EVALS_OLD,SR_OLD) also returns NEW_POINTS, the list of points 
-%           where f has been evaluated (i.e. the new points w.r.t. the previous grid), and IDX, that contains
-%           the position of NEW_POINTS in SR.KNOTS, i.e. SR.KNOTS(:,IDX) = NEW_POINTS
+% [F_EVAL,NEW_POINTS,IDX_NEW] = EVALUATE_ON_SPARSE_GRID(F,SR,EVALS_OLD,SR_OLD) also returns NEW_POINTS, the list of points 
+%           where f has been evaluated (i.e. the new points w.r.t. the previous grid), and IDX_NEW, that contains
+%           the position of NEW_POINTS in SR.KNOTS, i.e. SR.KNOTS(:,IDX_NEW) = NEW_POINTS
+%
+% [F_EVAL,NEW_POINTS,IDX_NEW,DISCARD_POINTS,IDX_OLD] = EVALUATE_ON_SPARSE_GRID(F,SR,EVALS_OLD,SR_OLD) also returns
+%           DISCARD_POINTS, the list of points of SR_OLD that have been discarded (may happen with non-nested
+%           grids) and IDX_OLD, index vector s.t. SR_OLD.KNOTS(:,IDX_OLD) = DISCARD_POINTS
+%
 %
 % F_EVAL = EVALUATE_ON_SPARSE_GRID(F,SR,EVALS_OLD,SR_OLD,PARAL) uses the matlab parallel toolbox to speed 
 %           up the computation:
@@ -135,10 +140,10 @@ pts_list_old = Sr_old.knots';
 % -> recycle_list contains the indices of the points that have been already evaluated
 % -> recycle_list_old contains their position in the old sparse grid
 
-[tocomp_list,recycle_list,recycle_list_old] = lookup_merge_and_diff(pts_list,pts_list_old,tol);
+[tocomp_list,recycle_list,recycle_list_old,discard_list] = lookup_merge_and_diff(pts_list,pts_list_old,tol);
 
 new_points=pts_list(tocomp_list,:)';
-
+discard_points = pts_list_old(discard_list,:)';
 
 % do the evaluation 
 % ------------------------------------
