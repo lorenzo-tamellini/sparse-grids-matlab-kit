@@ -36,6 +36,8 @@ function [S,C] = smolyak_grid(N,w,knots,lev2knots,idxset,map,weights_coeff)
 %           S(j).size: size of the tensor grid = prod(m)
 %           S(j).coeff: how many times the tensor grid appears in the sparse grid (with sign)
 %               the index j runs over all points in the level set Y(W,N) 
+%           S(j).idx: the multiidx vector corresponding to the current grid, whose number of points
+%               is defined by lev2knots(i)
 %
 %       The outputs of SMOLYAK_GRID are 
 %       S: structure containing the information on the sparse grid (vector of tensor grids; see above)
@@ -185,9 +187,6 @@ else
     coeff_condensed=zeros(1,nb_grids);
     ss=1;
 
-
-
-
     for j=1:nn
         if coeff(j)~=0
             i = C(j,:);
@@ -221,7 +220,18 @@ else
         S(ss).coeff=coeff_condensed(ss);
     end
      
+    % similarly for the multiidx generating each tensor grid
+    ss=1;
+    for j=1:nn
+        if coeff(j)~=0
+            i = C(j,:);
+            S(ss).idx = i; 
+            ss=ss+1;
+        end
+    end
 
+    
+    
 
 end % this end closes if w == 0
 

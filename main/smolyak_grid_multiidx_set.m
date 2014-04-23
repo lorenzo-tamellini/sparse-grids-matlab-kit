@@ -158,7 +158,18 @@ for ss=1:nb_grids
     S(ss).coeff=coeff_condensed(ss);
 end
 
+% similarly for the multiidx generating each tensor grid
+ss=1;
+for j=1:nn
+    if coeff(j)~=0
+        i = C(j,:);
+        S(ss).idx = i;
+        ss=ss+1;
+    end
 end
+
+
+end % this end closes the function
 
 
 

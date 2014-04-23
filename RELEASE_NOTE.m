@@ -5,9 +5,13 @@
 %----------------------------------------------------------------------------------
 
 
-% RELEASE NOTES version 14.4
-%
+% -> 2014, Apr 23   --> SMOLYAK_GRID, SMOLYAK_GRID_MULTIIDX_SET now return the multiidx associated to each tensor grid
+% 
 % -> 2014, Apr. 17  --> EVALUATE_ON_SPARSE_GRID now returns also the list of discarded points.
+% 
+%
+%
+% RELEASE NOTES version 14.4
 %
 %
 % -> 2014, Apr. 09: --> LEV2KNOTS_NESTED has been renamed LEV2KNOTS_DOUBLING
