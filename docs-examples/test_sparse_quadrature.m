@@ -9,7 +9,7 @@
 %%
 clear
 
-% function to be interpolated, in (-1,1)^N. input column points, out row vector
+% function to be integrate, in (-1,1)^N. input column points, out row vector
 
 f = @(x,b) prod(1./sqrt(x+b));
 b=3;
