@@ -101,6 +101,54 @@ ylim([-1.5 4])
 legend show
 
 
+
+% Leja points: nested quadrature points to approximate integrals like \int_a^b f(x) dx with n
+% points. Three different kind of Leja points are available: Line Leja, sym-Line Leja, p-disk Leja (see
+% leja_points.m for more details). All Leja points are nested by construction
+
+figure
+
+% ------- line leja ----------
+n=5; a=1; b=4;
+x=knots_leja(n,a,b,'line');
+plot(x,1 + 0*x,'or','MarkerFaceColor','r','DisplayName','5 Line Leja points')
+
+hold on 
+
+n=9; a=1; b=4;
+x=knots_leja(n,a,b,'line');
+plot(x,2 + 0*x,'or','MarkerFaceColor','r','DisplayName','9 Line Leja points')
+
+
+% ------- sym leja ----------
+n=5; a=1; b=4;
+x=knots_leja(n,a,b,'sym_line');
+plot(x,3 + 0*x,'ok','MarkerFaceColor','k','DisplayName','5 sym-line Leja points')
+
+hold on 
+
+n=9; a=1; b=4;
+x=knots_leja(n,a,b,'sym_line');
+plot(x,4 + 0*x,'ok','MarkerFaceColor','k','DisplayName','9 sym-Line Leja points')
+
+
+
+% ------- p-disk leja ----------
+n=5; a=1; b=4;
+x=knots_leja(n,a,b,'p_disk');
+plot(x,5 + 0*x,'ob','MarkerFaceColor','b','DisplayName','5 p-Disk Leja points')
+
+hold on 
+
+n=9; a=1; b=4;
+x=knots_leja(n,a,b,'p_disk');
+plot(x,6 + 0*x,'ob','MarkerFaceColor','b','DisplayName','9 p-Disk Leja points')
+
+grid on
+ylim([-1.5 12])
+legend show
+
+
 % Gauss-Hermite points: quadrature points to approximate integrals like 
 %
 % 1/sqrt(2 sig pi) \int_R f(x) e^{ -(x-mi)^2 / (2 sig^2) } dx 
@@ -122,7 +170,7 @@ plot(x,1 + 0*x,'or','MarkerFaceColor','r','DisplayName','3 KPN points')
 
 n=9; 
 x=knots_kpn(n);
-plot(x, 2 + 0*x,'og','MarkerFaceColor','g','DisplayName','9 KPN points')
+plot(x, 2 + 0*x,'ob','MarkerFaceColor','b','DisplayName','9 KPN points')
 
 ylim([-1.5 4])
 legend show
@@ -132,7 +180,7 @@ legend show
 
 % in view of building sparse grids, it is useful to order quadrature/interpolation rules in sequences, i.e. to
 % introduce levels for the rules. The Sparse Grid Matlab Kit provides 3 functions to this end:
-%
+
 % -> lev2knots_lin     
 %
 % adds 1 point from one level to the next: consecutive quadrature/interpolation rules have
@@ -141,7 +189,15 @@ legend show
 clc
 lev2knots_lin([1 2 3 4 5])
 
+
+% -> lev2knots_2step     
 %
+% adds 2 points from one level to the next: consecutive quadrature/interpolation rules have
+% 1,3,5,7,..points
+
+lev2knots_2step([1 2 3 4 5])
+
+
 % -> lev2knots_doubling 
 %
 % "doubles" the number of points from one level to the next: consecutive rules have 1,3,5,9,17... points

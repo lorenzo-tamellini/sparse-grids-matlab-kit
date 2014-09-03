@@ -4,8 +4,9 @@
 % See LICENSE.txt for license
 %----------------------------------------------------------------------------------
 
-
-% -> 2014, Apr 23   --> SMOLYAK_GRID, SMOLYAK_GRID_MULTIIDX_SET now return the multiidx associated to each tensor grid
+% -> 2014, Sep. 3   --> added support for Leja points (see KNOTS_LEJA, LEV2KNOTS_2STEP)
+%
+% -> 2014, Apr. 23  --> SMOLYAK_GRID, SMOLYAK_GRID_MULTIIDX_SET now return the multiidx associated to each tensor grid
 % 
 % -> 2014, Apr. 17  --> EVALUATE_ON_SPARSE_GRID now returns also the list of discarded points.
 % 
