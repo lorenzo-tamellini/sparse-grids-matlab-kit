@@ -180,7 +180,7 @@ end
 
 if j~=N % in this case there are no points to recycle and we have completely filled  tocomp_list
     if tocomp_list(j+1)~=0,
-        error('tocomp_list(j+1)~=nested'),
+        error('tocomp_list(j+1)~=0'),
     end
     tocomp_list(j+1:end)=[];
 end
@@ -223,7 +223,7 @@ if ~isempty( setxor( [tocomp_list; recycle_list], 1:N ) ),
     error([ 'The code has lost track of some points of the new grid, ',...
             'or some points from the old grid have been mistaken as points of the new grid. ',...
             'Double check the values of tolerances use to detect identical points (both here and in reduce_sparse_grid) ',...
-tr            'and try to rerun the code. ~isempty(setxor([tocomp_list recycle_list],1:N))']),
+            'and try to rerun the code. ~isempty(setxor([tocomp_list recycle_list],1:N))']),
 end
 
 

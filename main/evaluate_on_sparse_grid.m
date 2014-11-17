@@ -77,6 +77,8 @@ switch nargin
         f_eval = simple_evaluate(f,Sr);
         new_points = Sr.knots;
         tocomp_list = 1:length(Sr.weights);
+        discard_points=[];
+        discard_list=[];
         return
 
     case 3
@@ -90,6 +92,8 @@ switch nargin
             f_eval = simple_evaluate(f,Sr);
             new_points = Sr.knots;
             tocomp_list = 1:length(Sr.weights);
+            discard_points=[];
+            discard_list=[];
             return
         end
         if ~isreduced(Sr_old)
@@ -106,6 +110,8 @@ switch nargin
             f_eval = simple_evaluate(f,Sr,paral);
             new_points = Sr.knots;
             tocomp_list = 1:length(Sr.weights);
+            discard_points=[];
+            discard_list=[];
             return
         end
         if ~isreduced(Sr_old)
@@ -121,6 +127,8 @@ switch nargin
             f_eval = simple_evaluate(f,Sr,paral);
             new_points = Sr.knots;
             tocomp_list = 1:length(Sr.weights);            
+            discard_points=[];
+            discard_list=[];
             return
         end
         
