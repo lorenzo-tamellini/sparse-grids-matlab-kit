@@ -1,4 +1,4 @@
-function [modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,flag,~)
+function [modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,flags,~)
 
 % CONVERT_TO_MODAL recasts a sparse grid interpolant as a sum of orthogonal polynomials
 % i.e. computes the spectral expansion of the interpolant.
@@ -12,6 +12,7 @@ function [modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,flag,~)
 %       The function returns the Legendre expansion as a vector of coefficients MODAL_COEFFS, 
 %       and a matrix K containing the associated multi-indices, one per row
 %
+%
 % [MODAL_COEFFS,K] = CONVERT_TO_MODAL(S,SR,NODAL_VALUES,DOMAIN,'chebyshev') returns the Chebyshev expansion
 %        of the sparse grid interpolant. See above for inputs and outputs.
 %
@@ -19,6 +20,19 @@ function [modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,flag,~)
 % [MODAL_COEFFS,K] = CONVERT_TO_MODAL(S,SR,NODAL_VALUES,DOMAIN,'hermite') returns the Hermite expansion
 %       of the sparse grid interpolant. Here, DOMAIN is a 2XN matrix = [mu1, mu2, mu3, ...; sigma1, sigma2, sigma3,...]
 %       i.e. the n-th variable of the sparse grid space has normal distribution with mean mu_n and std sigma_n
+%
+%
+% [MODAL_COEFFS,K] = CONVERT_TO_MODAL(S,SR,NODAL_VALUES,DOMAIN,{<family1>,<family2>,<family3>,...}) returns the expansion
+%       of the sparse grid interpolant over polynomial of "mixed" type, according to the families specified in
+%       the last argument. For example:
+%
+%       CONVERT_TO_MODAL(S,SR,NODAL_VALUES,DOMAIN,{'legendre','hermite','legendre','hermite'})
+%
+%       converts the sparse grid interpolant in a sum of multi-variate polynomials that are products of
+%       univariate Legendre polynomials (directions 1 and 3) and Hermite. Here DOMAIN is a 2XN matrix 
+%       containing the parameters for each directions as column vectors. E.g. in the case above
+%
+%       DOMAIN = [a1, mu1, a2, mu2; b1, sigma1, b2 sigma2]
 
 
 %----------------------------------------------------
@@ -38,12 +52,9 @@ if nargin==4
     error(strcat('not enough input arguments.',errmsg))
 end
 
-try
-    ismember(flag,{'legendre','chebyshev','hermite'});
-catch
-    error(strcat('Input argument FLAG unrecognized. ',errmsg));
+if any(~ismember(flags,{'legendre','chebyshev','hermite'}));
+    error(strcat('One or more strings in FLAGS unrecognized. ',errmsg));
 end
-
 
 % nodal values has to be column
 [r,c]=size(nodal_values);
@@ -95,7 +106,7 @@ for g = 1: nb_tensor_grids
     global_values_counter = global_values_counter + S(g).size ;
         
     % and compute modal
-    U(g) = compute_modal_tensor(S(g),S_values,domain,flag);
+    U(g) = compute_modal_tensor(S(g),S_values,domain,flags);
     
 end
 

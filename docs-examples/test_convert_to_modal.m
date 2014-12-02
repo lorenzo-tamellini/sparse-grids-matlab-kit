@@ -133,3 +133,56 @@ domain=[a;b];
 [modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,'chebyshev');
 
 [K,modal_coeffs]
+
+
+
+
+
+%% test using different polynomials in different directions
+
+clear
+clc
+
+a=0;
+b=1.5;
+mu = 1;
+sig = 0.2;
+a2=1.4;
+b2=3.2;
+mu2 = 0.2;
+sig2 = 0.05;
+
+
+N=4; w=7; 
+knots={ @(n) knots_uniform(n,a,b,'prob'), @(n) knots_gaussian(n,mu,sig),...
+        @(n) knots_uniform(n,a2,b2,'prob'), @(n) knots_gaussian(n,mu2,sig2)};
+lev2knots={@lev2knots_lin, @lev2knots_lin, @lev2knots_lin, @lev2knots_lin}; 
+idxset=@(i) sum(i-1);
+[S,C]=smolyak_grid(N,w,knots,lev2knots,idxset);
+Sr=reduce_sparse_grid(S);
+
+
+
+X=Sr.knots;
+
+ll1=[2 3 1 1];
+ll2=[4 1 0 2];
+
+nodal_values = 6 ...
+                -3*(lege_eval(X(1,:),ll1(1),a,b).*...
+                    herm_eval(X(2,:),ll1(2),mu,sig).*...
+                    cheb_eval(X(3,:),ll1(3),a2,b2).*...
+                    herm_eval(X(4,:),ll1(4),mu2,sig2))'...
+                +1*(lege_eval(X(1,:),ll2(1),a,b).*...
+                    herm_eval(X(2,:),ll2(2),mu,sig).*...
+                    cheb_eval(X(3,:),ll2(3),a2,b2).*...
+                    herm_eval(X(4,:),ll2(4),mu2,sig2))';
+
+
+
+domain=[a mu a2 mu2; b sig b2 sig2];
+
+[modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,{'legendre','hermite','chebyshev','hermite'});
+
+sel = abs(modal_coeffs)>1e-12;
+[K(sel,:),modal_coeffs(sel,:)]

@@ -4,6 +4,11 @@
 % See LICENSE.txt for license
 %----------------------------------------------------------------------------------
 
+% RELEASE NOTES version 14.12
+%
+%
+% -> 2014, Dec. 2   --> CONVERT_TO_MODAL now handles the case of mixed polynomials in different directions. 
+%
 % -> 2014, Sep. 3   --> added support for Leja points (see KNOTS_LEJA, LEV2KNOTS_2STEP)
 %
 % -> 2014, Apr. 23  --> SMOLYAK_GRID, SMOLYAK_GRID_MULTIIDX_SET now return the multiidx associated to each tensor grid

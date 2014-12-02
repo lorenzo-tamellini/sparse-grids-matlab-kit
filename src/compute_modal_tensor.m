@@ -1,4 +1,4 @@
-function U = compute_modal_tensor(S,S_values,domain,flag)
+function U = compute_modal_tensor(S,S_values,domain,flags)
 
 % COMPUTE_MODAL_TENSOR given a tensor grid and the values on it, re-express the interpolant 
 % as a modal expansion.
@@ -18,6 +18,10 @@ function U = compute_modal_tensor(S,S_values,domain,flag)
 %       Hermite polynomials. Here DOMAIN is a 2XN matrix = [mu1, mu2, mu3, ...; sigma1, sigma2, sigma3,...]
 %       such that the first variable has normal distribution with mean mu1 and std sigma1
 %       and so on.
+%
+% U=COMPUTE_MODAL_TENSOR(S,S_values,domain,{<family1>,<family2>,<family3>,...}) works as the previous call, using 
+%       polynomials of type <family-n> in direction n. Here DOMAIN is a 2XN matrix where each column gives
+%       the parameters of the n-th family of polynomials (a,b for legendre, mu,sig for hermite...)
 
 
 %----------------------------------------------------
@@ -27,9 +31,8 @@ function U = compute_modal_tensor(S,S_values,domain,flag)
 %----------------------------------------------------
 
 
-try
-    ismember(flag,{'legendre','chebyshev','hermite'});
-catch
+
+if any(~ismember(flags,{'legendre','chebyshev','hermite'}));
     error(['Input argument FLAG unrecognized. '...
         ' Please note that COMPUTE_MODAL_TENSOR does not accept INTERVAL_MAP '...
         'input argument any longer. '...
@@ -78,20 +81,41 @@ if rows~=cols, error('vandermonde matrix will not be square!'), end
 
 V = zeros(rows,cols);
 
-for c=1:cols
-    k = I(c,:);
-    %vc = lege_eval_multidim(interval_map(S.knots),k,domain(1,:),domain(2,:));
-    switch flag
-        case 'legendre'
-            vc = lege_eval_multidim(S.knots,k,domain(1,:),domain(2,:));
-        case 'hermite'
-            vc = herm_eval_multidim(S.knots,k,domain(1,:),domain(2,:));
-        case 'chebyshev'
-            vc = cheb_eval_multidim(S.knots,k,domain(1,:),domain(2,:));            
-        otherwise
-            error('unknown family of polynomials')
-    end    
-    V(:,c)=vc';
+if length(flags)==1 || ischar(flags) % the second condition for when the function is called on one sigle family of polynomials
+    for c=1:cols
+        k = I(c,:);
+        %vc = lege_eval_multidim(interval_map(S.knots),k,domain(1,:),domain(2,:));
+        switch flags
+            case 'legendre'
+                vc = lege_eval_multidim(S.knots,k,domain(1,:),domain(2,:));
+            case 'hermite'
+                vc = herm_eval_multidim(S.knots,k,domain(1,:),domain(2,:));
+            case 'chebyshev'
+                vc = cheb_eval_multidim(S.knots,k,domain(1,:),domain(2,:));
+            otherwise
+                error('unknown family of polynomials')
+        end
+        V(:,c)=vc';
+    end
+else
+    for c=1:cols
+        k = I(c,:);
+        vc=ones(1,size(S.knots,2));
+        for n=1:nb_dim
+            switch flags{n}
+                case 'legendre'
+                    vc = vc.*lege_eval(S.knots(n,:),k(n),domain(1,n),domain(2,n));
+                case 'hermite'
+                    vc = vc.*herm_eval(S.knots(n,:),k(n),domain(1,n),domain(2,n));
+                case 'chebyshev'
+                    vc = vc.*cheb_eval(S.knots(n,:),k(n),domain(1,n),domain(2,n));
+                otherwise
+                    error('unknown family of polynomials')
+            end
+        end
+        V(:,c)=vc';
+        
+    end
 end
 
 % now solve the system
