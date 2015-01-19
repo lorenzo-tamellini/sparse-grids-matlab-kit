@@ -28,7 +28,7 @@ if isempty(non_tab)
     nb_knots=reshape(vect_nb_knots,r,c);
 else
     %error(strcat('levels:',num2str(non_tab),' are not tabulated'))
-    warning('asking for non tabulated levels') %#ok<WNTAG>
+    warning('SparseGKit:KpnNonTab','asking for non tabulated levels') 
     % put Inf for I>5
     [r,c]=size(I);
     pos=find(I>5); % pos is the linear position 
