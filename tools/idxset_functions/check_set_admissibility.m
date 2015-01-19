@@ -25,7 +25,7 @@ while (row<row_max)
     % current index
     row=row+1;
     idx=C(row,:);
-    [is_adm, completed_set, missing_set] = check_index_admissibility(idx,C);
+    [is_adm, ~, missing_set] = check_index_admissibility(idx,C);
     
     % if it is not admissible, add what's needed to the bottom of C
     % and increase row_max, so that the new indices will also be checked.
@@ -38,7 +38,7 @@ while (row<row_max)
         row_max=size(C,1);
         
         % print a warning
-        disp(strcat('the opt set is not admissible. Adding: ',num2str(missing_set) ) )
+        disp(strcat('the set is not admissible. Adding: ',num2str(missing_set) ) )
 
         % record non admissibility has been found
         adm=false;
