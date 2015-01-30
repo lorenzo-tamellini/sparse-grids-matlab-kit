@@ -170,7 +170,7 @@ if ~isempty(tocomp_list)
         if MATLAB_SPARSE_KIT_VERBOSE,   
             disp('using parallel')
         end
-        if ~matlabpool('size')
+        if ~matlabpool('size') 
             error('no open matlabpool session detected')
         end
         parfor i=1:n
