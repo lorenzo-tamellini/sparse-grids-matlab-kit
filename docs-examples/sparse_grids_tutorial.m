@@ -316,10 +316,10 @@ C=multiidx_box_set([2 3],0);
 D=multiidx_box_set([2 3],1);
 
 figure 
-plot(D(:,1),D(:,2),'xr','MarkerFaceColor','r','LineWidth',2,'MarkerSize',12,'DisplayName','Multiidx box set, min=1')
+plot(C(:,1),C(:,2),'xr','MarkerFaceColor','r','LineWidth',2,'MarkerSize',12,'DisplayName','Multiidx box set, min=0')
 hold on
-plot(C(:,1),C(:,2),'ok','MarkerFaceColor','k','DisplayName','Multiidx box set, min=0')
-axis([0 2.5 0 4])
+plot(D(:,1),D(:,2),'ok','MarkerFaceColor','k','DisplayName','Multiidx box set, min=1')
+axis([-0.5 4 -0.5 4])
 legend show
 
 % b) MULTIIDX_BOX_GEN generates the set of all indices ii such that rule(ii)<=w, where rule is a function that takes as input a row vector
@@ -333,10 +333,11 @@ E=multiidx_gen(N,rule,w,0);
 F=multiidx_gen(N,rule,w,1);
 
 figure 
-plot(E(:,1),E(:,2),'xr','MarkerFaceColor','r','LineWidth',2,'MarkerSize',12,'DisplayName','Multiidx gen, min=1')
+plot(E(:,1),E(:,2),'xr','MarkerFaceColor','r','LineWidth',2,'MarkerSize',12,'DisplayName','Multiidx gen, min=0')
 hold on
-plot(F(:,1),F(:,2),'ok','MarkerFaceColor','k','DisplayName','Multiidx gen, min=0')
+plot(F(:,1),F(:,2),'ok','MarkerFaceColor','k','DisplayName','Multiidx gen, min=1')
 legend show
+axis([-0.5 8 -0.5 8])
 
 
 %% PART 1: INTRODUCTION - DATA-STRUCURE
