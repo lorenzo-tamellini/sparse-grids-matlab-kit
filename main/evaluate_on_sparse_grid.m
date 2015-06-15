@@ -170,7 +170,7 @@ if ~isempty(tocomp_list)
         if MATLAB_SPARSE_KIT_VERBOSE,   
             disp('using parallel')
         end
-        if ~matlabpool('size') 
+        if ~check_if_parallel_on()
             error('no open matlabpool session detected')
         end
         parfor i=1:n
@@ -190,7 +190,7 @@ end
 
 % the two parts together 
 % ------------------------------------
-
+% matlabpool('size')
 
 f_eval(:,tocomp_list)= evals_new;
 f_eval(:,recycle_list)= evals_old(:,recycle_list_old);
@@ -244,7 +244,7 @@ if n>paral % if no parallel this one becomes n>NaN, which is false for any n
     if MATLAB_SPARSE_KIT_VERBOSE
         disp('using parallel')
     end
-    if ~matlabpool('size')
+    if ~ check_if_parallel_on()
         error('no open matlabpool session detected')
     end
     parfor i=2:n

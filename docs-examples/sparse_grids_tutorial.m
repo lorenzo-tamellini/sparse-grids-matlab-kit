@@ -533,8 +533,8 @@ w=4;
 T=smolyak_grid(N,w,@(n) knots_uniform(n,-1,1),@lev2knots_lin);
 Tr= reduce_sparse_grid(T);
 
-if ~matlabpool('size')
-    matlabpool open
+if ~check_if_parallel_on()
+    activate_parallel() % optional argument to specify how many workers
 end
 X=0;
 evals_1=evaluate_on_sparse_grid(f,Tr,[],[],X);
@@ -550,10 +550,9 @@ plot(evals_2,'x')
 plot(evals_3,'o')
 
 
-% a check is performed whether a matlabpool session open is found
 
-if matlabpool('size')
-    matlabpool close
+if check_if_parallel_on()
+    close_parallel()
 end
 
 % this command will now throw an error
@@ -692,7 +691,6 @@ abs(I-I_ex)
 %% PART 3: INTEGRATION - COMPUTE MOMENTS OF RANDOM VARIABLES
 
 % here we compute E[f(x)] = \int_{[-2 1]x[0.5 6]} f(x) 1/(3*5.5) dx, (3*5.5 is the size of the domain)
-
 clc
 clear
 
@@ -765,7 +763,6 @@ S = smolyak_grid(N,w,@(n) knots_CC(n,-2,1,'prob'),@lev2knots_doubling);
 Sr = reduce_sparse_grid(S);
 [IS,evals_S]=quadrature_on_sparse_grid(@(x)f(x,b), Sr);
 
-
 % the new grid
 w = 8;
 T = smolyak_grid(N,w,@(n) knots_CC(n,-2,1,'prob'),@lev2knots_doubling);
@@ -778,8 +775,8 @@ IT_rec=quadrature_on_sparse_grid(@(x)f(x,b),Tr,evals_S,Sr);
 % the non-recycling call
 IT=quadrature_on_sparse_grid(@(x)f(x,b) , Tr);
 
-if ~matlabpool('size')
-    matlabpool open
+if ~check_if_parallel_on()
+    activate_parallel() % optional argument to specify how many workers
 end
 
 % the parallel call with no recycling
