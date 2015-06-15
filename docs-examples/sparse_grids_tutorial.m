@@ -219,6 +219,8 @@ lev2knots_kpn([1 2 3 4 5])
 % the last ingredient to specify when building a sparse grid is the set of tensor grids to be used. The
 % algorithm will then take care of computing the coefficients of the linear combination of these grids
 % (note that such coefficients may be 0 as well). 
+
+
 % The most convenient way to specify tensor grids is to use multi-index notation: every grid is
 % associated to a multiindex, that is a vector of integer numbers. 
 % Each number in the vector tells the level of the quadrature rule used in each direction
@@ -243,7 +245,6 @@ plot_grid(S_lin,[],'color','k','marker','o','MarkerFaceColor','k','DisplayName',
 legend show
 set(legend,'Location','SouthOutside')
 
-%% PART 1: INTRODUCTION - INGREDIENTS OF A SPARSE GRID. SPECIFYING THE MULTIINDEX SET
 
 % there are two ways of specifying the set of multindices to be used. 
 %
@@ -305,6 +306,37 @@ plot_grid(S_M,[],'color','b','marker','d','MarkerFaceColor','b');
 axis([-1 1 -1 1])
 
 
+%% the package provides two functions to generate multi-index sets. 
+
+% a) MULTIIDX_BOX_SET generates all multiindices jj that are component-wise less than or
+% equal to some other index ii. The minimal value of the components of the indices to be generated can be either 0 or 1. For instance
+
+jj=[2 3];
+C=multiidx_box_set([2 3],0);
+D=multiidx_box_set([2 3],1);
+
+figure 
+plot(D(:,1),D(:,2),'xr','MarkerFaceColor','r','LineWidth',2,'MarkerSize',12,'DisplayName','Multiidx box set, min=1')
+hold on
+plot(C(:,1),C(:,2),'ok','MarkerFaceColor','k','DisplayName','Multiidx box set, min=0')
+axis([0 2.5 0 4])
+legend show
+
+% b) MULTIIDX_BOX_GEN generates the set of all indices ii such that rule(ii)<=w, where rule is a function that takes as input a row vector
+% (or a matrix where each multiidx is stored as a row) and returns a scalar value (or a column vector with the result of the operation applied
+% to each row of the input index vector). Again, the minimum index can be 0 or 1:
+
+N=2;
+w=7;
+rule=@(I) sum(I,2); 
+E=multiidx_gen(N,rule,w,0);
+F=multiidx_gen(N,rule,w,1);
+
+figure 
+plot(E(:,1),E(:,2),'xr','MarkerFaceColor','r','LineWidth',2,'MarkerSize',12,'DisplayName','Multiidx gen, min=1')
+hold on
+plot(F(:,1),F(:,2),'ok','MarkerFaceColor','k','DisplayName','Multiidx gen, min=0')
+legend show
 
 
 %% PART 1: INTRODUCTION - DATA-STRUCURE

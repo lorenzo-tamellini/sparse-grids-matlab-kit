@@ -6,11 +6,12 @@
 
 % -> 2015, Jun. 15  --> the new matlab toolbox syntax is now supported (see functions ACTIVATE_PARALLEL, CHECK_IF_PARALLEL_ON, CLOSE_PARALLEL)
 %
+%                   --> added MULTIIDX_GEN and MULTIIDX_BOX_SET to the tutorial
+%
 %
 % -> 2015, Apr. 27  --> added function AS_REDUCED that converts a list of points / weights in a reduced grid
 %                       structure
 % 
-%   I NEED TO UPDATE THE COPYRIGHT YEAR!!
 %
 % RELEASE NOTES version 14.12
 %

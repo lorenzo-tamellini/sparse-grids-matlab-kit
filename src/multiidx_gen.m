@@ -1,8 +1,8 @@
-function MULTI_IDX = multiidx_gen(L,rule,w,base,multiidx,MULTI_IDX)
+function MULTI_IDX = multiidx_gen(N,rule,w,base,multiidx,MULTI_IDX)
 
-% MULTI_IDX = multiidx_gen(L,rule,w,base,[],[])
+% MULTI_IDX = multiidx_gen(N,rule,w,base,[],[])
 %
-% calculates all multi indexes M_I of length L with elements such that rule(M_I) <= w.
+% calculates all multi indexes M_I of length N with elements such that rule(M_I) <= w.
 % M_I's are stored as rows of the matrix MULTI_IDX
 % indices will start from base (either 0 or 1)
 
@@ -31,7 +31,7 @@ elseif nargin==4
 end
 
 
-if length(multiidx)~=L 
+if length(multiidx)~=N 
       % recursive step: generates all possible leaves from the current node (i.e. all multiindexes with length le+1 starting from
       % the current multi_idx, which is of length le that are feasible w.r.t. rule)
       
@@ -39,7 +39,7 @@ if length(multiidx)~=L
       
       while rule([multiidx, i]) <= w
             % if [multiidx, i] is feasible further explore the branch of the tree that comes out from it.
-            MULTI_IDX = multiidx_gen(L,rule,w,base,[multiidx, i],MULTI_IDX);
+            MULTI_IDX = multiidx_gen(N,rule,w,base,[multiidx, i],MULTI_IDX);
             i=i+1;
       end
 
