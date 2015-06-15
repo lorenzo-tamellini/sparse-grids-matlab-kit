@@ -4,7 +4,9 @@
 % See LICENSE.txt for license
 %----------------------------------------------------------------------------------
 
-
+% -> 2015, Jun. 15  --> the new matlab toolbox syntax is now supported (see functions ACTIVATE_PARALLEL, CHECK_IF_PARALLEL_ON, CLOSE_PARALLEL)
+%
+%
 % -> 2015, Apr. 27  --> added function AS_REDUCED that converts a list of points / weights in a reduced grid
 %                       structure
 % 
