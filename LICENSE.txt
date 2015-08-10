@@ -1,4 +1,4 @@
-Sparse Grid Matlab Kit
+Sparse Grids Matlab Kit
 
 Copyright (c) 2009-2015 L. Tamellini, F. Nobile
 All rights reserved.

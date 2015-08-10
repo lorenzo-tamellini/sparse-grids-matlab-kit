@@ -5,7 +5,25 @@
 %----------------------------------------------------------------------------------
 
 
-% For a detailed list of diffrences with the previous version, take a look at RELEASE_NOTE.m
+% Please cite our toolbox by mentioning the webpage containing the package (http://csqi.epfl.ch) 
+% and adding the following reference to your work:
+%
+% @InCollection{back.nobile.eal:comparison,
+%  author    = {B\"ack, J. and Nobile, F. and Tamellini, L. and Tempone, R.},
+%  title        = {Stochastic spectral {G}alerkin and collocation methods for {PDE}s with random coefficients: a numerical comparison},
+%  booktitle    = {Spectral and High Order Methods for Partial Differential Equations},
+%  pages        = {43--62},
+%  publisher    = {Springer},
+%  year        = 2011,
+%  volume    = 76,
+%  series    = {Lecture Notes in Computational Science and Engineering}, 
+%  editor    = {Hesthaven, J.S. and Ronquist, E.M.},
+%  note        = {Selected papers from the ICOSAHOM '09 conference, June 22-26, Trondheim, Norway}
+%}
+
+
+%---------------------------
+% Take a look at RELEASE_NOTE.m for a detailed list of diffrences with the previous version
 
 
 

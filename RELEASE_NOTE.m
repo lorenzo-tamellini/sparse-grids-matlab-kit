@@ -4,6 +4,9 @@
 % See LICENSE.txt for license
 %----------------------------------------------------------------------------------
 
+% RELEASE NOTES version 15.8
+%
+%
 % -> 2015, Jun. 15  --> the new matlab toolbox syntax is now supported (see functions ACTIVATE_PARALLEL, CHECK_IF_PARALLEL_ON, CLOSE_PARALLEL)
 %
 %                   --> added MULTIIDX_GEN and MULTIIDX_BOX_SET to the tutorial
