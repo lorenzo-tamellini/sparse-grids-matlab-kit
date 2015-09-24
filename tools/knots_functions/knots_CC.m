@@ -6,7 +6,8 @@ function [x,w] = knots_CC(nn,x_a,x_b,whichrho)
 % and the weights (w) for the Clenshaw-Curtis integration formula
 % w.r.t to the weight function rho(x)=1/(b-a) 
 % i.e. the density of a uniform random variable 
-% with range going from x=a to x=b.
+% with range going from x=a to x=b. Note that for efficiency reasons
+% nn must an odd number
 % 
 % [x,w] = KNOTS_CC(nn,x_a,x_b,'prob') 
 % 
