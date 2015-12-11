@@ -3,7 +3,10 @@
 % Copyright (c) 2009-2015 L. Tamellini, F. Nobile
 % See LICENSE.txt for license
 %----------------------------------------------------------------------------------
-
+%
+%
+% -> 2015, Dec. 11  --> added function to ask number of open parallel matlab workers. Fixed a minor bug in close_parallel()
+%
 % RELEASE NOTES version 15.8
 %
 %

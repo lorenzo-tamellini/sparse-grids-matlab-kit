@@ -14,6 +14,7 @@ function [] = close_parallel()
 if verLessThan('matlab', '8.3')
     eval('matlabpool close')
 else
-    delete(gcp)
+    p=gcp('nocreate');
+    delete(p)
 end
     
