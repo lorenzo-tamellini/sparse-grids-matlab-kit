@@ -4,7 +4,8 @@
 % See LICENSE.txt for license
 %----------------------------------------------------------------------------------
 %
-%
+% -> 2016, Jun. 20  --> fixing a bug in output computation in quadrature_on_sparse_grids.
+% 
 % -> 2015, Dec. 11  --> added function to ask number of open parallel matlab workers. Fixed a minor bug in close_parallel()
 %
 % RELEASE NOTES version 15.8
