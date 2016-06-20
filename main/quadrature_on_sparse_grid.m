@@ -75,10 +75,10 @@ switch nargin
 
 end
 
-% o is the number of outputs
-s=size(evals,1);
-
-res=zeros(s,1);
-for d=1:s
-    res(s)=sum(dot(evals(s,:),S.weights));
-end
+% s is the number of outputs
+% s=size(evals,1);
+% res=zeros(s,1);
+% for d=1:s
+%     res(s)=sum(dot(evals(s,:),S.weights));
+% end
+res = evals*S.weights';
