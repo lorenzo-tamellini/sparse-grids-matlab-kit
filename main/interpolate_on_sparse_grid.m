@@ -179,11 +179,14 @@ for i=1:nb_grids
     % combi=[1 1 2 2 1 1 2 2 ...
     %        1 2 1 2 ......
     %
-
-    combi=0*knots;
+    %
+    % again, we exploit the fact that the minimum entry of combi is 1 and that for many directions
+    % there is only one point, so if we init combi with ones we're good in many cases
+  
+    combi = ones(N,S(i).size);
     
-    % the easiest way to recover combi from knots is to proceed one dimension at a time, 
-    % and mark with a different label (1,2,...K) all the equal points. We need of course as many labels 
+    % the easiest way to recover combi from knots is to proceed one dimension at a time,
+    % and mark with a different label (1,2,...K) all the equal points. We need of course as many labels
     % as the number of different points in each dir!
     
     for dim=1:N
@@ -194,15 +197,16 @@ for i=1:nb_grids
         
         % we start from a row of zeroes and we place 1....K in the right
         % positions by summations (each element of the row will be written
-        % only once!)
-        for k=1:K
-            combi(dim,:) = combi(dim,:) + k*( knots(dim,:)==knots_per_dim{dim}(k) );
+        % only once!). Since 1 are already in place, we proceed to place 2 and higher, but only if needed
+        if K>1
+            for k=2:K
+                % here we add to the row of "1" either 0 or (k-1) so we get k where needed
+                combi(dim,:) = combi(dim,:)+ (k-1)*( knots(dim,:)==knots_per_dim{dim}(k) ); 
+            end
         end
-        
     end
- 
-    
-    
+
+
     % Now we can do the dot-multiplications among rows, the
     % multiplication by nodal values and the final sum! We proceed one
     % knot at a time
