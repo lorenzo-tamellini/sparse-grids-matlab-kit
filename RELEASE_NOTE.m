@@ -12,6 +12,9 @@
 %                   --> using LAGR_EVAL_FAST and further optimization of INTERPOLATE_ON_SPARSE_GRID for
 %                       additional speedup
 %
+%                   --> added functions ISTENSOR and ISSMOLYAK to verify if a variable is a tensor / sparse
+%                       grid
+%
 %                       
 % -> 2016, Jun. 20  --> fixing a bug in output computation in quadrature_on_sparse_grids.
 % 
