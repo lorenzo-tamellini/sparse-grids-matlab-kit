@@ -15,10 +15,12 @@ function S = tensor_grid(N,m,knots)
 %       In both cases, the header of knots_function is [x,w]=knots_function(m)
 %
 %       The output S is a structure containing the information on the tensor grid:
-%           S.knots: vector containing the tensor grid knots
-%           S.weights: vector containing the corresponding weights
-%           S.size: size of the tensor grid = prod(m)
-
+%           S.knots:        vector containing the tensor grid knots
+%           S.weights:      vector containing the corresponding weights
+%           S.size:         size of the tensor grid, S.size = prod(m)
+%           S.knots_per_dim: cell array (N components), each component is the set of 1D knots used
+%                           to build the tensor grid    
+%           S.m:            input vector m, m(i) = lenght(S.knots_per_dim{i})
 
 
 %----------------------------------------------------
@@ -41,6 +43,9 @@ sz=prod(m);
 
 S.knots=zeros(N,sz);
 S.weights=ones(1,sz);
+S.size = sz;
+S.knots_per_dim=cell(1,N);
+S.m = m;
 
 % generate the pattern that will be used for knots and weights matrices, e.g.
 % 
@@ -55,7 +60,7 @@ pattern=generate_pattern(m);
 
 for n=1:N
     [xx,ww] = knots{n}(m(n));
+    S.knots_per_dim{n}=xx;
     S.knots(n,:) = xx(pattern(n,:));
     S.weights = S.weights.*ww(pattern(n,:));
 end
-S.size = sz;

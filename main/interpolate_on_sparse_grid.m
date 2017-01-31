@@ -93,12 +93,14 @@ for i=1:nb_grids
     % we had here 
     % dimtot=size(knots,1);
     % clearly dimtot==N, hence we sobstitute it everywhere
-    knots_per_dim=cell(1,N);
     
-    for dim=1:N
-        knots_per_dim{dim}=unique(knots(dim,:));
-    end
+    % the following lines are also no longer needed    
+    %  knots_per_dim=cell(1,N);
+    %  for dim=1:N
+    %      knots_per_dim{dim}=unique(knots(dim,:));
+    %  end
     
+    knots_per_dim=S(i).knots_per_dim;
     
     % I also have to take into account the coefficient of the sparse grid
     
@@ -130,22 +132,27 @@ for i=1:nb_grids
         
         % this is how many grid points in the current direction for the
         % current tensor grid
-        K=length(knots_per_dim{dim});
+        %K=length(knots_per_dim{dim});
+        K=S(i).m(dim);
         
         % allocate space for evaluations. Since I will be accessing it one lagrangian polynomial at a time
         % i.e. one knot at a time, it's better to have all information for the same lagrange polynomial
-        % on the same column, for speed purposes
-        mono_lagr_eval{dim}=zeros(nb_pts,K);
+        % on the same column, for speed purposes. Moreover, note that whenever K=1 (one point only in a direction)
+        % then the lagrange polynomial is identically one
+        mono_lagr_eval{dim}=ones(nb_pts,K);
         
-        % loop on each node of the current dimension and evaluate the corresponding monodim lagr polynomial.
-        % We will need an auxiliary vector to pick up the current knot (where the lagr pol is centered) and
-        % the remaining knots (where the lagr pol is zero). Here we see that mono_lagr_eval it's written 
-        % one column at a time
-        aux=1:K;
-        for k=aux
-            mono_lagr_eval{dim}(:,k) = lagr_eval(knots_per_dim{dim}(k),knots_per_dim{dim}(aux~=k),non_grid_points(:,dim));
+        if K>1
+            % loop on each node of the current dimension and evaluate the corresponding monodim lagr polynomial.
+            % We will need an auxiliary vector to pick up the current knot (where the lagr pol is centered) and
+            % the remaining knots (where the lagr pol is zero). Here we see that mono_lagr_eval it's written
+            % one column at a time
+            aux=1:K;
+            for k=aux
+                %mono_lagr_eval{dim}(:,k) = lagr_eval(knots_per_dim{dim}(k),knots_per_dim{dim}(aux~=k),non_grid_points(:,dim));
+                mono_lagr_eval{dim}(:,k) = lagr_eval_fast(knots_per_dim{dim}(k),knots_per_dim{dim}(aux~=k),K-1,non_grid_points(:,dim),[nb_pts 1]);
+            end
         end
-        
+
     end
     
     % now put everything together. We have to take the tensor product of
@@ -171,7 +178,8 @@ for i=1:nb_grids
     %
     % combi=[1 1 2 2 1 1 2 2 ...
     %        1 2 1 2 ......
-    
+    %
+
     combi=0*knots;
     
     % the easiest way to recover combi from knots is to proceed one dimension at a time, 
@@ -181,8 +189,9 @@ for i=1:nb_grids
     for dim=1:N
         
         % this is how many points per direction
-        K=length(knots_per_dim{dim});
-    
+        % K=length(knots_per_dim{dim});
+        K=S(i).m(dim);
+        
         % we start from a row of zeroes and we place 1....K in the right
         % positions by summations (each element of the row will be written
         % only once!)
@@ -191,6 +200,7 @@ for i=1:nb_grids
         end
         
     end
+ 
     
     
     % Now we can do the dot-multiplications among rows, the

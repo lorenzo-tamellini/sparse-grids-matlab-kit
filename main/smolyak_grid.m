@@ -33,7 +33,10 @@ function [S,C] = smolyak_grid(N,w,knots,lev2knots,idxset,map,weights_coeff)
 %       each "tensor grid" S(j) is a four fields structure:
 %           S(j).knots: vector containing the tensor grid knots
 %           S(j).weights: vector containing the corresponding weights
-%           S(j).size: size of the tensor grid = prod(m)
+%           S(j).size: size of the tensor grid, S(j).size = prod(m)
+%           S(j).knots_per_dim: cell array (N components), each component is the set of 1D knots used 
+%               to build the tensor grid    
+%           S(j).m: the input vector m, m == lev2knots(idx), m(i)==length(S(j).knots_per_dim(i))
 %           S(j).coeff: how many times the tensor grid appears in the sparse grid (with sign)
 %               the index j runs over all points in the level set Y(W,N) 
 %           S(j).idx: the multiidx vector corresponding to the current grid, whose number of points
@@ -183,7 +186,7 @@ else
     
     nb_grids=sum(coeff~=0);
     empty_cells=cell(1,nb_grids);
-    S=struct('knots',empty_cells,'weights',empty_cells,'size',empty_cells);
+    S=struct('knots',empty_cells,'weights',empty_cells,'size',empty_cells,'knots_per_dim',empty_cells,'m',empty_cells);
     coeff_condensed=zeros(1,nb_grids);
     ss=1;
 

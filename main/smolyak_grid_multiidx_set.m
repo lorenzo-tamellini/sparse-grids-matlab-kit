@@ -121,7 +121,7 @@ end
 
 nb_grids=sum(coeff~=0);
 empty_cells=cell(1,nb_grids);
-S=struct('knots',empty_cells,'weights',empty_cells,'size',empty_cells);
+S=struct('knots',empty_cells,'weights',empty_cells,'size',empty_cells,'knots_per_dim',empty_cells,'m',empty_cells);
 coeff_condensed=zeros(1,nb_grids);
 ss=1;
 
