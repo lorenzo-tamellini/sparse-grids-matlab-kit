@@ -1,4 +1,5 @@
-function [S,C] = smolyak_grid(N,w,knots,lev2knots,idxset,map,weights_coeff)
+%function [S,C] = smolyak_grid(N,w,knots,lev2knots,idxset,map,weights_coeff)
+function [S,C] = smolyak_grid(N,w,knots,lev2knots,idxset,arg6,weights_coeff)
 
 
 %  SMOLYAK_GRID generates a Smolyak sparse grid (and corresponding quadrature weights)
@@ -48,6 +49,15 @@ function [S,C] = smolyak_grid(N,w,knots,lev2knots,idxset,map,weights_coeff)
 %
 %
 %
+%
+% [S,C] = SMOLYAK_GRID(N,W,KNOTS,LEV2KNOTS,IDXSET,S2), where S2 is another Smolyak grid, 
+%       tries to recycle tensor grids from S2 to build those of S instead of recomputing them.
+%       This can be helpful whenever sequences of Smolyak grid are generates. Note that *NO* check
+%       will performed whether S2 was generated with the same lev2knots as the one given as input.
+%       S2 can also be empty, S2=[]
+%
+%
+%
 %  [S,C] = SMOLYAK_GRID(N,W,KNOTS,LEV2KNOTS,IDXSET,MAP,WEIGHTS_COEFF) can be used as an alternative
 %       to generate a sparse grid on a hyper-rectangle. 
 %       Instead of typing out one KNOTS function and one LEV2KNOTS for each dimension, like in
@@ -73,6 +83,13 @@ function [S,C] = smolyak_grid(N,w,knots,lev2knots,idxset,map,weights_coeff)
 
 
 
+% declare a global variable controlling verbosity
+global MATLAB_SPARSE_KIT_VERBOSE
+if isempty(MATLAB_SPARSE_KIT_VERBOSE)
+    MATLAB_SPARSE_KIT_VERBOSE=1;
+end
+
+
 %----------------------------------------------------------
 % input handling
 
@@ -80,6 +97,17 @@ if nargin==4 || (nargin==6 && isempty(idxset)) || (nargin==7 && isempty(idxset))
     idxset=@(i) sum(i-1);
 end
 
+% discriminate between calls:
+if exist('arg6','var') 
+    if isa(arg6,'function_handle') % we are in the case smolyak_grid(N,w,knots,lev2knots,idxset,map,weights_coeff)
+        map = arg6;
+    elseif issmolyak(arg6) || isempty(arg6) % we are in the case smolyak_grid(N,w,knots,lev2knots,idxset,S2)
+        S2 = arg6;
+    else
+        error('unknown type for 6th input')
+    end
+    clear arg6
+end
 
 
 
@@ -111,6 +139,7 @@ if w==0
     m = apply_lev2knots(i,lev2knots,N);
     S(1) = tensor_grid(N,m,knots);
     S(1).coeff=1;
+    S(1).idx = i;
     %disp('using 1 multiindex')
     C=i;
 
@@ -124,6 +153,16 @@ else
     % build the list of multiindices in the set: idxset(i)<=w.
     C=multiidx_gen(N,idxset,w,1);
 
+    
+    % we also build the set of S2 if provided
+    if exist('S2','var') && ~isempty(S2)
+        % get index set of S2. Note that if S2 has empty fields, C2==[]
+        nb_idx_C2 = length(S2);
+        C2 = reshape([S2.idx],N,nb_idx_C2)'; % [S2.idx] puts all indices on a row. I reshape them and each N elements I get one column.
+        % Then I need to traspose the matrix
+    end
+    
+    
     
     % now compute the tensor grids out of the delta operators listed in C.
     % Exploit partial ordering of the sequence of multiindices
@@ -187,20 +226,51 @@ else
     nb_grids=sum(coeff~=0);
     empty_cells=cell(1,nb_grids);
     S=struct('knots',empty_cells,'weights',empty_cells,'size',empty_cells,'knots_per_dim',empty_cells,'m',empty_cells);
+    fieldnms = fieldnames(S)'; % I'll later need to loop over these fields - note the transpose, it has to be a row cell
     coeff_condensed=zeros(1,nb_grids);
     ss=1;
 
-    for j=1:nn
-        if coeff(j)~=0
-            i = C(j,:);
-            m =apply_lev2knots(i,lev2knots,N); % n. of points in each direction
-            S(ss) = tensor_grid(N,m,knots);
-            S(ss).weights=S(ss).weights*coeff(j);
-            coeff_condensed(ss)=coeff(j);
-            ss=ss+1;
+    % for each nonzero coeff, generate the tensor grid and store it. If possible, recycle from S2.
+    if exist('C2','var') && ~isempty(C2)
+        if MATLAB_SPARSE_KIT_VERBOSE
+            disp('build smolyak grid with tensor grid recycling')
+        end
+        for j=1:nn
+            if coeff(j)~=0
+                i = C(j,:);
+                [found,pos] = find_lexicographic(i,C2,'nocheck'); % this exploits that C2 is lexicographic, so it's efficient (cost ~ log(nb_rows_C2))
+                if found
+                    %disp('found')
+                    % Note that at this point elements of S are tensor grids while S2 is a sparse grid therefore it has additional fields
+                    % (coeff, idx). We thus need to copy field by field otherwise we'll have "assignment between dissimilar
+                    % structures" error. We use dynamic filed names to this end
+                    for fn = fieldnms
+                        S(ss).(fn{1}) = S2(pos).(fn{1}); % note that each fn is a 1-element cell, so to access its value I need the notation fn{1}
+                    end
+                    % however we need to fix the weights. Indeed, they are stored in S2 as weights*coeff, so we need to reverse
+                    % that multiplication
+                    S(ss).weights = S(ss).weights/S2(pos).coeff;
+                else
+                    m =apply_lev2knots(i,lev2knots,N); % n. of points in each direction
+                    S(ss) = tensor_grid(N,m,knots);
+                end
+                S(ss).weights=S(ss).weights*coeff(j);
+                coeff_condensed(ss)=coeff(j);
+                ss=ss+1;
+            end
+        end
+    else
+        for j=1:nn
+            if coeff(j)~=0
+                i = C(j,:);
+                m =apply_lev2knots(i,lev2knots,N); % n. of points in each direction
+                S(ss) = tensor_grid(N,m,knots);
+                S(ss).weights=S(ss).weights*coeff(j);
+                coeff_condensed(ss)=coeff(j);
+                ss=ss+1;
+            end
         end
     end
-    
         
     % finally, shift the points according to map if needed
     if exist('map','var') && ~isempty(map)

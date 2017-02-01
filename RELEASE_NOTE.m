@@ -15,6 +15,13 @@
 %                   --> added functions ISTENSOR and ISSMOLYAK to verify if a variable is a tensor / sparse
 %                       grid
 %
+%                   --> added support for lexicographic operations: ISLEXICO compares two vectors and
+%                       determines whether they are in lexicographic order; FIND_LEXICOGRAPHIC find a row in
+%                       a matrix exploiting the fact that the matrix is lexicographically sorted.
+%
+%                   --> SMOLYAK_GRID and SMOLYAK_GRID_MULTIIDX_SET now accept as input a sparse grid, from
+%                       which they will recover common tensor grids instead of recomputing them
+%
 %                       
 % -> 2016, Jun. 20  --> fixing a bug in output computation in quadrature_on_sparse_grids.
 % 
