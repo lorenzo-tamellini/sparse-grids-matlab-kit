@@ -34,14 +34,18 @@ work=zeros(1,w_max+1);
 
 
 %non_grid_points=rand(N,2000)*(b-a)+a;
-non_grid_points=[0.5*ones(N,1), zeros(N,1)];
+load non_grid_points
+%non_grid_points=[0.5*ones(N,1), zeros(N,1)];
+S_old = [];  % we also recycle previous grids
 
+tic
 for w=0:w_max
 
     disp(w)
 
     % create grid
-    [S,C]=smolyak_grid(N,w,knots,lev2knots,idxset);
+    [S,C]=smolyak_grid(N,w,knots,lev2knots,idxset,S_old);
+    S_old = S;
     
     Sr=reduce_sparse_grid(S);
 
@@ -66,6 +70,7 @@ for w=0:w_max
     interp_error(:,w+1)=max( abs((f(non_grid_points) - f_values)), [],2 ) ;    
 
 end
+toc
 
 %%
 figure

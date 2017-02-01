@@ -1,4 +1,3 @@
-%function [S,C] = smolyak_grid(N,w,knots,lev2knots,idxset,map,weights_coeff)
 function [S,C] = smolyak_grid(N,w,knots,lev2knots,idxset,arg6,weights_coeff)
 
 
