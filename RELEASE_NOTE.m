@@ -22,6 +22,8 @@
 %                   --> SMOLYAK_GRID and SMOLYAK_GRID_MULTIIDX_SET now accept as input a sparse grid, from
 %                       which they will recover common tensor grids instead of recomputing them
 %
+%                   --> clarified help of REDUCE_SPARSE_GRID
+%
 %                       
 % -> 2016, Jun. 20  --> fixing a bug in output computation in quadrature_on_sparse_grids.
 % 

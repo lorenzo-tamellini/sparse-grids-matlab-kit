@@ -7,8 +7,8 @@ function Sr=reduce_sparse_grid(S,tol)
 %       a so-called reduced sparse grid, that is a structure with fields
 %       -> Sr.knots:  list of non repeated knots
 %       -> Sr.weights: list of corresponding weights
-%       -> Sr.m: map from S.knots to [Sr.knots] i.e. for any k [S.knots](:,Sr.m(k))==Sr.knots(:,k)
-%       -> Sr.n: map form [S.knots] to Sb.knots i.e. "the element in position k of [S.knots] goes in position n(k) in Sr.knots"
+%       -> Sr.n: says where each element of [S.knots] will be mapped to in Sr.knots, i.e. for any k [S.knots](:,Sr.m(k))==Sr.knots(:,k)
+%       -> Sr.m: for each element of Sr.knots, says where it's coming from in [S.knots], i.e. "the element in position k of [S.knots] goes in position n(k) in Sr.knots"
 %        or [S.knots](:,j)==Sr.knots(:,Sr.n(j)) and in general [S.knots](:,Sr.n==i)==Sr.knot(:,i)
 %
 % SR = REDUCE_SPARSE_GRID(S,TOL) uses a tolerance TOL to identify coincident points 
