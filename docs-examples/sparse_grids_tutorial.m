@@ -801,7 +801,8 @@ Tr = reduce_sparse_grid(T);
 % the recycling call. Other optional arguments can turn on parallel
 % evaluation and tune the tolerance for two points to be considered equal.
 % See help quadrature_on_sparse_grid and test_evaluate_on_sparse_grid
-IT_rec=quadrature_on_sparse_grid(@(x)f(x,b),Tr,evals_S,Sr);
+IT_rec=quadrature_on_sparse_grid(@(x)f(x,b),T,Tr,evals_S,S,Sr);
+
 
 % the non-recycling call
 IT=quadrature_on_sparse_grid(@(x)f(x,b) , Tr);
@@ -811,10 +812,10 @@ if ~check_if_parallel_on()
 end
 
 % the parallel call with no recycling
-IT2 = quadrature_on_sparse_grid(@(x)f(x,b) , Tr, [],[],0);
+IT2= quadrature_on_sparse_grid(@(x)f(x,b) , T, Tr, [],[],[],0);
 
 % the parallel call with recycling
-IT3=quadrature_on_sparse_grid(@(x)f(x,b),Tr,evals_S,Sr,0);
+IT3=quadrature_on_sparse_grid(@(x)f(x,b),T,Tr,evals_S,S,Sr,0);
 
 
 disp('-------------')

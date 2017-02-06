@@ -50,6 +50,7 @@ function [f_eval,new_points,tocomp_list,discard_points,discard_list] = evaluate_
 % See LICENSE.txt for license
 %----------------------------------------------------
 
+warning('SparseGKit:deprecated','evaluate_on_sparse_grid_legacy is a deprecated function')
 
 
 % declare a global variable controlling verbosity

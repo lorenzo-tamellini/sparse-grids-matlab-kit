@@ -84,10 +84,17 @@ end
 
 switch nargin
 
+    case 1
+        error('not enough input arguments')
+
     case 2
         % evaluate_on_sparse_grid(f,Sr). 
         % The second input is S though, no we need to change its name
-        Sr=S;
+        if ~isreduced(S)
+            Sr=as_reduced(S);
+        else
+            Sr=S;
+        end
         f_eval = simple_evaluate(f,Sr);
         new_points = Sr.knots;
         tocomp_list = 1:length(Sr.weights);
@@ -105,6 +112,7 @@ switch nargin
             'which is the old version of EVALUATE_ON_SPARSE_GRID, see help EVALUATE_ON_SPARSE_GRID_LEGACY. '...
             'This function is however deprecated and will disappear from future relesases of the Sparse Grid Matlab Kit.'];
         error(errmsg)
+
     case 6
         % evaluate_on_sparse_grid(f,S,Sr,evals_old,S_old,Sr_old)
         % or

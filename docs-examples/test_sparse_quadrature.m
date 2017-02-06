@@ -29,6 +29,7 @@ w_max=6;
 q_error=zeros(1,w_max);
 work=zeros(1,w_max);
 
+S_old=[];
 Sr_old=[];
 evals_old=[];
 
@@ -41,9 +42,10 @@ for w=0:w_max
     [S,C]=smolyak_grid(N,w,knots,lev2knots,idxset);
     Sr=reduce_sparse_grid(S);
 
-    [I,evals_old]=quadrature_on_sparse_grid(@(x)f(x,b),Sr,evals_old,Sr_old);
+    [I,evals_old]=quadrature_on_sparse_grid(@(x)f(x,b),S,Sr,evals_old,S_old,Sr_old);
     
-    Sr_old=Sr;
+    S_old=S;
+    Sr_old=Sr;    
     
     %compute convergence error
     q_error(w+1)=abs(I_ex-I);
