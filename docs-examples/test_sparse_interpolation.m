@@ -33,8 +33,7 @@ interp_error=zeros(2,w_max+1);
 work=zeros(1,w_max+1);
 
 
-%non_grid_points=rand(N,2000)*(b-a)+a;
-load non_grid_points
+non_grid_points=rand(N,2000)*(b-a)+a;
 %non_grid_points=[0.5*ones(N,1), zeros(N,1)];
 S_old = [];  % we also recycle previous grids
 
