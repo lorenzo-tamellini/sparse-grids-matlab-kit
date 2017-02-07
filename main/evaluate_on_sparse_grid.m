@@ -3,39 +3,41 @@ function [f_eval,new_points,tocomp_list,discard_points,discard_list] = evaluate_
 %EVALUATE_ON_SPARSE_GRID evaluates a function on a sparse grid, possibly recycling previous calls.
 %           Several input combinations are possible, every input from the 3rd on can be set to []
 % 
-% F_EVAL = EVALUATE_ON_SPARSE_GRID(F,SR) evaluates a function F on a sparse grid SR, without recycling. 
-%           SR can be a reduced sparse grid or a matrix with points stored as columns (i.e., like points
-%           are stored in Sr.knots, Sr being a reduced sparse grid).
-%           F is a function that takes as input a column vector point and returns either a scalar or a column vector. 
+% F_EVAL = EVALUATE_ON_SPARSE_GRID(F,SR) evaluates a function F on a sparse grid SR. 
+%           SR must be a reduced sparse grid (see also AS_REDUCED to "convert" a matrix into a reduced sparse
+%           grid).
+%           F is a function or function handle, it takes as input a column vector point and returns either a scalar or a column vector. 
 %           F will be evaluated one point at a time so there's no need for F to accept as input matrices as well.
 %
 %           F_EVAL is a matrix storing the evaluations of F on SR, each evaluation being stored as a column 
 %           vector 
 %
 %
-% F_EVAL = EVALUATE_ON_SPARSE_GRID(F,S,SR,EVALS_OLD,S_OLD,SR_OLD) recycles available evaluations of F on a different
-%           sparse grid, stored respectively in EVALS_OLD and SR_OLD. EVALS_OLD is a matrix storing the 
-%           evaluations of F on SR_OLD, each evaluation being stored as a column vector 
-%           (i.e. EVALS_OLD will be typically a row vector or a matrix with nb.columns = nb. sparse grid
-%           points). 
+% F_EVAL = EVALUATE_ON_SPARSE_GRID(F,S,SR,EVALS_OLD,S_OLD,SR_OLD) recycles available evaluations of F.
+%           Two kinds of inputs are possible: 
 %
-%           Two kinds of inputs are possible:
-%
-%           -> S and S_OLD are sparse grids, and SR, SR_OLD their reduced version, i.e.
+%           -> you want to recycle from another grid: S and S_OLD are sparse grids, and SR, SR_OLD their reduced version, i.e.
 %               SR=REDUCE_SPARSE_GRID(S) and analogous for SR_OLD
 % 
-%           -> SR and SR_OLD are just "list of points", i.e. matrices with points stored as columns,
-%               S=[] and S_OLD=[]. This kind of call will be *much* slower than the other one though, especially for large N
+%           -> you want to recycle from a "plain list of points": S is a sparse grid, SR its reduced version,
+%               S_OLD = [], and SR_OLD = matrix_with_points_stored_as_columns.
+%               This kind of call will be *much* slower than the other one though, especially for large N
+%
+%           In boths cases EVALS_OLD is a matrix storing the evaluations of F on SR_OLD, each evaluation being stored as a column vector 
+%           (i.e. EVALS_OLD will be typically a row vector or a matrix with nb.columns = nb. points). 
+%
+%           EVALS_OLD, S_OLD, SR_OLD can also be set to [], which could be helpful when
+%           EVALUATE_ON_SPARSE_GRID is inside an iterative (WHILE or FOR) loop.
 %
 %
 % [F_EVAL,NEW_POINTS,IDX_NEW] = EVALUATE_ON_SPARSE_GRID(F,S,SR,EVALS_OLD,S_OLD,SR_OLD) also returns NEW_POINTS, the list of points 
 %           where f has been evaluated (i.e. the new points w.r.t. the previous grid), and IDX_NEW, that contains
-%           the position of NEW_POINTS in SR.KNOTS, i.e. SR.KNOTS(:,IDX_NEW) = NEW_POINTS
+%           the position of NEW_POINTS in SR.KNOTS, i.e. SR.KNOTS(:,IDX_NEW) == NEW_POINTS
 %
 % [F_EVAL,NEW_POINTS,IDX_NEW,DISCARD_POINTS,IDX_OLD] = EVALUATE_ON_SPARSE_GRID(F,S,SR,EVALS_OLD,S_OLD,SR_OLD) also returns
 %           DISCARD_POINTS, the list of points of SR_OLD that have been discarded (may happen with non-nested
-%           grids) and IDX_OLD, index vector s.t. SR_OLD.KNOTS(:,IDX_OLD) = DISCARD_POINTS
-%
+%           grids) and IDX_OLD, index vector s.t. SR_OLD.KNOTS(:,IDX_OLD) == DISCARD_POINTS (or SR_OLD(:,IDX_OLD) == DISCARD_POINTS
+%           if SR_OLD is a matrix of points)
 %
 % F_EVAL = EVALUATE_ON_SPARSE_GRID(F,S,SR,EVALS_OLD,S_OLD,SR_OLD,PARAL) uses the matlab parallel toolbox to speed 
 %           up the computation:
@@ -88,16 +90,13 @@ switch nargin
         error('not enough input arguments')
 
     case 2
-        % evaluate_on_sparse_grid(f,Sr). 
-        % The second input is S though, no we need to change its name
+        % evaluate_on_sparse_grid(f,S), S being a reduced grid 
         if ~isreduced(S)
-            Sr=as_reduced(S);
-        else
-            Sr=S;
+            error('when evaluate_on_sparse_grid is called with two inputs, the second one must be a reduced sparse grid')
         end
-        f_eval = simple_evaluate(f,Sr);
-        new_points = Sr.knots;
-        tocomp_list = 1:length(Sr.weights);
+        f_eval = simple_evaluate(f,S);
+        new_points = S.knots;
+        tocomp_list = 1:length(S.weights);
         discard_points=[];
         discard_list=[];
         return
@@ -117,7 +116,9 @@ switch nargin
         % evaluate_on_sparse_grid(f,S,Sr,evals_old,S_old,Sr_old)
         % or
         % evaluate_on_sparse_grid(f,S,Sr,[],[],[])
-        
+        % or
+        % evaluate_on_sparse_grid(f,S,Sr,evals_old,[],Sr_old_as_matrix)
+        %
         % in the previous version, the 6-input cases were
         %
         % evaluate_on_sparse_grid(f,Sr,[],[],paral,tol)
@@ -137,10 +138,7 @@ switch nargin
                 'This function is however deprecated and will disappear from future relesases of the Sparse Grid Matlab Kit.'];
             error(errmsg)
         end
-        
-        if ~isreduced(Sr)
-            Sr=as_reduced(Sr);
-        end
+
         if isempty(evals_old) && isempty(Sr_old) && isempty(S_old)
             f_eval = simple_evaluate(f,Sr);
             new_points = Sr.knots;
@@ -149,9 +147,6 @@ switch nargin
             discard_list=[];
             return
         end
-        if ~isreduced(Sr_old)
-            error('SR_OLD must be a reduced sparse grid')
-        end
         paral=NaN;
         tol=1e-14;
 
@@ -159,10 +154,9 @@ switch nargin
         % evaluate_on_sparse_grid(f,S,Sr,[],[],[],paral)
         % or
         % evaluate_on_sparse_grid(f,S,Sr,evals_old,S_old,Sr_old,paral)
-        if ~isreduced(Sr)
-            Sr=as_reduced(Sr);
-        end
-        if isempty(evals_old) && isempty(Sr_old)
+        % or 
+        % evaluate_on_sparse_grid(f,S,Sr,evals_old,[],Sr_old,paral)
+        if isempty(evals_old) && isempty(Sr_old) && isempty(S_old)
             f_eval = simple_evaluate(f,Sr,paral);
             new_points = Sr.knots;
             tocomp_list = 1:length(Sr.weights);
@@ -170,19 +164,15 @@ switch nargin
             discard_list=[];
             return
         end
-        if ~isreduced(Sr_old)
-            as_reduced(Sr_old);
-        end
         tol=1e-14;
 
     case 8
         % evaluate_on_sparse_grid(f,S,Sr,[],[],[],paral,tol)
         % or
-        % evaluate_on_sparse_grid(f,Sr,evals_old,Sr_old,paral,tol)
-        if ~isreduced(Sr)
-            Sr=as_reduced(Sr);
-        end
-        if isempty(evals_old) && isempty(Sr_old)
+        % evaluate_on_sparse_grid(f,S,Sr,evals_old,S_old,Sr_old,paral,tol)
+        % or
+        % evaluate_on_sparse_grid(f,S,Sr,evals_old,[],Sr_old,paral,tol)
+        if isempty(evals_old) && isempty(Sr_old) && isempty(S_old)
             f_eval = simple_evaluate(f,Sr,paral);
             new_points = Sr.knots;
             tocomp_list = 1:length(Sr.weights);            
@@ -190,9 +180,6 @@ switch nargin
             discard_list=[];
             return
         end
-        if ~isreduced(Sr_old)
-            as_reduced(Sr_old);
-        end        
 end
 
 
@@ -200,8 +187,6 @@ end
 % ------------------------------------
 
 
-pts_list = Sr.knots';
-pts_list_old = Sr_old.knots';
 
 % we store the needed information in three vectors:
 %
@@ -209,12 +194,14 @@ pts_list_old = Sr_old.knots';
 % -> recycle_list contains the indices of the points that have been already evaluated
 % -> recycle_list_old contains their position in the old sparse grid
 
-if isempty(S) && isempty(S_old) % we go for the slow code
+if isempty(S_old) % here SR_OLD is matrix with points stored as columns, and we go for the slow code
+    pts_list = Sr.knots';
+    pts_list_old = Sr_old';
     [tocomp_list,recycle_list,recycle_list_old,discard_list] = lookup_merge_and_diff(pts_list,pts_list_old,tol);
-elseif ~isempty(S) && ~isempty(S_old)
+else % here S_OLD is a sparse grid and SR_OLD is its reduced version and we go for the faster alternative
+    pts_list = Sr.knots';
+    pts_list_old = Sr_old.knots';
     [tocomp_list,recycle_list,recycle_list_old,discard_list] = compare_sparse_grids(S,Sr,S_old,Sr_old,tol);
-else
-    error('unreckongnized set of inputs')
 end
     
 new_points=pts_list(tocomp_list,:)';

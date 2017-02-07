@@ -523,6 +523,38 @@ evals_rec=evaluate_on_sparse_grid(f,T,Tr,evaluate_on_sparse_grid(f,Sr),S,Sr);
 
 max(abs(evals_non_rec(:)-evals_rec(:))) 
 
+%% PART 2: EVALUATE A FUNCTION ON A SPARSE GRID - RECYCLE FROM A "LIST OF POINTS"
+
+% it is also possible to recycle from a list of points. However, the algorithm used to detect
+% which points are to be evaluated is much slower than the previous case for N large
+
+clc
+clear
+
+f=@(x) sum(x);
+
+N=20; w=1;
+S=smolyak_grid(N,w,@(n) knots_uniform(n,-1,1),@lev2knots_lin);
+Sr= reduce_sparse_grid(S);
+
+w=2;
+T=smolyak_grid(N,w,@(n) knots_uniform(n,-1,1),@lev2knots_lin);
+Tr= reduce_sparse_grid(T);
+
+evals_non_rec=evaluate_on_sparse_grid(f,Tr);
+tic
+evals_rec=evaluate_on_sparse_grid(f,T,Tr,evaluate_on_sparse_grid(f,Sr),S,Sr);
+toc
+% pretend we only know the list of points Sr.knots, to see the difference in performance ... 
+tic
+evals_rec_slow=evaluate_on_sparse_grid(f,T,Tr,evaluate_on_sparse_grid(f,Sr),[],Sr.knots);
+toc
+max(abs(evals_non_rec(:)-evals_rec(:))) 
+isequal(evals_rec,evals_rec_slow)
+
+
+
+
 %% PART 2: EVALUATE A FUNCTION ON A SPARSE GRID - USE RECYCLING FEATURE FOR VECTOR OUTPUT
 
 clc

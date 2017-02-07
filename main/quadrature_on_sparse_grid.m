@@ -10,8 +10,9 @@ function [res,evals] = quadrature_on_sparse_grid(f,S,Sr,evals_old,S_old,Sr_old,p
 %
 % res = QUADRATURE_ON_SPARSE_GRID(F,S,SR,EVALS_OLD,S_OLD,SR_OLD) 
 %
+% res = QUADRATURE_ON_SPARSE_GRID(F,S,SR,[],[],[]) 
 %
-% res = QUADRATURE_ON_SPARSE_GRID(F,SR,[],[]) is equivalent to res = QUADRATURE_ON_SPARSE_GRID(F,SR)
+% res = QUADRATURE_ON_SPARSE_GRID(F,S,SR,EVALS_OLD,[],SR_OLD) 
 %
 %
 % res = QUADRATURE_ON_SPARSE_GRID(F,S,SR,EVALS_OLD,S_OLD,SR_OLD,PARAL) 
@@ -38,13 +39,19 @@ end
 
 
 switch nargin
+    
     case 1
         error('not enough input arguments')
+        
     case 2
-        % res = QUADRATURE_ON_SPARSE_GRID(f,Sr)
-        % The second input is S though, no we need to change its name
-        Sr=S;    
-        evals = evaluate_on_sparse_grid(f,Sr);
+        % res = QUADRATURE_ON_SPARSE_GRID(f,S), S being a reduced sparse grid. 
+        if ~isreduced(S)
+            error('when quadrature_on_sparse_grid is called with two inputs, the second one must be a reduced sparse grid')
+        end
+        evals = evaluate_on_sparse_grid(f,S);
+        res = evals*S.weights';
+        return
+        
     case {3,4}
         errmsg = ['QUADRATURE_ON_SPARSE_GRID does not accept ',num2str(nargin),' inputs. ' ... 
             'Observe that QUADRATURE_ON_SPARSE_GRID has been changed after release 15.8 and ' ...
@@ -53,6 +60,7 @@ switch nargin
             'time, especially for N large. See QUADRATURE_ON_SPARSE_GRID for more information and '...
             'QUADRATURE_ON_SPARSE_GRID_LEGACY if you are still using a version of the Sparse Grids Matlab kit older than 14.4'];
         error(errmsg)
+        
     case 5
         errmsg = ['QUADRATURE_ON_SPARSE_GRID does not accept ',num2str(nargin),' inputs. ' ... 
             'Observe that QUADRATURE_ON_SPARSE_GRID has been changed after release 15.8 and ' ...
@@ -63,14 +71,18 @@ switch nargin
             'which is the old version of QUADRATURE_ON_SPARSE_GRID, see help QUADRATURE_ON_SPARSE_GRID_LEGACY. '...
             'This function is however deprecated and will disappear from future relesases of the Sparse Grid Matlab Kit. '];
         error(errmsg)
+        
     case 6
-        % in the previous verions, this was evals = quadrature_on_sparse_grid(f,Sr,evals_old,Sr_old,paral,tol);
+        % in the previous versions, this was evals = quadrature_on_sparse_grid(f,Sr,evals_old,Sr_old,paral,tol);
         %
         % while now it is:
         %
         % quadrature_on_sparse_grid(f,S,Sr,evals_old,S_old,Sr_old)
         % or
         % quadrature_on_sparse_grid(f,S,Sr,[],[],[])
+        % or  
+        % quadrature_on_sparse_grid(f,S,Sr,evals_old,[],Sr_old)
+        
         if ~issmolyak(S)
             errmsg = ['The second input of QUADRATURE_ON_SPARSE_GRID must be a non-reduced sparse grid if the function is called with 6 inputs. ' ...
                 'Observe that QUADRATURE_ON_SPARSE_GRID has been changed after release 15.8 and ' ...

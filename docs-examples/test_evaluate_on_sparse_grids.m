@@ -37,27 +37,6 @@ end
 
 
 
-%% it is also possible to fine-tune the tolerance for 2 points two be considered equal and hence recyclable
-
-clc
-clear
-
-f=@(x) sum(x);
-
-N=2; w=3;
-S=smolyak_grid(N,w,@(n) knots_uniform(n,-1,1),@lev2knots_lin);
-Sr= reduce_sparse_grid(S);
-
-w=4;
-T=smolyak_grid(N,w,@(n) knots_uniform(n,-1,1),@lev2knots_lin);
-Tr= reduce_sparse_grid(T);
-
-
-tol=1e-16;
-evals_old=evaluate_on_sparse_grid(f,Sr);
-evals_r_par =evaluate_on_sparse_grid(f,T,Tr,evals_old,S,Sr,1,tol);
-
-
 %% it is also possible to extract information about what points are new and what points are in common between to grids, 
 % and what points are in the old sparse grid only
 
@@ -77,8 +56,7 @@ Tr= reduce_sparse_grid(T);
 
 tol=1e-16;
 evals_old=evaluate_on_sparse_grid(f,Sr);
-
-[evals_par,new_points,tocomp_list,discard_points,discard_list] =evaluate_on_sparse_grid(f,T,Tr,evals_old,S,Sr,1,tol);
+[evals_par,new_points,tocomp_list,discard_points,discard_list] =evaluate_on_sparse_grid(f,T,Tr,evals_old,S,Sr);
 
 
 

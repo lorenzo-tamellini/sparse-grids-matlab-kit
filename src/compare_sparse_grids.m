@@ -351,7 +351,7 @@ else
         % do the comparison. Observe that the output give the position of the common points in the subparts of
         % Sr.knots and SR_old.knots, so we need them to take them back to the "global" counting
         [not_found_in_S_old_only_loc,to_recycle_from_S_old_only_list_loc,to_recycle_from_S_old_only_list_old_loc,to_discard_from_S_old_list_loc] = ...
-            old_lookup_merge_and_diff(pts_list,pts_list_old,Tol);
+            lookup_merge_and_diff(pts_list,pts_list_old,Tol);
 
         if MATLAB_SPARSE_KIT_VERBOSE
             disp('...done. Overall statistics:')
