@@ -103,7 +103,7 @@ if exist('arg6','var')
     elseif issmolyak(arg6) || isempty(arg6) % we are in the case smolyak_grid(N,w,knots,lev2knots,idxset,S2)
         S2 = arg6;
     else
-        error('unknown type for 6th input')
+        error('SparseGKit:WrongInput','unknown type for 6th input')
     end
     clear arg6
 end

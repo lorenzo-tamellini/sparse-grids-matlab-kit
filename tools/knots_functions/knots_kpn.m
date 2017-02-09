@@ -18,7 +18,7 @@ i=knots2lev_kpn(n);
 
 
 if isnan(i)
-   error(strcat('this number of points is not available:',num2str(n)))
+   error('SparseGKit:OutOfTable',strcat('this number of points is not available:',num2str(n)))
 else
     % now access the knots and weights table using the i2l map
     [x_t,w_t]=kpn_tabulated(kpn_lev2l_map(i));
@@ -75,7 +75,7 @@ function l = kpn_lev2l_map(i)
 % as from table in kpn_lev_table
 
 if i>5
-    error('this level is not tabulated')
+    error('SparseGKit:OutOfTable','this level is not tabulated')
 else
     % i to l map
     l=kpn_lev_table(i+1,2);

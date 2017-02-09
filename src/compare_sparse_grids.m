@@ -81,7 +81,7 @@ N = size(Sr.knots,1);
 
 N_old = size(Sr_old.knots,1);
 
-if N~=N_old, error('grids with different N'), end
+if N~=N_old, error('SparseGKit:FailedSanityChk','grids with different N'), end
 
 nb_idx_S = length(S);
 I_S = reshape([S.idx],N,nb_idx_S)'; 
@@ -254,7 +254,7 @@ end
 % actually larger. In this case, we throw an error
 
 if isempty(idx_in_S_only)
-    error('idx_in_S_only is empty: this case is not handled yet')
+    error('SparseGKit:ToBeCoded','idx_in_S_only is empty: this case is not handled yet')
 else
     pts_from_new_idx_in_Sr_nosort=[];
     pos_end=0;
@@ -410,14 +410,14 @@ L3 = length(pts_in_both_grids_S_old);
 L4 = length(pts_in_S_old_only);
 
 if L3+L4~=size(Sr_old.knots,2)
-    error('The code has lost track of some points of the old grid, i+discard~=N_old')
+    error('SparseGKit:FailedSanityChk','The code has lost track of some points of the old grid, i+discard~=N_old')
 end
 
 if L2~=L3
-    error('mismatch between the two sets of recycling points. length(pts_in_both_grids_S)~=length(pts_in_both_grids_S_old)'),
+    error('SparseGKit:FailedSanityChk','mismatch between the two sets of recycling points. length(pts_in_both_grids_S)~=length(pts_in_both_grids_S_old)'),
 end
 if ~isempty( setxor( [pts_in_S_only; pts_in_both_grids_S], 1:size(Sr.knots,2) ) ),
-    error([ 'The code has lost track of some points of the new grid, ',...
+    error('SparseGKit:FailedSanityChk',[ 'The code has lost track of some points of the new grid, ',...
             'or some points from the old grid have been mistaken as points of the new grid. ',...
             'Double check the values of tolerances use to detect identical points (both here and in reduce_sparse_grid) ',...
             'and try to rerun the code. ']),

@@ -27,7 +27,7 @@ if isempty(non_tab)
     vect_nb_knots=kpn_lev_table(I+1,3)'; 
     nb_knots=reshape(vect_nb_knots,r,c);
 else
-    %error(strcat('levels:',num2str(non_tab),' are not tabulated'))
+    %error('SparseGKit:OutOfTable',strcat('levels:',num2str(non_tab),' are not tabulated'))
     warning('SparseGKit:KpnNonTab','asking for non tabulated levels') 
     % put Inf for I>5
     [r,c]=size(I);

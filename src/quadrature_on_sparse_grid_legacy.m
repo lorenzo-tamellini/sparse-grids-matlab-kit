@@ -38,7 +38,7 @@ warning('SparseGKit:deprecated','quadrature_on_sparse_grid_legacy is a deprecate
 
 switch nargin
     case 1
-        error('not enough input arguments')
+        error('SparseGKit:WrongInput','not enough input arguments')
     case 2
         % res = QUADRATURE_ON_SPARSE_GRID(f,S)
         evals = evaluate_on_sparse_grid_legacy(f,S);
@@ -51,7 +51,7 @@ switch nargin
                 'or modify the field KNOTS of your reduced sparse grid applying MAP '...
                 '(e.g. Sr.knots = map(Sr.knots) ). '...
                 'This message will disappear in future releases of SPARSE_GRID_MATLAB_KIT'];
-        error(errmsg);
+        error('SparseGKit:WrongInput',errmsg);
     case 4
         % this is either
         % % res = QUADRATURE_ON_SPARSE_GRID(f,S,map,weights_fact) or QUADRATURE_ON_SPARSE_GRID(f,S,[],weights_fact)
@@ -66,7 +66,7 @@ switch nargin
                 'or modify the fields KNOTS and WEIGHTS of your reduced sparse grid applying MAP and WEIGHTS_FACT'...
                 '(e.g. Sr.knots = map(Sr.knots),  Sr.weights=weights_fact*Sr.weights). '...
                 'This message will disappear in future releases of SPARSE_GRID_MATLAB_KIT'];
-            error(errmsg);
+            error('SparseGKit:WrongInput',errmsg);
         end
         
         evals = evaluate_on_sparse_grid_legacy(f,S,evals_old,S_old);

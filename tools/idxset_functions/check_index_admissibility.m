@@ -99,7 +99,7 @@ if nargin==3
         missing_set=sortrows(missing_set);
         completed_set=sortrows(completed_set);
     else
-        error('unknown sorting option')
+        error('SparseGKit:WrongInput','unknown sorting option')
     end
 end
 

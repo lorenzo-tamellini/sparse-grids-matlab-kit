@@ -21,11 +21,11 @@ function [found,pos,iter] = find_lexicographic(lookfor,I,nocheck)
 % so the cost of this preliminary analysis is negligible 
 
 if nargin == 2 && ~issorted(I,'rows'),
-    error('I is not lexicographically sorted')
+    error('SparseGKit:SetNotSorted','I is not lexicographically sorted')
 end
 
 if nargin == 3 && ~strcmp(nocheck,'nocheck') 
-    error('unknown 3rd input')
+    error('SparseGKit:WrongInput','unknown 3rd input')
 end
 
 nb_idx = size(I,1);

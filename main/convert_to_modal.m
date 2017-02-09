@@ -49,11 +49,11 @@ errmsg=[' Please note that CONVERT_TO_MODAL does not accept INTERVAL_MAP '...
         'This error message will not be shown in future releases of SPARSE-GRID-MATLAB-KIT'];
 
 if nargin==4
-    error(strcat('not enough input arguments.',errmsg))
+    error('SparseGKit:WrongInput',strcat('not enough input arguments.',errmsg))
 end
 
 if any(~ismember(flags,{'legendre','chebyshev','hermite'}));
-    error(strcat('One or more strings in FLAGS unrecognized. ',errmsg));
+    error('SparseGKit:WrongInput',strcat('One or more strings in FLAGS unrecognized. ',errmsg));
 end
 
 % nodal values has to be column

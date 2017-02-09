@@ -68,7 +68,7 @@ switch whichrho
         w=wt;
 
     otherwise
-    error('4th input not recognized')
+    error('SparseGKit:WrongInput','4th input not recognized')
     
 end
 

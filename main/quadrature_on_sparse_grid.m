@@ -41,12 +41,12 @@ end
 switch nargin
     
     case 1
-        error('not enough input arguments')
+        error('SparseGKit:WrongInput','not enough input arguments')
         
     case 2
         % res = QUADRATURE_ON_SPARSE_GRID(f,S), S being a reduced sparse grid. 
         if ~isreduced(S)
-            error('when quadrature_on_sparse_grid is called with two inputs, the second one must be a reduced sparse grid')
+            error('SparseGKit:WrongInput','when quadrature_on_sparse_grid is called with two inputs, the second one must be a reduced sparse grid')
         end
         evals = evaluate_on_sparse_grid(f,S);
         res = evals*S.weights';
@@ -59,7 +59,7 @@ switch nargin
             'one wants to evaluate the function. This allows for significant savings in computational '...
             'time, especially for N large. See QUADRATURE_ON_SPARSE_GRID for more information and '...
             'QUADRATURE_ON_SPARSE_GRID_LEGACY if you are still using a version of the Sparse Grids Matlab kit older than 14.4'];
-        error(errmsg)
+        error('SparseGKit:WrongInput',errmsg)
         
     case 5
         errmsg = ['QUADRATURE_ON_SPARSE_GRID does not accept ',num2str(nargin),' inputs. ' ... 
@@ -70,7 +70,7 @@ switch nargin
             'As a quick fix, you can use QUADRATURE_ON_SPARSE_GRID_LEGACY '...
             'which is the old version of QUADRATURE_ON_SPARSE_GRID, see help QUADRATURE_ON_SPARSE_GRID_LEGACY. '...
             'This function is however deprecated and will disappear from future relesases of the Sparse Grid Matlab Kit. '];
-        error(errmsg)
+        error('SparseGKit:WrongInput',errmsg)
         
     case 6
         % in the previous versions, this was evals = quadrature_on_sparse_grid(f,Sr,evals_old,Sr_old,paral,tol);
@@ -92,7 +92,7 @@ switch nargin
                 'As a quick fix, you can use QUADRATURE_ON_SPARSE_GRID_LEGACY '...
                 'which is the old version of QUADRATURE_ON_SPARSE_GRID, see help QUADRATURE_ON_SPARSE_GRID_LEGACY. '...
                 'This function is however deprecated and will disappear from future relesases of the Sparse Grid Matlab Kit.'];
-            error(errmsg)
+            error('SparseGKit:WrongInput',errmsg)
         end
         evals = evaluate_on_sparse_grid(f,S,Sr,evals_old,S_old,Sr_old);
     case 7

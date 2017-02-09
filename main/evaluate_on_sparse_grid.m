@@ -87,12 +87,12 @@ end
 switch nargin
 
     case 1
-        error('not enough input arguments')
+        error('SparseGKit:WrongInput','not enough input arguments')
 
     case 2
         % evaluate_on_sparse_grid(f,S), S being a reduced grid 
         if ~isreduced(S)
-            error('when evaluate_on_sparse_grid is called with two inputs, the second one must be a reduced sparse grid')
+            error('SparseGKit:WrongInput','when evaluate_on_sparse_grid is called with two inputs, the second one must be a reduced sparse grid')
         end
         f_eval = simple_evaluate(f,S);
         new_points = S.knots;
@@ -110,7 +110,7 @@ switch nargin
             'As a quick fix, you can use EVALUATE_ON_SPARSE_GRID_LEGACY '...
             'which is the old version of EVALUATE_ON_SPARSE_GRID, see help EVALUATE_ON_SPARSE_GRID_LEGACY. '...
             'This function is however deprecated and will disappear from future relesases of the Sparse Grid Matlab Kit.'];
-        error(errmsg)
+        error('SparseGKit:WrongInput',errmsg)
 
     case 6
         % evaluate_on_sparse_grid(f,S,Sr,evals_old,S_old,Sr_old)
@@ -136,7 +136,7 @@ switch nargin
                 'As a quick fix, you can use EVALUATE_ON_SPARSE_GRID_LEGACY '...
                 'which is the old version of EVALUATE_ON_SPARSE_GRID, see help EVALUATE_ON_SPARSE_GRID_LEGACY. '...
                 'This function is however deprecated and will disappear from future relesases of the Sparse Grid Matlab Kit.'];
-            error(errmsg)
+            error('SparseGKit:WrongInput',errmsg)
         end
 
         if isempty(evals_old) && isempty(Sr_old) && isempty(S_old)
@@ -225,7 +225,7 @@ if ~isempty(tocomp_list)
             disp('using parallel')
         end
         if ~check_if_parallel_on()
-            error('no open matlabpool session detected')
+            error('SparseGKit:NoOpenPar','no open matlabpool session detected')
         end
         parfor i=1:n
             % suppress the "variable is indexed but not sliced" warning, which cannot be circumvented in this case
@@ -298,7 +298,7 @@ if n>paral % if no parallel this one becomes n>NaN, which is false for any n
         disp('using parallel')
     end
     if ~ check_if_parallel_on()
-        error('no open matlabpool session detected')
+        error('SparseGKit:NoOpenPar','no open matlabpool session detected')
     end
     parfor i=2:n
         % if ~mod(i,100), disp(i), end        

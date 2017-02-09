@@ -51,7 +51,7 @@ if exist('arg4','var')
     elseif issmolyak(arg4)
         S2 = arg4;
     else
-        error('unknown type for 4th input')
+        error('SparseGKit:WrongInput','unknown type for 4th input')
     end
     clear arg4
 end
@@ -67,7 +67,7 @@ end
 % the matrix A=randi(20,300000,30) is unsorted.
 
 if ~issorted(C,'rows'),
-    error('the multiindex set C is not sorted')
+    error('SparseGKit:SetNotSorted','the multiindex set C is not sorted')
 end
 
 N=size(C,2);

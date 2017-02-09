@@ -24,6 +24,8 @@
 %
 %                   --> clarified help of REDUCE_SPARSE_GRID
 %
+%                   --> added error identifiers to support error handling (try/catch, rethrow). See ERRORS_AND_WARNINGS_LIST for a list 
+%
 %                       
 % -> 2016, Jun. 20  --> fixing a bug in output computation in quadrature_on_sparse_grids.
 % 

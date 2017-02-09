@@ -37,7 +37,7 @@ if nn==1
     x=(x_a+x_b)/2; wt=1;
 
 elseif mod(nn,2)==0
-    error('error in knots_CC: Clenshaw-Curtis formula \n use only odd number of points')
+    error('SparseGKit:WrongInput','error in knots_CC: Clenshaw-Curtis formula \n use only odd number of points')
 
 else
     n=nn-1;    
@@ -72,6 +72,6 @@ switch whichrho
         w=wt;
 
     otherwise
-    error('4th input not recognized')
+    error('SparseGKit:WrongInput','4th input not recognized')
     
 end

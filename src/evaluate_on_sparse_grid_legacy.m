@@ -65,7 +65,7 @@ end
 
 
 if ~isreduced(Sr)
-    error('SR must be a reduced sparse grid')
+    error('SparseGKit:WrongInput','SR must be a reduced sparse grid')
 end
 
 
@@ -85,7 +85,7 @@ switch nargin
         return
 
     case 3
-        error('EVALUATE_ON_SPARSE_GRID_LEGACY does not accept 3 inputs')
+        error('SparseGKit:WrongInput','EVALUATE_ON_SPARSE_GRID_LEGACY does not accept 3 inputs')
         
     case 4
         % evaluate_on_sparse_grid(f,Sr,evals_old,Sr_old)
@@ -100,7 +100,7 @@ switch nargin
             return
         end
         if ~isreduced(Sr_old)
-            error('SR_OLD must be a reduced sparse grid')
+            error('SparseGKit:WrongInput','SR_OLD must be a reduced sparse grid')
         end
         paral=NaN;
         tol=1e-14;
@@ -118,7 +118,7 @@ switch nargin
             return
         end
         if ~isreduced(Sr_old)
-            error('SR_OLD must be a reduced sparse grid')
+            error('SparseGKit:WrongInput','SR_OLD must be a reduced sparse grid')
         end
         tol=1e-14;
 
@@ -174,7 +174,7 @@ if ~isempty(tocomp_list)
             disp('using parallel')
         end
         if ~check_if_parallel_on()
-            error('no open matlabpool session detected')
+            error('SparseGKit:NoOpenPar','no open matlabpool session detected')
         end
         parfor i=1:n
             % suppress the "variable is indexed but not sliced" warning, which cannot be circumvented in this case
@@ -248,7 +248,7 @@ if n>paral % if no parallel this one becomes n>NaN, which is false for any n
         disp('using parallel')
     end
     if ~ check_if_parallel_on()
-        error('no open matlabpool session detected')
+        error('SparseGKit:NoOpenPar','no open matlabpool session detected')
     end
     parfor i=2:n
         % if ~mod(i,100), disp(i), end        

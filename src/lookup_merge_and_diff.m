@@ -180,7 +180,7 @@ end
 
 if j~=N % in this case there are no points to recycle and we have completely filled  tocomp_list
     if tocomp_list(j+1)~=0,
-        error('tocomp_list(j+1)~=0'),
+        error('SparseGKit:FailedSanityChk','tocomp_list(j+1)~=0'),
     end
     tocomp_list(j+1:end)=[];
 end
@@ -189,23 +189,23 @@ if i==N % in this case the two grids are the same one
     warning('SparseGKit:GridsAreEqual','the two grids are the same!') 
 else
     if i>N
-        error(['The code has detected more points to recycle than points in the new sparse grid! ',...
+        error('SparseGKit:FailedSanityChk',['The code has detected more points to recycle than points in the new sparse grid! ',...
                'Double check the values of tolerances used to detect identical points (both here and in reduce_sparse_grid) ',...
                'and rerun the code. i>N'])
     end
     if recycle_list(i+1)~=0,
-        error('recycle_list(i+1)~=0'),
+        error('SparseGKit:FailedSanityChk','recycle_list(i+1)~=0'),
     end
     recycle_list(i+1:end)=[];
 end
 
 if i~=length(recycle_list_old) % in this case we haven't exhausted the old_grid (non-nested case)
-    if recycle_list_old(i+1)~=0,error('recycle_list_old(j+1)~=0'),end
+    if recycle_list_old(i+1)~=0,error('SparseGKit:FailedSanityChk','recycle_list_old(j+1)~=0'),end
     recycle_list_old(i+1:end)=[];
 end
 
 if discard~=N_old % in this case we are discarding completely the old grid (non-nested case)
-    if discard_list(discard+1)~=0,error('discard_list(discard+1)~=0'),end
+    if discard_list(discard+1)~=0,error('SparseGKit:FailedSanityChk','discard_list(discard+1)~=0'),end
     discard_list(discard+1:end)=[];
 end
 
@@ -213,14 +213,14 @@ end
 
 % safety checks
 if i+discard~=N_old
-    error('The code has lost track of some points of the old grid, i+discard~=N_old')
+    error('SparseGKit:FailedSanityChk','The code has lost track of some points of the old grid, i+discard~=N_old')
 end
 
 if length(recycle_list)~=length(recycle_list_old),
-    error('mismatch between the two sets of recycling points. length(recycle_list)~=length(recycle_list_old)'),
+    error('SparseGKit:FailedSanityChk','mismatch between the two sets of recycling points. length(recycle_list)~=length(recycle_list_old)'),
 end
 if ~isempty( setxor( [tocomp_list; recycle_list], 1:N ) ),
-    error([ 'The code has lost track of some points of the new grid, ',...
+    error('SparseGKit:FailedSanityChk',[ 'The code has lost track of some points of the new grid, ',...
             'or some points from the old grid have been mistaken as points of the new grid. ',...
             'Double check the values of tolerances use to detect identical points (both here and in reduce_sparse_grid) ',...
             'and try to rerun the code. ~isempty(setxor([tocomp_list recycle_list],1:N))']),

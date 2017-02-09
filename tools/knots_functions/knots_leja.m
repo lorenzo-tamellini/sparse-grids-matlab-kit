@@ -69,7 +69,7 @@ switch type
       
     %--------------------------------------------------------        
     otherwise
-        error('unknown leja type')
+        error('SparseGKit:WrongInput','unknown leja type')
 
 end
 
@@ -95,7 +95,7 @@ switch whichrho
         % to multiply by (x_b-x_a)
         w=w*(x_b-x_a);
     otherwise
-        error('4th argument must be either prob or nonprob')
+        error('SparseGKit:WrongInput','4th argument must be either prob or nonprob')
 end
 
 x=x';
@@ -1143,7 +1143,7 @@ switch n
             12.3007903708637e-003
             -2.55671396531779e-003];
     otherwise
-        error('too many points')
+        error('SparseGKit:OutOfTable','too many points')
 end
 
 function [x,w] = sym_line_leja_tab(n)
@@ -2173,7 +2173,7 @@ switch n
             -25.7249401716039e-003
             -25.7249401716040e-003];
     otherwise
-        error('too many points')
+        error('SparseGKit:OutOfTable','too many points')
 end
 
 function [x,w] = p_disk_leja_tab(n)
@@ -3203,5 +3203,5 @@ switch n
             32.7426638807676e-003
             32.7426638807677e-003];
     otherwise
-        error('too many points')
+        error('SparseGKit:OutOfTable','too many points')
 end

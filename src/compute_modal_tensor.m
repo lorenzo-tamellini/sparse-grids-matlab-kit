@@ -33,7 +33,7 @@ function U = compute_modal_tensor(S,S_values,domain,flags)
 
 
 if any(~ismember(flags,{'legendre','chebyshev','hermite'}));
-    error(['Input argument FLAG unrecognized. '...
+    error('SparseGKit:WrongInput',['Input argument FLAG unrecognized. '...
         ' Please note that COMPUTE_MODAL_TENSOR does not accept INTERVAL_MAP '...
         'input argument any longer. '...
         'Type help convert_to_modal for help. '...
@@ -73,7 +73,7 @@ U.size=nb_multiindices;
 rows = S.size; % one equation per point
 cols = nb_multiindices; % one unknown per polynomial
 
-if rows~=cols, error('vandermonde matrix will not be square!'), end
+if rows~=cols, error('SparseGKit:FailedSanityChk','vandermonde matrix will not be square!'), end
 
 
 % now create the vandermonde matrix with evaluation of each multi-index in every point
@@ -93,7 +93,7 @@ if length(flags)==1 || ischar(flags) % the second condition for when the functio
             case 'chebyshev'
                 vc = cheb_eval_multidim(S.knots,k,domain(1,:),domain(2,:));
             otherwise
-                error('unknown family of polynomials')
+                error('SparseGKit:WrongInput','unknown family of polynomials')
         end
         V(:,c)=vc';
     end
@@ -110,7 +110,7 @@ else
                 case 'chebyshev'
                     vc = vc.*cheb_eval(S.knots(n,:),k(n),domain(1,n),domain(2,n));
                 otherwise
-                    error('unknown family of polynomials')
+                    error('SparseGKit:WrongInput','unknown family of polynomials')
             end
         end
         V(:,c)=vc';
