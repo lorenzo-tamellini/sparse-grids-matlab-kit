@@ -46,7 +46,9 @@ detect_unsufficient_tolerance(kk,Tol);
 
 % i is an index vector that maps kk into kk_ordered, i.e. kk(i,:)==kk_ordered
 
-[kk_ordered,i]=mysortrows(kk,Tol/size(kk,2));
+%[kk_ordered,i]=mysortrows(kk,Tol/size(kk,2)); % this will not work properly if more than 10 rv are used, the
+%toll will be too small!
+[kk_ordered,i]=mysortrows(kk,Tol);
 
 % next I take the difference of two consecutive rows. if the difference is small, then the rows are the same, i.e. the knot is the same
 dkk_ordered=diff(kk_ordered,1,1);
