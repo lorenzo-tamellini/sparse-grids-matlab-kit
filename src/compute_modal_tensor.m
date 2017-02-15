@@ -45,11 +45,14 @@ end
 % As the number of knots is different in each direction, I use a cell array
 
 nb_dim=size(S.knots,1);
-knots_per_dim=cell(1,nb_dim);
 
-for dim=1:nb_dim
-    knots_per_dim{dim}=unique(S.knots(dim,:));
-end
+% knots_per_dim=cell(1,nb_dim);
+% for dim=1:nb_dim
+%     knots_per_dim{dim}=unique(S.knots(dim,:));
+% end
+
+knots_per_dim=S.knots_per_dim;
+
 
 % The modal expansion in i-th direction uses up to degree k, with k as follows
 

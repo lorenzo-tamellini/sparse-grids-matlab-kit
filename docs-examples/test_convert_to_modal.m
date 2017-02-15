@@ -186,3 +186,49 @@ domain=[a mu a2 mu2; b sig b2 sig2];
 
 sel = abs(modal_coeffs)>1e-12;
 [K(sel,:),modal_coeffs(sel,:)]
+
+
+%% a vector-valued case: each component of the vector-valued field is considered individually
+
+clear
+
+flag='hermite';
+
+% means
+mu=[1 -1];
+% standard deviations
+sig=[2 3];
+
+
+
+% The sparse grid. Note that here I don't really care what points I have used to build the nodal
+% interpolant. They could even be evenly spaced points! It's just a bunch of evaluations of a function.
+% of course bad points make the matrix ill conditioned
+N=2; w=5; 
+knots=@(n) knots_gaussian(n,0,1); 
+lev2knots=@lev2knots_lin; 
+idxset=@(i) sum(i-1);
+S=smolyak_grid(N,w,knots,lev2knots,idxset,get_interval_map(mu,sig,'gaussian'));
+Sr=reduce_sparse_grid(S);
+
+
+
+% Same procedure as before, now with a linear comb of Hermite polynomials
+% NODAL_VALUES is a matrix VxM, where V is the output dimensionality and M is the number of points.
+% in other words, evaluations of the function-values are stored as columns (same as EVALUATE_ON_SPARSE_GRID)
+% so, we no longer need to transpose in nodal_values1 and 2
+
+X=Sr.knots;
+
+nodal_values1 = 6-4*herm_eval_multidim(X,[3 1],mu,sig)+...
+    7*herm_eval_multidim(X,[1 2],mu,sig);
+
+nodal_values2 = 0.5-2*herm_eval_multidim(X,[1 1],mu,sig)+...
+    5*herm_eval_multidim(X,[2 3],mu,sig);
+
+nodal_values = [nodal_values1; nodal_values2];
+
+domain=[mu;sig];
+[modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,flag);
+
+[K,modal_coeffs]

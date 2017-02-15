@@ -340,6 +340,74 @@ legend show
 axis([-0.5 8 -0.5 8])
 
 
+%% when building a large sparse grid, it might be useful to recycle from previous grids to speed-up the computation
+
+clc
+clear
+
+knots=@(n) knots_gaussian(n,0,1);
+lev2knots=@lev2knots_lin;
+
+N=20;
+w=4;
+S=smolyak_grid(N,w,knots,lev2knots,@(i) prod(i));
+w=5;
+disp('build grid without recycling')
+tic
+T=smolyak_grid(N,w,knots,lev2knots,@(i) prod(i));
+toc
+tic
+T_rec=smolyak_grid(N,w,knots,lev2knots,@(i) prod(i),S);
+toc
+
+isequal(T,T_rec) % sometimes fields like knots or weights might differ at machine precision
+
+%% note that the following call is also valid: 
+% T_rec=smolyak_grid(N,w,knots,lev2knots,@(i) prod(i),[]);
+% this is useful in iterative loops like:
+clc
+tic
+for w=1:7
+    % build grid
+    T=smolyak_grid(N,w,knots,lev2knots,@(i) prod(i));
+    % then do something ...
+end
+toc
+
+
+tic
+T_old=[];
+for w=1:7
+    % build grid
+    T=smolyak_grid(N,w,knots,lev2knots,@(i) prod(i),T_old);
+    T_old = T;
+    % then do something ...
+end
+toc
+
+%% the same functionality is also available for smolyak_grid_multiidx_set
+
+clear
+clc
+
+knots=@(n) knots_gaussian(n,0,1);
+lev2knots=@lev2knots_lin;
+ibox= [3 4 2 4 2];
+[~,C] = multiidx_box_set(ibox,1);
+D = sortrows([C; 2 5 2 2 6]);
+
+S=smolyak_grid_multiidx_set(C,knots,lev2knots);
+
+tic
+T=smolyak_grid_multiidx_set(D,knots,lev2knots);
+toc
+tic
+T_rec = smolyak_grid_multiidx_set(D,knots,lev2knots,S);
+toc
+isequal(T,T_rec)
+
+
+
 %% PART 1: INTRODUCTION - DATA-STRUCURE
 
 % A sparse grid is represented as a vector of structures. Each element is a tensor grid, with fields

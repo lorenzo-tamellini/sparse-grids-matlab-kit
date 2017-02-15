@@ -6,12 +6,22 @@ function [modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,flags,~)
 % 
 % [MODAL_COEFFS,K] = CONVERT_TO_MODAL(S,SR,NODAL_VALUES,DOMAIN,'legendre') returns the Legendre expansion
 %       of the sparse grid interpolant. S is a sparse grid, SR is its reduced counterpart, NODAL_VALUES
-%       are the values of the sparse grid interpolant on the reduced sparse grid (either row or column vector).
+%       are the values of the target function (say F) evaluated on the reduced sparse grid, and has the same
+%       size of e.g. F_EVAL, output of EVALUATE_ON_SPARSE_GRID. 
+%
+%       More precisely, if F: R^N -> R^V and SR.KNOTS contains M points in R^N, then 
+%       SR.KNOTS is a matrix NxM and NODAL_VALUES is a matrix VxM, i.e.,
+%       evaluations of F on different points of SR must be stored in NODAL_VALUES as columns. 
+%       If F is a scalar-valued function then NODAL_VALUES is a row-vector
+%
 %       DOMAIN is a 2xN matrix = [a1, a2, a3, ...; b1, b2, b3, ...] defining the lower and upper bound
 %       of the hyper-rectangle on which the sparse grid is defined
-%       The function returns the Legendre expansion as a vector of coefficients MODAL_COEFFS, 
-%       and a matrix K containing the associated multi-indices, one per row
+%       The function returns the Legendre expansion as a matrix of coefficients MODAL_COEFFS, where
+%       the rows of MODAL_COEFF have V components (V columns), i.e. they are the "function coefficient" of the expansion
+%       of F: R^N -> R^V. K is a matrix containing the associated multi-indices, one per row.
 %
+%       
+%       
 %
 % [MODAL_COEFFS,K] = CONVERT_TO_MODAL(S,SR,NODAL_VALUES,DOMAIN,'chebyshev') returns the Chebyshev expansion
 %        of the sparse grid interpolant. See above for inputs and outputs.
@@ -37,7 +47,7 @@ function [modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,flags,~)
 
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2015 L. Tamellini, F. Nobile
+% Copyright (c) 2009-2015 L. Tamellini, F. Nobile, B. Sprungk
 % See LICENSE.txt for license
 %----------------------------------------------------
 
@@ -56,15 +66,10 @@ if any(~ismember(flags,{'legendre','chebyshev','hermite'}));
     error('SparseGKit:WrongInput',strcat('One or more strings in FLAGS unrecognized. ',errmsg));
 end
 
-% nodal values has to be column
-[r,c]=size(nodal_values);
-if r<c
-    nodal_values=nodal_values';
-end
-
 % N is be the number of random variables
 N=size(Sr.knots,1);
-
+% V is the output dimensionality, F:R^N -> R^V
+V=size(nodal_values,1);
 
 % one tensor grid at a time, compute the modal equivalent, then sum up
 % how many grid to process?
@@ -99,8 +104,10 @@ for g = 1: nb_tensor_grids
     % To locate the knots of the g-th grid in the mapping Sr.n, i use global_values_counter    
     grid_knots = global_values_counter + 1 : ( global_values_counter + S(g).size );
     
-    % extract the values of the g-th grid
-    S_values = nodal_values(Sr.n(grid_knots));
+    % extract the values of the g-th grid. If nodal_values is vector-valued, because F:R^N -> R^V
+    % then the evaluation of each component of F, F_1, F_2, ... F_V on each point of the tensor
+    % grid must be in a column vector, therefore I need to transpose nodal_values
+    S_values = nodal_values(:,Sr.n(grid_knots))';
 
     % then update global_values_counter
     global_values_counter = global_values_counter + S(g).size ;
@@ -122,7 +129,7 @@ tot_midx=sum([U.size]);
 All = zeros(tot_midx,N);
 
 % this is the container of coefficients
-all_coeffs = zeros(tot_midx,1);
+all_coeffs = zeros(tot_midx,V);
 
 % this is the index that scrolls them
 l=0; 
@@ -135,7 +142,9 @@ for g = 1: nb_tensor_grids
     end
 
     All(l+1:l+U(g).size,:) = U(g).multi_indices;
-    all_coeffs(l+1:l+U(g).size) = U(g).modal_coeffs*S(g).coeff;
+    all_coeffs(l+1:l+U(g).size,:) = U(g).modal_coeffs*S(g).coeff; % note that this one works even if on the left of = we want
+                                                                  % a row vector (row of all_coeffs) and on the right we have
+                                                                  % a column vector
     l=l+U(g).size;
 end
 
@@ -165,21 +174,21 @@ K = All_sorted(selector,:);
 % now I have to sum all the coefficients.
 
 % sort coefficients in the same way as multi_indices
-all_coeffs_sorted = all_coeffs(sorter);
+all_coeffs_sorted = all_coeffs(sorter,:);
 
 % initialize modal_coeffs, that is the final output
 nb_modal_coeffs = size(K,1);
-modal_coeffs = zeros(nb_modal_coeffs,1);
+modal_coeffs = zeros(nb_modal_coeffs,V);
 
 % compute them one at a time
 
 l=1; %scrolls all_coeffs_sorted
 for k= 1 : nb_modal_coeffs
-    ss=all_coeffs_sorted(l);
+    ss=all_coeffs_sorted(l,:);
     while selector(l)~=1
         l=l+1;
-        ss = ss+all_coeffs_sorted(l);
+        ss = ss+all_coeffs_sorted(l,:);
     end
-    modal_coeffs(k) = ss; 
+    modal_coeffs(k,:) = ss; 
     l=l+1;
 end

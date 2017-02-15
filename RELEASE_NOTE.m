@@ -4,6 +4,11 @@
 % See LICENSE.txt for license
 %----------------------------------------------------------------------------------
 %
+%
+% -> 2017, Feb. 14  --> CONVERT_TO_MODAL now can operate on vector-valued functions. 
+%
+%                   --> Optimized computation of Hermite polynomials in HERM_EVAL and HERM_EVAL_MULTIDIM
+%
 % -> 2017, Jan. 31  --> fixed a bug in REDUCE_SPARSE_GRID which might have affected problems with more than 10
 %                       dimensions (i.e., some points that should have detected as equal might have considered
 %                       different, causing some larger counting of sparse grid points and extra unnecessary

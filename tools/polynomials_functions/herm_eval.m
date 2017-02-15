@@ -28,17 +28,10 @@ z = ( x - mi ) / sigma ;
 
 % calculate the standard legendre polynomials in t
 H = standard_herm_eval(z,k);
-% modify L to take into account normalizations
-
-st_herm_norm = sqrt ( factorial(k) );
-
-
-H = H / st_herm_norm;
-
-
-
-
-
+% modify L to take into account normalizations. 
+if k>1
+    H = H / sqrt ( factorial(k) );
+end
 
 
 
@@ -78,3 +71,5 @@ else
       end
       return
 end
+
+
