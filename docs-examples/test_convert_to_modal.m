@@ -25,8 +25,7 @@ domain=[-ones(1,N); ones(1,N)];
 
 % compute a legendre polynomial over the sparse grid
 X=Sr.knots;
-nodal_values = 4*lege_eval_multidim(X,[4 0],-1,1)'+...
-    2*lege_eval_multidim(X,[1 1],-1,1)';
+nodal_values = 4*lege_eval_multidim(X,[4 0],-1,1)+2*lege_eval_multidim(X,[1 1],-1,1);
 
 % conversion from the points to the legendre polynomial. I should recover it exactly
 [modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,'legendre');
@@ -54,8 +53,7 @@ Sr=reduce_sparse_grid(S);
 % procedure (with a sufficient number of points in the grid)
 X=Sr.knots;
 
-nodal_values = 6-3*lege_eval_multidim(X,[3 0],a,b)'+...
-    7*lege_eval_multidim(X,[1 1],a,b)';
+nodal_values = 6-3*lege_eval_multidim(X,[3 0],a,b)+7*lege_eval_multidim(X,[1 1],a,b);
 
 
 domain=[a;b];
@@ -93,8 +91,7 @@ Sr=reduce_sparse_grid(S);
 
 X=Sr.knots;
 
-nodal_values = 6-4*herm_eval_multidim(X,[3 1],mu,sig)'+...
-    7*herm_eval_multidim(X,[1 2],mu,sig)';
+nodal_values = 6-4*herm_eval_multidim(X,[3 1],mu,sig)+7*herm_eval_multidim(X,[1 2],mu,sig);
 
 
 domain=[mu;sig];
@@ -125,8 +122,7 @@ Sr=reduce_sparse_grid(S);
 % procedure (with a sufficient number of points in the grid)
 X=Sr.knots;
 
-nodal_values = 6-3*cheb_eval_multidim(X,[3 2],a,b)'+...
-    7*cheb_eval_multidim(X,[1 1],a,b)';
+nodal_values = 6-3*cheb_eval_multidim(X,[3 2],a,b)+ 7*cheb_eval_multidim(X,[1 1],a,b);
 
 
 domain=[a;b];
@@ -172,11 +168,11 @@ nodal_values = 6 ...
                 -3*(lege_eval(X(1,:),ll1(1),a,b).*...
                     herm_eval(X(2,:),ll1(2),mu,sig).*...
                     cheb_eval(X(3,:),ll1(3),a2,b2).*...
-                    herm_eval(X(4,:),ll1(4),mu2,sig2))'...
+                    herm_eval(X(4,:),ll1(4),mu2,sig2))...
                 +1*(lege_eval(X(1,:),ll2(1),a,b).*...
                     herm_eval(X(2,:),ll2(2),mu,sig).*...
                     cheb_eval(X(3,:),ll2(3),a2,b2).*...
-                    herm_eval(X(4,:),ll2(4),mu2,sig2))';
+                    herm_eval(X(4,:),ll2(4),mu2,sig2));
 
 
 

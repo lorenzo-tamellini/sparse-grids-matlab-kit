@@ -1107,8 +1107,7 @@ domain=[-ones(1,N); ones(1,N)];
 
 % compute a legendre polynomial over the sparse grid
 X=Sr.knots;
-nodal_values = 4*lege_eval_multidim(X,[4 0],-1,1)'+...
-    2*lege_eval_multidim(X,[1 1],-1,1)';
+nodal_values = 4*lege_eval_multidim(X,[4 0],-1,1)+ 2*lege_eval_multidim(X,[1 1],-1,1);
 
 % conversion from the points to the legendre polynomial. I should recover it exactly
 [modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,'legendre');
