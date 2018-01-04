@@ -15,7 +15,7 @@ function [is_adm, completed_set, missing_set] = check_index_admissibility(idx,id
 
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2015 L. Tamellini, F. Nobile
+% Copyright (c) 2009-2017 L. Tamellini, F. Nobile
 % See LICENSE.txt for license
 %----------------------------------------------------
 

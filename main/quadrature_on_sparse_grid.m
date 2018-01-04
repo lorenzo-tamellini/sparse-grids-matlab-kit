@@ -27,7 +27,7 @@ function [res,evals] = quadrature_on_sparse_grid(f,S,Sr,evals_old,S_old,Sr_old,p
 
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2015 L. Tamellini, F. Nobile
+% Copyright (c) 2009-2017 L. Tamellini, F. Nobile
 % See LICENSE.txt for license
 %----------------------------------------------------
 

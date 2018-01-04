@@ -50,7 +50,7 @@ function [pts_in_S_only,pts_in_both_grids_S,pts_in_both_grids_S_old,pts_in_S_old
 
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2015 L. Tamellini, F. Nobile
+% Copyright (c) 2009-2017 L. Tamellini, F. Nobile
 % See LICENSE.txt for license
 %----------------------------------------------------
 

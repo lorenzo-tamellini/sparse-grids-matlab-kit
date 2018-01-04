@@ -12,7 +12,7 @@ function [x,w]=knots_gaussian(n,mi,sigma)
 
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2015 L. Tamellini, F. Nobile
+% Copyright (c) 2009-2017 L. Tamellini, F. Nobile
 % See LICENSE.txt for license
 %----------------------------------------------------
 
