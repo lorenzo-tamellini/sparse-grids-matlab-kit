@@ -5,6 +5,12 @@
 %----------------------------------------------------------------------------------
 %
 %
+% RELEASE NOTES version 17.5
+%
+%
+% -> 2017, May  17  --> added ADAPT_SPARSE_GRIDS and TUTORIAL_ADAPTIVE and PLOT_IDX_STATUS to show how adapt
+%                       sparse explores 2-dimensional spaces
+%
 % -> 2017, Feb. 14  --> CONVERT_TO_MODAL now can operate on vector-valued functions. 
 %
 %                   --> Optimized computation of Hermite polynomials in HERM_EVAL and HERM_EVAL_MULTIDIM
@@ -35,11 +41,12 @@
 %                   --> clarified help of REDUCE_SPARSE_GRID
 %
 %                   --> added error identifiers to support error handling (try/catch, rethrow). See ERRORS_AND_WARNINGS_LIST for a list 
-%
 %                       
 % -> 2016, Jun. 20  --> fixing a bug in output computation in quadrature_on_sparse_grids.
 % 
 % -> 2015, Dec. 11  --> added function to ask number of open parallel matlab workers. Fixed a minor bug in close_parallel()
+%
+%
 %
 % RELEASE NOTES version 15.8
 %
@@ -48,10 +55,10 @@
 %
 %                   --> added MULTIIDX_GEN and MULTIIDX_BOX_SET to the tutorial
 %
-%
 % -> 2015, Apr. 27  --> added function AS_REDUCED that converts a list of points / weights in a reduced grid
 %                       structure
 % 
+%
 %
 % RELEASE NOTES version 14.12
 %
