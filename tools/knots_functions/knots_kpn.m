@@ -2,7 +2,30 @@ function [x,w] = knots_kpn(n)
 
 % [x,w] = knots_kpn(n)
 %
-% returns knots and weights for kpn for given number of points
+% returns the collocation points (x) and the weights (w) 
+% of the KPN quadrature formula (Kronrod-Patterson-Normal)
+% for approximation of integrals w.r.t to the weight function 
+%
+% rho(x)=1/sqrt(2*pi)*exp(-x^2/2) 
+%
+% i.e. the density of a gaussian random variable 
+% with mean 0 and standard deviation 1.
+%
+% Knots and weights have been precomputed (up to 35). 
+% An error is raised if the number of points requested is not available
+%
+% References:
+%
+%    Florian Heiss, Viktor Winschel,
+%    Likelihood approximation by numerical integration on sparse grids,
+%    Journal of Econometrics,
+%    Volume 144, 2008, pages 62-80.
+%
+%    Alan Genz, Bradley Keister,
+%    Fully symmetric interpolatory rules for multiple integrals
+%    over infinite regions with Gaussian weight,
+%    Journal of Computational and Applied Mathematics,
+%    Volume 71, 1996, pages 299-309.
 
 
 %----------------------------------------------------
