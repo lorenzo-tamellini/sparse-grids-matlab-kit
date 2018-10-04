@@ -453,3 +453,70 @@ plot(adapt1.private.nb_pts_log(31:end),'b','DisplayName','adapt')
 hold on
 plot(adapt2.private.nb_pts_log(11:end),'r','DisplayName','dim adapt')
 legend show
+
+
+%% a convergence study in L-inf norm (max in interpolation error)
+
+
+clear
+
+% function to be interpolated
+f=@(x) 1./(x(1,:).^2+x(2,:).^2 + 0.3);
+
+% domain is [a,b]^N
+N=2;
+a=-1;
+b=1;
+
+% settings for sparse grids
+knots=@(n) knots_CC(n,a,b);
+lev2knots=@lev2knots_doubling;
+controls.paral=NaN; 
+controls.prof_toll = 1e-10;
+prev_adapt = [];
+controls.nested=true;
+
+% evaluate error as max error over 100 random points in [a,b]^2. Note that here we have hard-coded that a=-1,  b=1
+nb_rand_pts = 100;
+Rand_pts = 2*rand(2,nb_rand_pts)-1;
+truef_evals = f(Rand_pts);
+
+% generate a sequence of sparse grids with these many points (approximately), for each save values of interest 
+% (exact nb pts, error,  approximation of integral of f)
+max_pts = [5 7 13 21 29 50 80 200 400 600 1000];
+PP = length(max_pts);
+quadf_vals = zeros(1,PP);
+sg_pts = zeros(1,PP);
+sg_err =zeros(1,PP);
+
+
+% the loop over the sparse grids
+k=1;
+for p = max_pts
+    controls.max_pts=p;
+    adapt1 = adapt_sparse_grid(f,N,knots,lev2knots,prev_adapt,controls);
+    sg_eval = interpolate_on_sparse_grid(adapt1.S,adapt1.Sr,adapt1.f_on_Sr,Rand_pts);
+    sg_err(k) = max(abs(sg_eval - truef_evals));
+    quadf_vals(k)=adapt1.intf;
+    sg_pts(k) = adapt1.nb_pts;
+    if p<max_pts(end)
+        prev_adapt=adapt1;
+        k=k+1;
+    end
+end
+
+% take the last computed integral as reference integral
+quadf_ref = quadf_vals(end);
+quadf_vals(end)=[];
+max_pts(end)=[];
+
+% error plots
+figure
+loglog(sg_pts(1:end-1),abs(quadf_vals-quadf_ref),'-ob','LineWidth',2,'MarkerFaceColor','b','DisplayName','adaptive sg')
+title('quadrature error')
+grid on
+
+figure
+loglog(sg_pts,sg_err,'-ob','LineWidth',2,'MarkerFaceColor','b','DisplayName','adaptive sg')
+title('interp error')
+grid on
