@@ -5,6 +5,17 @@
 %----------------------------------------------------------------------------------
 %
 %
+%
+% -> 2018, Oct. 3   --> added KNOTS_GAUSSIAN_LEJA, i.e., weighted Leja for quadrature with respect to the
+%                       gaussian weight function. Added example file where Gaussian Leja are computed
+%                       and then quadrature and interpolation convergence tests for different univariate 
+%                       knots for Gaussian random variables are compared, TEST_COMPUTE_GAUSSIAN_LEJA_AND_CONVERGENGE_TEST.m
+%
+% -> 2018, Jun. 28  --> added example of convergence study for interpolation error with adaptive sparse grids,
+%                       see tutorial_adaptive.m
+%
+%
+%
 % RELEASE NOTES version 17.5
 %
 %

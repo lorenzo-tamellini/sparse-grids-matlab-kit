@@ -149,7 +149,7 @@ ylim([-1.5 12])
 legend show
 
 
-% Gauss-Hermite points: quadrature points to approximate integrals like 
+%% Gauss-Hermite points: quadrature points to approximate integrals like 
 %
 % 1/sqrt(2 sig pi) \int_R f(x) e^{ -(x-mi)^2 / (2 sig^2) } dx 
 %
@@ -161,7 +161,7 @@ figure
 plot(x,0*x,'ok','MarkerFaceColor','k','DisplayName','9 GH points')
 grid on
 
-% Krondor - Patterson Nodes : nested quadrature points to approximate integrals as the previous
+% Kronrod - Patterson Nodes : nested quadrature points to approximate integrals as the previous
 
 hold on
 n=3; 
@@ -172,8 +172,21 @@ n=9;
 x=knots_kpn(n);
 plot(x, 2 + 0*x,'ob','MarkerFaceColor','b','DisplayName','9 KPN points')
 
-ylim([-1.5 4])
+
+% Gaussian-Leja : nested quadrature points to approximate integrals as the previous
+
+hold on
+n=3; 
+x=knots_gaussian_leja(n);
+plot(x,3 + 0*x,'xr','LineWidth',2,'MarkerFaceColor','r','MarkerSize',8,'DisplayName','3 Gaussian-Leja points')
+
+n=9; 
+x=knots_gaussian_leja(n);
+plot(x, 4 + 0*x,'xb','LineWidth',2,'MarkerFaceColor','b','MarkerSize',8,'DisplayName','9 Gaussian-Leja points')
+
+ylim([-1.5 7])
 legend show
+
 
 
 %% PART 1: INTRODUCTION - INGREDIENTS OF A SPARSE GRID. LEV2KNOTS FUNCTION.
