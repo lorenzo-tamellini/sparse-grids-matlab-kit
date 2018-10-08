@@ -13,12 +13,20 @@
 % 2) Fabio Nobile
 % 3) Bjorn Sprungk
 % 4) Diane Guignard
+% 5) Giovanni Porta
 
 
 
 %---------------------------
-% 1) Take a look at RELEASE_NOTE.m for a detailed list of diffrences with the previous version
-
+% 1) QUICK START
+%
+% Take a look at:
+%
+% -- RELEASE_NOTE.m for a detailed list of diffrences with the previous version
+%
+% -- SPARSE_GRIDS_TUTORIAL.m in the folder docs-examples for a gradual introduction to the code
+%
+% -- the slides SPARSE_GRIDS_MATLAB_KIT_TALK.pdf in the folder docs-examples also discuss basic and some advanced features of the code
 
 
 %---------------------------
@@ -51,8 +59,7 @@
 % -> convert_to_modal.m
 %
 % documentation and examples can be found in docs-examples folder. 
-%
-% In particular, docs-examples/html contains the published version of sparse_grid_tutorial.m (file/publish).
+
 
 
 

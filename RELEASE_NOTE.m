@@ -6,6 +6,8 @@
 %
 % -> 2018, Oct. 8   --> added summary at the beginning of tutorial
 %
+%                   --> added slides about the software as additional documentation
+%
 %                   --> added field "size" to reduced sparse grid, that contains the number of different points in the sparse grid,
 %                       i.e.,  Sr.size == length(Sr.weights) == size(Sr.knots,2)
 %                       
