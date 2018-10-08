@@ -554,7 +554,7 @@ set(legend,'Location','NorthEastOutside')
 % The tensor grids forming the sparse grid may have points in common (even when using non-nested points).
 % To save computational time during e.g. evaluation of a function on a sparse grid, it is then important
 % to get rid of these repetions. To this end, use the function reduce_sparse_grid. The quadrature weights
-% are of course consistently modified
+% are of course consistently modified. The field "size" tells the number in the reduced grid
 
 clc
 clear 
@@ -570,6 +570,7 @@ Sr=reduce_sparse_grid(S);
 
 fprintf('size of original grid: %i\n',size([S.knots],2))
 fprintf('size of reduced  grid: %i\n',size(Sr.knots,2))
+fprintf('Sr.size: %i\n',Sr.size)
 
 
 figure
@@ -611,7 +612,7 @@ evals_plain_fs=evaluate_on_sparse_grid(fs,Sr);
 evals_plain_fv=evaluate_on_sparse_grid(fv,Sr);
 
 % a direct computation
-pts = size(Sr.knots,2);
+pts = Sr.size;
 
 os=size(fs(Sr.knots(:,1)),1);
 ov=size(fv(Sr.knots(:,1)),1);

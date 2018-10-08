@@ -7,6 +7,7 @@ function Sr=reduce_sparse_grid(S,tol)
 %       a so-called reduced sparse grid, that is a structure with fields
 %       -> Sr.knots:  list of non repeated knots
 %       -> Sr.weights: list of corresponding weights
+%       -> Sr.size: the number of non repeated knots
 %       -> Sr.n: says where each element of [S.knots] will be mapped to in Sr.knots, i.e. for any k [S.knots](:,Sr.m(k))==Sr.knots(:,k)
 %       -> Sr.m: for each element of Sr.knots, says where it's coming from in [S.knots], i.e. "the element in position k of [S.knots] goes in position n(k) in Sr.knots"
 %        or [S.knots](:,j)==Sr.knots(:,Sr.n(j)) and in general [S.knots](:,Sr.n==i)==Sr.knot(:,i)
@@ -164,3 +165,4 @@ for i=1:length(invindex)
     Sr.weights(idx_reduced) = Sr.weights(idx_reduced)+ww(i);
 end
 
+Sr.size = nb_knots_reduced;

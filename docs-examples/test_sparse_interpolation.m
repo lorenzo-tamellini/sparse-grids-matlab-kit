@@ -53,7 +53,7 @@ for w=0:w_max
     % Sr.knots=interval_map(Sr.knots);
 
     % compute work
-    work(w+1)=size(Sr.knots,2);
+    work(w+1)=Sr.size;
     
     % compute estimate of polynomial size
     pol_size(w+1)=size(C,1);

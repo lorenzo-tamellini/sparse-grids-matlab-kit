@@ -51,7 +51,7 @@ for w=0:w_max
     q_error(w+1)=abs(I_ex-I);
 
     % compute work
-    work(w+1)=size(Sr.knots,2);
+    work(w+1)=Sr.size;
         
 end
 toc

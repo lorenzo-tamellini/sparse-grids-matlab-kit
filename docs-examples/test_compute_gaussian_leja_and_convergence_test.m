@@ -248,7 +248,7 @@ for w=1:w_max
     evals_Lj_old = evals;
     S_Lj_old=S_Lj;
     Sr_Lj_old = Sr_Lj;
-    nb_pts_Lj(w) = length(Sr_Lj.weights);
+    nb_pts_Lj(w) = Sr_Lj.size;
 
     disp('Gauss Hermite');
     S_GH = smolyak_grid(N,w,knots_GH,@lev2knots_lin, @(i) sum(i-1), S_GH_old);
@@ -258,7 +258,7 @@ for w=1:w_max
     evals_GH_old = evals;
     S_GH_old = S_GH;
     Sr_GH_old = Sr_GH;    
-    nb_pts_GH(w) = length(Sr_GH.weights);
+    nb_pts_GH(w) = Sr_GH.size;
 end
 
 
@@ -286,7 +286,7 @@ for w=1:w_max_KPN
     evals_KPN_old = evals;
     S_KPN_old = S_KPN;
     Sr_KPN_old = Sr_KPN;    
-    nb_pts_KPN(w) = length(Sr_KPN.weights);
+    nb_pts_KPN(w) = Sr_KPN.size;
 end
 
 
@@ -450,7 +450,7 @@ for w=1:w_max
     evals_Lj_old = evals_Lj;
     S_Lj_old=S_Lj;
     Sr_Lj_old = Sr_Lj;
-    nb_pts_Lj(w) = length(Sr_Lj.weights);
+    nb_pts_Lj(w) = Sr_Lj.size;
 
     disp('Gauss Hermite');
     S_GH = smolyak_grid(N,w,knots_GH,@lev2knots_lin, @(i) sum(i-1), S_GH_old);
@@ -460,7 +460,7 @@ for w=1:w_max
     evals_GH_old = evals_GH;  
     S_GH_old = S_GH;
     Sr_GH_old = Sr_GH;       
-    nb_pts_GH(w) = length(Sr_GH.weights);
+    nb_pts_GH(w) = Sr_GH.size;
 end
 
 
@@ -491,7 +491,7 @@ for w=1:w_max_KPN
     S_KPN_old = S_KPN;
     Sr_KPN_old = Sr_KPN;
     
-    nb_pts_KPN(w) = length(Sr_KPN.weights);
+    nb_pts_KPN(w) = Sr_KPN.size;
 end
 
 % convergence plots
