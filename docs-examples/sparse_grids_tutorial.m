@@ -1,4 +1,49 @@
-% Examples of use of Sparse Grid Matlab Kit
+% This tutorial is a "hands-on" manual of the Sparse Grid Matlab Kit a contains examples of use of the main functions.
+% More examples can be found in the files TEST_*.m in this folder. A dedicated tutorial for the function 
+% ADAPT_SPARSE_GRID can be found in TUTORIAL_ADAPTIVE.m
+%
+%
+%
+% This file is structured as follows. Each part is composed by one or more "matlab sections" that can be 
+% executed individually by the command "Run Section" (CTRL+ENTER)
+% 
+%
+%
+% PART 0: addtopath / set verbosity
+%
+%
+% PART 1: introduction
+%   - what is a sparse grid
+%   - ingredients of a sparse grid. 1d knots
+%   - ingredients of a sparse grid. lev2knots function
+%   - ingredients of a sparse grid. multi-index set
+%   - data-strucure
+%   - modify the domain of a sparse grid
+%   - reduce a sparse grid
+%
+%
+% PART 2: evaluate a function on a sparse grid 
+%   - basics
+%   - use recycling featur
+%   - recycle from a "list of points"
+%   - use recycling feature for vector output
+%   - use parallel feature
+%
+%
+% PART 3: integration - basics
+%   - use other quadrature knots
+%   - modify quadrature domain
+%   - compute moments of random variables
+%   - recycle evaluations from previously computed grids and parallel computation 
+%   - how to build more complex sparse grids. anisotropic grids 
+%   - how to build more complex sparse grids. use smolyak_multiindices
+%
+%
+% PART 4: interpolation on a sparse grid. basics
+%   -  interpolation error on sparse grid points
+%
+%
+% PART 5: compute the g-pce of a function given its sparse grid approximation
 
 
 %----------------------------------------------------
@@ -9,7 +54,8 @@
 
 
 
-%% PART 0: INSTALL / ADD TO PATH
+
+%% PART 0: INSTALL / ADD TO PATH / VERBOSITY
 
 clc
 clear
@@ -541,7 +587,7 @@ set(legend,'Location','SouthOutside')
 
 
 
-%% PART 2: EVALUATE A FUNCTION ON A SPARSE GRID
+%% PART 2: EVALUATE A FUNCTION ON A SPARSE GRID - BASICS
 
 % the kit comes with the function evaluate_on_sparse_grid, that allows to  evaluate a function on the points of a sparse grid, and provides
 % -> recycling of previous evaluations 

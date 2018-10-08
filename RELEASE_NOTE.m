@@ -6,6 +6,8 @@
 %
 %
 %
+% -> 2018, Oct. 5   --> fixed bug in COMPARE_SPARSE_GRIDS with use of nargin
+%
 % -> 2018, Oct. 3   --> added KNOTS_GAUSSIAN_LEJA, i.e., weighted Leja for quadrature with respect to the
 %                       gaussian weight function. Added example file where Gaussian Leja are computed
 %                       and then quadrature and interpolation convergence tests for different univariate 
