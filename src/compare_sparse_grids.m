@@ -61,7 +61,7 @@ if isempty(MATLAB_SPARSE_KIT_VERBOSE)
     MATLAB_SPARSE_KIT_VERBOSE=1;
 end
 
-if nargin==3
+if nargin==4
     Tol=1e-14;
 end
 
