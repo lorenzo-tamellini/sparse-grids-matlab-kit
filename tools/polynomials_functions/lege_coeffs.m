@@ -91,7 +91,6 @@ end
 polcoeffs=zeros(size(tpolcoeffs));
 polcoeffs(1,end)=tpolcoeffs(1,end);
 
-
 % scroll the rest of the polynomials
 for kap=1:degmax 
 
@@ -114,10 +113,14 @@ for kap=1:degmax
         % initial coefficient and add zeros in front of pw if needed, 
         % so that we can then sum it to polcoeff_fin    
         pw=pws{mon};
-        pw_len = length(pw);
-        pw = tpolcoeffs(pos,monpos) * [zeros(1,degmax+1-pw_len) pw];
         
-        polcoeffs(pos,:)= polcoeffs(pos,:) + pw;
+%         pw_len = length(pw);
+%         pw = tpolcoeffs(pos,monpos) * [zeros(1,degmax+1-pw_len) pw];        
+%         polcoeffs(pos,:)= polcoeffs(pos,:) + pw;
+        
+        % at step number mon, I am considering the mon-th power of (c_1 x + x_2), so a polynomial with mon+1 terms. 
+        % Thus I need to update only the last mon+1 columns of the pos-th row:
+        polcoeffs(pos,end-mon:end) =  polcoeffs(pos,end-mon:end) + tpolcoeffs(pos,monpos)* pw;
 
     end
 
