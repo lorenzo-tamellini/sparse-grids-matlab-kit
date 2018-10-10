@@ -1,6 +1,6 @@
-function export_grid_to_file(Sr,filename,with_weights)
+function export_sparse_grid_to_file(Sr,filename,with_weights)
 
-% EXPORT_GRID_TO_FILE saves knots of a reduced sparse grid to an ASCII file.
+% EXPORT_SPARSE_GRID_TO_FILE saves knots of a reduced sparse grid to an ASCII file.
 % The first line of the file shows the number of points in the grid and their dimension;
 % then, points are stored as lines.
 %
@@ -13,12 +13,12 @@ function export_grid_to_file(Sr,filename,with_weights)
 % coord1(P3) coord2(P3)
 % ...
 %
-% EXPORT_GRID_TO_FILE(SR) saves the points in Sr in a file called POINTS.DAT
+% EXPORT_SPARSE_GRID_TO_FILE(SR) saves the points in Sr in a file called POINTS.DAT
 %
-% EXPORT_GRID_TO_FILE(SR,FILENAME) saves the points in Sr in a file called FILENAME 
+% EXPORT_SPARSE_GRID_TO_FILE(SR,FILENAME) saves the points in Sr in a file called FILENAME 
 %       (extension should be provided in FILENAME)
 %
-% EXPORT_GRID_TO_FILE(SR,FILENAME,'with_weights') saves the points in Sr in a file called FILENAME 
+% EXPORT_SPARSE_GRID_TO_FILE(SR,FILENAME,'with_weights') saves the points in Sr in a file called FILENAME 
 %       (extension should be provided in FILENAME) and adds also the corresponding weight as
 %       last entry of the row,  ie.
 % 

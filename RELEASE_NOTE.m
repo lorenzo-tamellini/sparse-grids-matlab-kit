@@ -7,7 +7,7 @@
 %
 % -> 2018, Oct. 10  --> added DERIVE_SPARSE_GRID to compute gradients of a sparse grid interpolant
 %
-%                   --> added EXPORT_GRID_TO_FILE to save a reduced grid on file (knots and weights)
+%                   --> added EXPORT_SPARSE_GRID_TO_FILE to save a reduced grid on file (knots and weights)
 % 
 % -> 2018, Oct. 8   --> added summary at the beginning of tutorial
 %

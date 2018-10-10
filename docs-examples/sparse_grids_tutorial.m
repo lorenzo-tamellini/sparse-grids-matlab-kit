@@ -1322,10 +1322,10 @@ Sr = reduce_sparse_grid(S);
 
 % save points to 'points.dat'. The first row actually contains two integer
 % values, i.e., Sr.size and N
-export_grid_to_file(Sr);
+export_sparse_grid_to_file(Sr);
 
 % save points to 'mygrid.dat'
-export_grid_to_file(Sr,'mygrid.dat');
+export_sparse_grid_to_file(Sr,'mygrid.dat');
 
 % save points and to 'mygrid_with_weights.dat'
-export_grid_to_file(Sr,'mygrid_with_weights.dat','with_weights');
+export_sparse_grid_to_file(Sr,'mygrid_with_weights.dat','with_weights');
