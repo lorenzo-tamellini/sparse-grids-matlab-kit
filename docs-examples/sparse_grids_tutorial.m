@@ -1305,3 +1305,27 @@ max(abs((Grads_def(1,:) - df1(eval_points))./df1(eval_points)))
 max(abs((Grads_man(1,:) - df1(eval_points))./df1(eval_points)))
 
 
+%% PART 7: SAVE SPARSE GRID ON FILE
+
+clc
+
+N=3;
+
+aa=[4 1 -2];
+bb=[6 5 -1];
+knots1=@(n) knots_CC(n,aa(1),bb(1),'nonprob');
+knots2=@(n) knots_CC(n,aa(2),bb(2),'nonprob');
+knots3=@(n) knots_uniform(n,aa(3),bb(3),'nonprob');
+w = 2;
+S = smolyak_grid(N,w,{knots1,knots2,knots3},@lev2knots_doubling);
+Sr = reduce_sparse_grid(S);
+
+% save points to 'points.dat'. The first row actually contains two integer
+% values, i.e., Sr.size and N
+export_grid_to_file(Sr);
+
+% save points to 'mygrid.dat'
+export_grid_to_file(Sr,'mygrid.dat');
+
+% save points and to 'mygrid_with_weights.dat'
+export_grid_to_file(Sr,'mygrid_with_weights.dat','with_weights');

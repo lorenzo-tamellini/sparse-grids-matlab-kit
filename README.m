@@ -58,7 +58,9 @@
 % -> quadrature_on_sparse_grid.m
 % -> convert_to_modal.m
 % -> derive_sparse_grid.m
+% -> export_grid_to_file.m
 %
+% 
 % documentation and examples can be found in docs-examples folder. 
 
 
