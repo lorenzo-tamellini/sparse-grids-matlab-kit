@@ -1,16 +1,17 @@
-function h= plot_grid(S,dims,varargin)
+function h= plot_sparse_grid(S,dims,varargin)
 
-%  h = plot_grid(S,dims,varargin)
+% h = plot_sparse_grid(S,dims,varargin)
 %
-% PLOT_GRID(S) plots S, which is a sparse grid in 2D. S can be either reduced or not. 
+% PLOT_SPARSE_GRID(S) plots S, which is a sparse grid in 2D. S can be either reduced or not. S can also be a tensor grid
+%       (use istensor(S) to verify, type HELP ISTENSOR for details)
 %
-% PLOT_GRID(S,[d1 d2]) plots the d1 and d2 components of the points in S if S iw more than 2D
+% PLOT_SPARSE_GRID(S,[d1 d2]) plots the d1 and d2 components of the points in S if S is more than 2D
 %
-% PLOT_GRID(S,[d1,d2],varargin) defines the style of the plot, e.g.
+% PLOT_SPARSE_GRID(S,[d1,d2],varargin) defines the style of the plot, e.g.
 %
-% plot_grid(S,[],'color','g','marker','o')
+% plot_sparse_grid(S,[],'color','g','marker','o')
 %
-% h=PLOT_GRID(S)
+% h=PLOT_SPARSE_GRID(S)
 %
 % returns the handle to the plot
 

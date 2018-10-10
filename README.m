@@ -50,16 +50,16 @@
 %
 % The functionalty provided are: 
 %
-% -> smolyak_grid.m
-% -> smolyak_grid_multiidx_set.m
-% -> reduce_sparse_grid.m
-% -> evaluate_on_sparse_grid.m
-% -> interpolate_on_sparse_grid.m
-% -> quadrature_on_sparse_grid.m
-% -> convert_to_modal.m
-% -> derive_sparse_grid.m
-% -> export_sparse_grid_to_file.m
-%
+% -> convert_to_modal
+% -> derive_sparse_grid
+% -> export_sparse_grid_to_file%
+% -> evaluate_on_sparse_grid
+% -> interpolate_on_sparse_grid
+% -> plot_sparse_grid
+% -> quadrature_on_sparse_grid
+% -> reduce_sparse_grid
+% -> smolyak_grid
+% -> smolyak_grid_multiidx_set
 % 
 % documentation and examples can be found in docs-examples folder. 
 

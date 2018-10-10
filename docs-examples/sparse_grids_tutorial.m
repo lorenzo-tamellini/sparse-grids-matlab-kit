@@ -92,7 +92,7 @@ S = smolyak_grid(N,w,knots,@lev2knots_doubling); % grid
 % visualization
 
 % plot the grid itself
-plot_grid(S,[],'color','k','marker','o','MarkerFaceColor','k');
+plot_sparse_grid(S,[],'color','k','marker','o','MarkerFaceColor','k');
 
 % each component
 figure
@@ -102,7 +102,8 @@ for s=1:s_max
     if ~isempty(S(s).size) % some grids are not included in the linear combination
         k=k+1;
         subplot(2,4,k)
-        plot_grid(S(s),[],'color','k','marker','o','MarkerFaceColor','k');
+        % we use again plot_sparse grids, which can plot tensor grids too
+        plot_sparse_grid(S(s),[],'color','k','marker','o','MarkerFaceColor','k');
         axis square
         %pause
     end
@@ -298,9 +299,9 @@ S_doub=tensor_grid(N,lev2knots_doubling(ii),knots);
 
 figure
 
-plot_grid(S_doub,[],'color','r','marker','s','MarkerFaceColor','r','DisplayName','lev2knots-nested');
+plot_sparse_grid(S_doub,[],'color','r','marker','s','MarkerFaceColor','r','DisplayName','lev2knots-nested');
 hold on
-plot_grid(S_lin,[],'color','k','marker','o','MarkerFaceColor','k','DisplayName','lev2knots-lin');
+plot_sparse_grid(S_lin,[],'color','k','marker','o','MarkerFaceColor','k','DisplayName','lev2knots-lin');
 
 legend show
 set(legend,'Location','SouthOutside')
@@ -336,12 +337,12 @@ S_HC = smolyak_grid(N,w,knots,lev2knots,idxset); % grid
 
 % plot the grid itself
 figure
-plot_grid(S_TD,[],'color','k','marker','o','MarkerFaceColor','k');
+plot_sparse_grid(S_TD,[],'color','k','marker','o','MarkerFaceColor','k');
 legend('TD-grid')
 
 
 figure
-plot_grid(S_HC,[],'color','k','marker','o','MarkerFaceColor','k');
+plot_sparse_grid(S_HC,[],'color','k','marker','o','MarkerFaceColor','k');
 legend('HC-grid')
 
 % 2) The second one is to use the function SMOLYAK_MULTIINDICES, where one specifies exactly
@@ -362,7 +363,7 @@ C=[
 S_M = smolyak_grid_multiidx_set(C,knots,lev2knots);
 
 figure
-plot_grid(S_M,[],'color','b','marker','d','MarkerFaceColor','b');
+plot_sparse_grid(S_M,[],'color','b','marker','d','MarkerFaceColor','b');
 axis([-1 1 -1 1])
 
 
@@ -502,9 +503,9 @@ disp('maximum difference between corresponding points in the two grids')
 max(max(abs([S.knots]-[S2.knots])))
 
 figure
-plot_grid(S);
+plot_sparse_grid(S);
 hold on
-plot_grid(S2,[],'MarkerSize',10,'Marker','o');
+plot_sparse_grid(S2,[],'MarkerSize',10,'Marker','o');
 legend('grid S','grid S2')
 set(legend,'Location','NorthEastOutside')
 
@@ -520,7 +521,7 @@ w = 4;
 S = smolyak_grid(N,w,{knots1,knots2},{@lev2knots_doubling,@lev2knots_lin});
 
 figure
-plot_grid(S);
+plot_sparse_grid(S);
 
 % in case knots and lev2knots functions in the different directions are the same and the only thing that changes
 % is the definition interval, also using the standard interval and providing a shifting function to
@@ -541,9 +542,9 @@ knots=@(n) knots_CC(n,-1,1,'nonprob');
 S2 = smolyak_grid(N,w,knots,@lev2knots_doubling,[],map); % uses the default idxset
 
 figure
-plot_grid(S);
+plot_sparse_grid(S);
 hold on
-plot_grid(S2,[],'MarkerSize',10,'Marker','o');
+plot_sparse_grid(S2,[],'MarkerSize',10,'Marker','o');
 %max(max(abs([S.knots]-[S2.knots])))
 legend('grid S','grid S2')
 set(legend,'Location','NorthEastOutside')
@@ -576,13 +577,13 @@ fprintf('Sr.size: %i\n',Sr.size)
 
 figure
 subplot(1,2,1)
-plot_grid(S,[],'color','b','marker','d','MarkerFaceColor','b');
+plot_sparse_grid(S,[],'color','b','marker','d','MarkerFaceColor','b');
 axis square
 legend('original grid')
 set(legend,'Location','SouthOutside')
 
 subplot(1,2,2)
-plot_grid(Sr,[],'color','b','marker','d','MarkerFaceColor','b');
+plot_sparse_grid(Sr,[],'color','b','marker','d','MarkerFaceColor','b');
 axis square
 legend('reduced grid')
 set(legend,'Location','SouthOutside')
