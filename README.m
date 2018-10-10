@@ -57,6 +57,7 @@
 % -> interpolate_on_sparse_grid.m
 % -> quadrature_on_sparse_grid.m
 % -> convert_to_modal.m
+% -> derive_sparse_grid.m
 %
 % documentation and examples can be found in docs-examples folder. 
 

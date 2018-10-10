@@ -4,6 +4,9 @@
 % See LICENSE.txt for license
 %----------------------------------------------------------------------------------
 %
+%
+% -> 2018, Oct. 10  --> added DERIVE_SPARSE_GRID to compute gradients of a sparse grid interpolant
+%
 % -> 2018, Oct. 8   --> added summary at the beginning of tutorial
 %
 %                   --> added slides about the software as additional documentation

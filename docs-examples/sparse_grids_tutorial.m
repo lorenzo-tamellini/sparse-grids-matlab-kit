@@ -39,12 +39,13 @@
 %   - how to build more complex sparse grids. use smolyak_multiindices
 %
 %
-% PART 4: interpolation on a sparse grid. basics
+% PART 4: interpolation on a sparse grid - basics
 %   -  interpolation error on sparse grid points
 %
 %
 % PART 5: compute the g-pce of a function given its sparse grid approximation
-
+%
+% PART 6: derive a sparse grid 
 
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
@@ -1173,3 +1174,134 @@ nodal_values = 4*lege_eval_multidim(X,[4 0],-1,1)+ 2*lege_eval_multidim(X,[1 1],
 [modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,'legendre');
 
 [K,modal_coeffs] %#ok<NOPTS>
+
+
+
+%% PART 6: DERIVE A SPARSE GRID
+
+clear
+
+% define sparse grid over [4,6] x [1,5]
+N=2;
+aa=[4 1];
+bb=[6 5];
+
+% the function to be interpolated and its derivatives
+f=@(x) 1./(1+0.5*sum(x.^2)); 
+df1 = @(x) -1./((1+0.5*sum(x.^2)).^2)*2*0.5.*x(1,:);
+df2 = @(x) -1./((1+0.5*sum(x.^2)).^2)*2*0.5.*x(2,:);
+
+
+
+% create a sparse grid and evaluate the function on it
+domain = [aa; bb];
+knots1=@(n) knots_CC(n,aa(1),bb(1),'nonprob');
+knots2=@(n) knots_CC(n,aa(2),bb(2),'nonprob');
+w = 4;
+S = smolyak_grid(N,w,{knots1,knots2},@lev2knots_doubling);
+Sr = reduce_sparse_grid(S);
+
+values_on_grid=evaluate_on_sparse_grid(f,Sr);
+
+% generate M random points in the domain where we evaluate the derivative of the sparse grid 
+% and the true derivative, to check error
+M=100;
+% use get interval map to go from [-1,1]^N to actual domain
+my_map=get_interval_map(aa,bb,'uniform');
+eval_points = my_map(rand(N,M)*2-1);
+
+
+% compute values with function
+Grads = derive_sparse_grid(S,Sr,values_on_grid,domain,eval_points);
+
+
+% error and visualization
+
+max(abs(Grads(1,:) - df1(eval_points)))
+max(abs(Grads(2,:) - df2(eval_points)))
+
+figure
+hold on; 
+plot(Grads(1,:),'-o','DisplayName','Finite Diff'); 
+plot(df1(eval_points),'-','DisplayName','true val')
+legend show
+grid on
+
+figure
+hold on; 
+plot(Grads(2,:),'-o','DisplayName','Finite Diff'); 
+plot(df2(eval_points),'-','DisplayName','true val')
+legend show
+grid on
+
+
+
+
+
+
+
+
+%% h is computed automatically in each direction as (b-a)/1E5, but can be adjusted if needed. 
+% In the example below, the length of the interval along direction 1 is O(1E-5) so choosing
+% the default h would lead to h = O(1E-10), which incurs in numerical cancellations.
+% Thus, setting manually a larger value for h helps in reducing the error
+
+N=2;
+
+aa=[4E-5 1];
+bb=[6E-5 5];
+
+% the function to be interpolated and its derivatives
+f=@(x) 1./(1+0.5*sum(x.^2)); 
+df1 = @(x) -1./((1+0.5*sum(x.^2)).^2)*2*0.5.*x(1,:);
+df2 = @(x) -1./((1+0.5*sum(x.^2)).^2)*2*0.5.*x(2,:);
+
+
+
+% create a sparse grid and evaluate the function on it
+domain = [aa; bb];
+knots1=@(n) knots_CC(n,aa(1),bb(1),'nonprob');
+knots2=@(n) knots_CC(n,aa(2),bb(2),'nonprob');
+w = 5;
+S = smolyak_grid(N,w,{knots1,knots2},@lev2knots_doubling);
+Sr = reduce_sparse_grid(S);
+
+values_on_grid=evaluate_on_sparse_grid(f,Sr);
+
+% generate M random points in the domain where we evaluate the derivative of the sparse grid 
+% and the true derivative, to check error
+M=100;
+% use get interval map to go from [-1,1]^N to actual domain
+my_map=get_interval_map(aa,bb,'uniform');
+eval_points = my_map(rand(N,M)*2-1);
+
+
+% compute values with function
+Grads_def = derive_sparse_grid(S,Sr,values_on_grid,domain,eval_points);
+h=[1E-7 1E-5];
+Grads_man = derive_sparse_grid(S,Sr,values_on_grid,domain,eval_points,h);
+
+% error and visualization
+
+figure
+hold on; 
+plot(Grads_def(1,:),'o','DisplayName','Finite Diff, default h'); 
+plot(Grads_man(1,:),'x','DisplayName','Finite Diff, manual h'); 
+plot(df1(eval_points),'-','DisplayName','true val')
+legend show
+grid on
+
+figure
+hold on; 
+plot(Grads_def(2,:),'-o','DisplayName','Finite Diff, default h'); 
+plot(Grads_man(2,:),'x','DisplayName','Finite Diff, manual h'); 
+plot(df2(eval_points),'-','DisplayName','true val')
+legend show
+grid on
+
+% error
+clc
+max(abs((Grads_def(1,:) - df1(eval_points))./df1(eval_points)))
+max(abs((Grads_man(1,:) - df1(eval_points))./df1(eval_points)))
+
+
