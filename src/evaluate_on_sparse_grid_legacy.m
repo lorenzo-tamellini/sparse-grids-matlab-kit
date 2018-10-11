@@ -46,7 +46,7 @@ function [f_eval,new_points,tocomp_list,discard_points,discard_list] = evaluate_
 
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2017 L. Tamellini, F. Nobile
+% Copyright (c) 2009-2018 L. Tamellini, F. Nobile
 % See LICENSE.txt for license
 %----------------------------------------------------
 

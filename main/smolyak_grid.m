@@ -76,7 +76,7 @@ function [S,C] = smolyak_grid(N,w,knots,lev2knots,idxset,arg6,weights_coeff)
 
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2017 L. Tamellini, F. Nobile
+% Copyright (c) 2009-2018 L. Tamellini, F. Nobile
 % See LICENSE.txt for license
 %----------------------------------------------------
 

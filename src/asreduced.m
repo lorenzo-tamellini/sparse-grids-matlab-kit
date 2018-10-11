@@ -11,7 +11,7 @@ function S = asreduced(pts_list,wgs_list)
 
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2017 L. Tamellini, F. Nobile
+% Copyright (c) 2009-2018 L. Tamellini, F. Nobile
 % See LICENSE.txt for license
 %----------------------------------------------------
 

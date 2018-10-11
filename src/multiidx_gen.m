@@ -9,7 +9,7 @@ function MULTI_IDX = multiidx_gen(N,rule,w,base,multiidx,MULTI_IDX)
 
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2017 L. Tamellini, F. Nobile
+% Copyright (c) 2009-2018 L. Tamellini, F. Nobile
 % See LICENSE.txt for license
 %----------------------------------------------------
 

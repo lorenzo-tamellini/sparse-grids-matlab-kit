@@ -22,7 +22,7 @@ function [Sob_i,Tot_Sob_i,Mean,Var] = compute_sobol_indices_from_sparse_grid(S,S
  
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2017 L. Tamellini, F. Nobile, G. Porta
+% Copyright (c) 2009-2018 L. Tamellini, F. Nobile, G. Porta
 % See LICENSE.txt for license
 %----------------------------------------------------
 

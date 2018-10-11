@@ -20,7 +20,7 @@ function A = kpn_lev_table(rows,cols)
 
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2017 L. Tamellini, F. Nobile
+% Copyright (c) 2009-2018 L. Tamellini, F. Nobile
 % See LICENSE.txt for license
 %----------------------------------------------------
 

@@ -37,7 +37,7 @@ function h = plot_sparse_grids_interpolant(S,Sr,domain,f_values,varargin) %with_
 
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2017 L. Tamellini, F. Nobile
+% Copyright (c) 2009-2018 L. Tamellini, F. Nobile
 % See LICENSE.txt for license
 %----------------------------------------------------
 
