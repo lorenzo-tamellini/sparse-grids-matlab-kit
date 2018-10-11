@@ -43,9 +43,19 @@
 %   -  interpolation error on sparse grid points
 %   -  plot sparse grid interpolant
 %
+%
 % PART 5: compute the g-pce of a function given its sparse grid approximation
 %
-% PART 6: derive a sparse grid 
+%
+% PART 6: sparse-grids based sensitivity analysis
+%   -  compute Sobol Indices of f
+%   -  compute gradients of sparse grid interpolant of f
+%
+%
+% PART 7: export sparse grid on file
+
+
+
 
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
@@ -1281,8 +1291,52 @@ nodal_values = 4*lege_eval_multidim(X,[4 0],-1,1)+ 2*lege_eval_multidim(X,[1 1],
 [K,modal_coeffs] %#ok<NOPTS>
 
 
+%% PART 6: SPARSE-GRIDS-BASED SENSITIVITY ANALYSIS - COMPUTE SOBOL INDICES OF A FUNCTION
 
-%% PART 6: DERIVE A SPARSE GRID
+clear
+
+% define sparse grid 
+aa=[-1 -1 -1];
+bb=[ 1  1  1];
+
+% we consider different functions, that we evaluate in one go:
+f1=@(x) 1 + x(1,:).^2   + x(2,:).^2 + x(3,:).^2;        
+f2=@(x) 1 + 5*x(1,:).^2 + x(2,:).^2 + x(3,:).^2; 
+f3=@(x) 1./(1 + x(1,:).^2   + x(2,:).^2 + x(3,:).^2); 
+f4=@(x) 1./(1 + 5*x(1,:).^2 + x(2,:).^2 + x(3,:).^2); 
+
+f=@(x) [f1(x); f2(x); f3(x); f4(x)];
+
+% We expect to see these results:
+%   f1: has no mixed effects, so the principal and total Sobol indices are identical. Also, it's isotropic, so the indices of each variable are identical
+%   f2: no mixed effects as f1, but y_1 contributes more to the variability of f so it has a larger Sobol total/principal index
+%   f3: this function has mixed effects (partial derivatives are nonzero),  so the principal and total Sobol index will be different, but equal among random variables
+%   f4: mixed effects, and y_1 contributes more to the variability of f so it has larger Sobol indices
+
+% generate a sparse grid
+domain = [aa; bb;];
+knots=@(n) knots_CC(n,-1,1,'nonprob');
+N = length(aa);
+w = 5;
+S = smolyak_grid(N,w,knots,@lev2knots_doubling);
+Sr = reduce_sparse_grid(S);
+
+values_on_grid=evaluate_on_sparse_grid(f,Sr);
+
+% compute Sobol indices. The function uses internally the function CONVERT_TO_MODAL and it uses the same inputs
+[Sob_i1,Tot_Sob_i1,Mean1,Var1] = compute_sobol_indices_from_sparse_grid(S,Sr,values_on_grid(1,:),domain,'legendre');
+[Sob_i2,Tot_Sob_i2,Mean2,Var2] = compute_sobol_indices_from_sparse_grid(S,Sr,values_on_grid(2,:),domain,'legendre');
+[Sob_i3,Tot_Sob_i3,Mean3,Var3] = compute_sobol_indices_from_sparse_grid(S,Sr,values_on_grid(3,:),domain,'legendre');
+[Sob_i4,Tot_Sob_i4,Mean4,Var4] = compute_sobol_indices_from_sparse_grid(S,Sr,values_on_grid(4,:),domain,'legendre');
+
+% results are as expected
+disp('      f1   |    f2    |   f3    |    f4   ')
+disp('Principal Sobol indices')
+disp([Sob_i1 Sob_i2 Sob_i3 Sob_i4])
+disp('Total Sobol indices')
+disp([Tot_Sob_i1 Tot_Sob_i2 Tot_Sob_i3 Tot_Sob_i4])
+
+%% PART 6: SPARSE-GRIDS-BASED SENSITIVITY ANALYSIS - COMPUTE GRADIENTS OF A SPARSE GRID INTERPOLANT
 
 clear
 
