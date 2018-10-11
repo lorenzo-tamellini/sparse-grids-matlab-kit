@@ -41,7 +41,7 @@
 %
 % PART 4: interpolation on a sparse grid - basics
 %   -  interpolation error on sparse grid points
-%
+%   -  plot sparse grid interpolant
 %
 % PART 5: compute the g-pce of a function given its sparse grid approximation
 %
@@ -1122,6 +1122,110 @@ f_values = interpolate_on_sparse_grid(T,Tr,function_on_grid,non_grid_points);
 disp('----------')
 disp('Interpolation error - nested grid')
 max( abs( f_values-f(non_grid_points,b) ) )
+
+
+%% PART 4: INTERPOLATION ON A SPARSE GRID -  PLOT SPARSE GRIDS INTERPOLANT - case N=2
+
+clear
+
+% define sparse grid over [4,6] x [1,5]
+N=2;
+aa=[4 1];
+bb=[6 5];
+
+% the function to be interpolated
+f=@(x) 1./(1+0.5*sum(x.^2)); 
+
+
+% create a sparse grid and evaluate the function on it
+domain = [aa; bb];
+knots1=@(n) knots_CC(n,aa(1),bb(1),'nonprob');
+knots2=@(n) knots_CC(n,aa(2),bb(2),'nonprob');
+w = 4;
+S = smolyak_grid(N,w,{knots1,knots2},@lev2knots_doubling);
+Sr = reduce_sparse_grid(S);
+
+values_on_grid=evaluate_on_sparse_grid(f,Sr);
+
+% the plot. The function returns a handle to the graphic => end line with ";" or you'll get output on
+% the command window
+plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid);
+
+plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid,'with_f_values');
+
+plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid,'nb_plot_pts',10);
+
+% access to plot handles for further editing is available. E.g., this sets dots to black
+h = plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid,'with_f_values','nb_plot_pts',10);
+axes_h = get(h,'Children');
+objs_h = get(axes_h,'Children');
+set(objs_h(1),'MarkerFaceColor','k');
+
+
+%% case N=3
+
+clear
+
+% define sparse grid over [4,6] x [1,5] x [2 3]
+N=3;
+aa=[4 1 2];
+bb=[6 5 3];
+
+% the function to be interpolated
+f=@(x) 1./(1+0.5*sum(x.^2)); 
+
+
+% create a sparse grid and evaluate the function on it
+domain = [aa; bb];
+knots1=@(n) knots_CC(n,aa(1),bb(1),'nonprob');
+knots2=@(n) knots_CC(n,aa(2),bb(2),'nonprob');
+knots3=@(n) knots_CC(n,aa(3),bb(3),'nonprob');
+w = 4;
+S = smolyak_grid(N,w,{knots1,knots2,knots3},@lev2knots_doubling);
+Sr = reduce_sparse_grid(S);
+
+values_on_grid=evaluate_on_sparse_grid(f,Sr);
+
+
+plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid);
+ 
+% specify number of contour lines
+plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid,'with_f_values','nb_plot_pts',10,'nb_contourfs',10,'nb_contourf_lines',40);
+
+
+
+
+%% case N>3
+
+clear
+
+% define sparse grid over [-1,1]^7
+N=7;
+aa=-1*ones(1,N);
+bb=ones(1,N);
+
+% the function to be interpolated
+f=@(x) 1./(1+0.5*x(1,:).^2+0.25*x(2,:).^2+5*x(3,:).^2+2*x(4,:).^2+0.001*x(5,:).^2+10*x(6,:).^2 + 10*x(7,:).^2); 
+%f=@(x) 1./(1+0.5*x(1,:).^2+0.5*x(2,:).^2+0.5*x(3,:).^2+0.5*x(4,:).^2+0.5*x(5,:).^2+0.5*x(6,:).^2 + 0.5*x(7,:).^2); 
+
+
+% create a sparse grid and evaluate the function on it
+domain = [aa; bb];
+knots=@(n) knots_CC(n,-1,1,'nonprob');
+w = 6;
+S = smolyak_grid(N,w,knots,@lev2knots_doubling);
+Sr = reduce_sparse_grid(S);
+
+values_on_grid=evaluate_on_sparse_grid(f,Sr);
+
+% add f_values. Note that there are possibly several points which share the values of the coordinates in the cuts,
+% therefore there will be points not on the surface. This helps understanding the fluctuations of the function
+% when the coordinates not in the cut are not fixed to their average value. In this specific example, changing the
+% values of the frozen variables from their averages happens to lower the value of the function
+plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid,'with_f_values');
+
+% specify cuts
+plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid,'with_f_values','two_dim_cuts',[1 4 2 7]);
 
 
 

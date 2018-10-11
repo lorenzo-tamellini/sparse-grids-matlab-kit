@@ -56,6 +56,7 @@
 % -> evaluate_on_sparse_grid
 % -> interpolate_on_sparse_grid
 % -> plot_sparse_grid
+% -> plot_sparse_grid_interpolant
 % -> quadrature_on_sparse_grid
 % -> reduce_sparse_grid
 % -> smolyak_grid

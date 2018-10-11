@@ -10,8 +10,11 @@
 %                   --> added EXPORT_SPARSE_GRID_TO_FILE to save a reduced grid on file (knots and weights)
 %
 %                   --> renamed PLOT_GRID to PLOT_SPARSE_GRID for naming consistency
+%
+%                   --> added PLOT_SPARSE_GRID_INTERPOLANT to plot the sparse grid approximation of a function.
+%                       (different plots for the cases N=2, N=3,  N>3)
 % 
-% -> 2018, Oct. 8   --> added summary at the beginning of tutorial
+%                   --> added summary at the beginning of tutorial
 %
 %                   --> added slides about the software as additional documentation
 %
@@ -20,9 +23,9 @@
 %                       
 %                   --> renamed AS_REDUCED -> ASREDUCED, for consistency with other names
 %
-% -> 2018, Oct. 5   --> fixed bug in COMPARE_SPARSE_GRIDS with use of nargin
+%                   --> fixed bug in COMPARE_SPARSE_GRIDS with use of nargin
 %
-% -> 2018, Oct. 3   --> added KNOTS_GAUSSIAN_LEJA, i.e., weighted Leja for quadrature with respect to the
+%                   --> added KNOTS_GAUSSIAN_LEJA, i.e., weighted Leja for quadrature with respect to the
 %                       gaussian weight function. Added example file where Gaussian Leja are computed
 %                       and then quadrature and interpolation convergence tests for different univariate 
 %                       knots for Gaussian random variables are compared, TEST_COMPUTE_GAUSSIAN_LEJA_AND_CONVERGENGE_TEST.m

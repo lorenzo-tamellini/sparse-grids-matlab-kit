@@ -19,4 +19,5 @@
 'SparseGKit:uint16'
 'SparseGKit:double'
 'SparseGKit:KpnNonTab'
+'SparseGKit:IgnoredInput' %#ok<*NOPTS>
 
