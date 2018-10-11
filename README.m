@@ -5,6 +5,7 @@
 %----------------------------------------------------------------------------------
 
 
+
 %---------------------------
 % Contributors
 %---------------------------
@@ -29,6 +30,7 @@
 % -- the slides SPARSE_GRIDS_MATLAB_KIT_TALK.pdf in the folder docs-examples also discuss basic and some advanced features of the code
 
 
+
 %---------------------------
 % 2) HOW TO INSTALL THE TOOLKIT
 % 
@@ -48,21 +50,26 @@
 %---------------------------
 % 3) HOW TO USE THE TOOLKIT
 %
-% The functionalty provided are: 
+% To create a sparse grids, use any of these two functions:
+%
+% -> smolyak_grid
+% -> smolyak_grid_multiidx_set
+%
+% A number of functionalities to operate on sparse grids are provided: 
 %
 % -> convert_to_modal
+% -> compute_sobol_indices_from_sparse_grid
 % -> derive_sparse_grid
-% -> export_sparse_grid_to_file%
+% -> export_sparse_grid_to_file
 % -> evaluate_on_sparse_grid
 % -> interpolate_on_sparse_grid
 % -> plot_sparse_grid
 % -> plot_sparse_grid_interpolant
 % -> quadrature_on_sparse_grid
 % -> reduce_sparse_grid
-% -> smolyak_grid
-% -> smolyak_grid_multiidx_set
 % 
-% documentation and examples can be found in docs-examples folder. 
+% type HELP FUNCTIONAME to access help for each function.
+% Documentation and examples can be found in docs-examples folder. 
 
 
 
@@ -71,6 +78,8 @@
 % 4) REPORT BUGS to tamellini@imati.cnr.it
 % 
 % also, let us know your email address if you want us to warn you whenever we release a new version of the toolbox
+
+
 
 
 %---------------------------
