@@ -11,11 +11,11 @@
 %---------------------------
 %
 % 1) Lorenzo Tamellini
-% 2) Fabio Nobile
-% 3) Bjorn Sprungk
-% 4) Diane Guignard
-% 5) Giovanni Porta
-
+% 2) Diane Guignard
+% 3) Fabio Nobile
+% 4) Giovanni Porta
+% 5) Bjorn Sprungk
+% 6) Francesco Tesei
 
 
 %---------------------------
