@@ -4,8 +4,17 @@
 % See LICENSE.txt for license
 %----------------------------------------------------------------------------------
 %
+% RELEASE NOTES version 18.10
+%
 %
 % -> 2018, Oct. 10  --> added DERIVE_SPARSE_GRID to compute gradients of a sparse grid interpolant
+%
+%                   --> added COMPUTE_SOBOL_INDICES_FROM_SPARSE_GRID to compute Sobolo indices of a function by its sparse grid interpolant
+%
+%                   --> added KNOTS_GAUSSIAN_LEJA, i.e., weighted Leja for quadrature with respect to the
+%                       gaussian weight function. Added example file where Gaussian Leja are computed
+%                       and then quadrature and interpolation convergence tests for different univariate 
+%                       knots for Gaussian random variables are compared, TEST_COMPUTE_GAUSSIAN_LEJA_AND_CONVERGENGE_TEST.m
 %
 %                   --> added EXPORT_SPARSE_GRID_TO_FILE to save a reduced grid on file (knots and weights)
 %
@@ -24,11 +33,6 @@
 %                   --> renamed AS_REDUCED -> ASREDUCED, for consistency with other names
 %
 %                   --> fixed bug in COMPARE_SPARSE_GRIDS with use of nargin
-%
-%                   --> added KNOTS_GAUSSIAN_LEJA, i.e., weighted Leja for quadrature with respect to the
-%                       gaussian weight function. Added example file where Gaussian Leja are computed
-%                       and then quadrature and interpolation convergence tests for different univariate 
-%                       knots for Gaussian random variables are compared, TEST_COMPUTE_GAUSSIAN_LEJA_AND_CONVERGENGE_TEST.m
 %
 % -> 2018, Jun. 28  --> added example of convergence study for interpolation error with adaptive sparse grids,
 %                       see tutorial_adaptive.m
