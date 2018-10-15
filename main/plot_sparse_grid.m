@@ -30,7 +30,7 @@ end
 
 x=[S.knots];
 
-if nargin==1
+if nargin==1 || nargin==2
     % use a default plot style
     h=plot(x(dims(1),:),x(dims(2),:),'ok','MarkerFaceColor','k');
 else

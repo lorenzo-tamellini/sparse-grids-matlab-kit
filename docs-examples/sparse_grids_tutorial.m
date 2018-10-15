@@ -1160,6 +1160,7 @@ values_on_grid=evaluate_on_sparse_grid(f,Sr);
 % the plot. The function returns a handle to the graphic => end line with ";" or you'll get output on
 % the command window
 plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid);
+view([200 16])
 
 plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid,'with_f_values');
 
@@ -1171,6 +1172,9 @@ axes_h = get(h,'Children');
 objs_h = get(axes_h,'Children');
 set(objs_h(1),'MarkerFaceColor','k');
 
+figure
+plot_sparse_grid(Sr)
+axis square
 
 %% case N=3
 
@@ -1202,6 +1206,9 @@ plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid);
 % specify number of contour lines
 plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid,'with_f_values','nb_plot_pts',10,'nb_contourfs',10,'nb_contourf_lines',40);
 
+figure
+plot_sparse_grid(Sr,[1 3])
+axis square
 
 
 
@@ -1235,7 +1242,7 @@ values_on_grid=evaluate_on_sparse_grid(f,Sr);
 plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid,'with_f_values');
 
 % specify cuts
-plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid,'with_f_values','two_dim_cuts',[1 4 2 7]);
+plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid,'two_dim_cuts',[1 4 2 7]);
 
 
 

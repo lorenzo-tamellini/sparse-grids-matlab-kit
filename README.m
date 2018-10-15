@@ -57,6 +57,7 @@
 %
 % A number of functionalities to operate on sparse grids are provided: 
 %
+% -> adapt_sparse_grid
 % -> convert_to_modal
 % -> compute_sobol_indices_from_sparse_grid
 % -> derive_sparse_grid

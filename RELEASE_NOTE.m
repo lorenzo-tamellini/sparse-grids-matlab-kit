@@ -4,7 +4,7 @@
 % See LICENSE.txt for license
 %----------------------------------------------------------------------------------
 %
-% RELEASE NOTES version 18.10
+% RELEASE NOTES version 18.10 (Esperanza)
 %
 %
 % -> 2018, Oct. 10  --> added DERIVE_SPARSE_GRID to compute gradients of a sparse grid interpolant
@@ -34,12 +34,14 @@
 %
 %                   --> fixed bug in COMPARE_SPARSE_GRIDS with use of nargin
 %
+%                   --> fixed bug in PLOT_SPARSE_GRID for nargin == 2
+%
 % -> 2018, Jun. 28  --> added example of convergence study for interpolation error with adaptive sparse grids,
 %                       see tutorial_adaptive.m
 %
 %
 %
-% RELEASE NOTES version 17.5
+% RELEASE NOTES version 17.5 (Trent)
 %
 %
 % -> 2017, May  17  --> added ADAPT_SPARSE_GRIDS and TUTORIAL_ADAPTIVE and PLOT_IDX_STATUS to show how adapt
@@ -82,7 +84,7 @@
 %
 %
 %
-% RELEASE NOTES version 15.8
+% RELEASE NOTES version 15.8 (Woodstock)
 %
 %
 % -> 2015, Jun. 15  --> the new matlab toolbox syntax is now supported (see functions ACTIVATE_PARALLEL, CHECK_IF_PARALLEL_ON, CLOSE_PARALLEL)
@@ -94,7 +96,7 @@
 % 
 %
 %
-% RELEASE NOTES version 14.12
+% RELEASE NOTES version 14.12 (Fenice)
 %
 %
 % -> 2014, Dec. 2   --> CONVERT_TO_MODAL now handles the case of mixed polynomials in different directions. 
@@ -107,7 +109,7 @@
 % 
 %
 %
-% RELEASE NOTES version 14.4
+% RELEASE NOTES version 14.4 (Ritchie)
 %
 %
 % -> 2014, Apr. 09: --> LEV2KNOTS_NESTED has been renamed LEV2KNOTS_DOUBLING
