@@ -221,7 +221,7 @@ evals_new=zeros(s,n);
 
 if ~isempty(tocomp_list)
     if n>paral % if no parallel this one becomes n>NaN, which is false for any n
-        if MATLAB_SPARSE_KIT_VERBOSE,   
+        if MATLAB_SPARSE_KIT_VERBOSE 
             disp('using parallel')
         end
         if ~check_if_parallel_on()
@@ -240,12 +240,12 @@ if ~isempty(tocomp_list)
             evals_new(:,i)=f(pts_list(tocomp_list(i),:)');
         end
     end
+    f_eval(:,tocomp_list)= evals_new;
 end
 
 % the two parts together 
 % ------------------------------------
-
-f_eval(:,tocomp_list)= evals_new;
+% f_eval(:,tocomp_list)= evals_new; % moved this inside the if isempty block, it will fail here if tocomp_list is empty
 f_eval(:,recycle_list)= evals_old(:,recycle_list_old);
 
 
