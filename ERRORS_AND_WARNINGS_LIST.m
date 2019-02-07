@@ -8,6 +8,7 @@
 'SparseGKit:OutOfTable'
 'SparseGKit:ToBeCoded'
 'SparseGKit:FailedSanityChk'
+'SparseGKit:RenamedFunction'
 
 % --------------------------------------------
 % warnings
