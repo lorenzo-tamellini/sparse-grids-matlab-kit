@@ -4,6 +4,15 @@
 % See LICENSE.txt for license
 %----------------------------------------------------------------------------------
 %
+%
+% -> 2019, Feb. 7   --> fixed a low-level bug in evaluate on sparse grid that would make the function stop with an error (very rare)
+% 
+% -> 2019, Feb. 7   --> added error messages for functions that have been renamed
+%
+% -> 2019, Feb. 7   --> the output ADAPT_SPARSE_GRID now contains a field "nested" which is set to TRUE if nested points were used
+%
+%
+%
 % RELEASE NOTES version 18.10 (Esperanza)
 %
 %
