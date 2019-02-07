@@ -155,6 +155,8 @@ function adapted = adapt_sparse_grid(f,N_full,knots,lev2knots,prev_adapt,control
 %
 %       adapted.N       : the current number of dimensions considered for exploration
 %
+%       adapted.nested  : true if nested points are used
+%
 %       adapted.private : a structure contained more detailed information on the status of the adaptive algorithm, that is needed
 %                         to resume the computation.  In particular, the needed data structure consists of:
 %
@@ -340,7 +342,7 @@ while nb_pts < controls.max_pts   %while nb_pts_wrong_count < controls.max_pts
     switch length(new_var)
         case 0
             % do nothing here, we keep working in the same subspace
-            if MATLAB_SPARSE_KIT_VERBOSE,
+            if MATLAB_SPARSE_KIT_VERBOSE
                 disp('keep number of dimensions as is')
             end
         case 1
@@ -348,7 +350,7 @@ while nb_pts < controls.max_pts   %while nb_pts_wrong_count < controls.max_pts
             % we also add one variable to the explored one, to maintain the balance
             % length(var_with_pts) + controls.var_buffer_size = N_curr
 
-            if MATLAB_SPARSE_KIT_VERBOSE,
+            if MATLAB_SPARSE_KIT_VERBOSE
                 disp('adding points a new variable')
             end
             var_with_pts = union(var_with_pts,new_var);
@@ -361,7 +363,7 @@ while nb_pts < controls.max_pts   %while nb_pts_wrong_count < controls.max_pts
             
             if N < N_full            
 
-                if MATLAB_SPARSE_KIT_VERBOSE,
+                if MATLAB_SPARSE_KIT_VERBOSE
                     disp('adding a new variable to the explored dimensions')
                 end
 
@@ -377,7 +379,7 @@ while nb_pts < controls.max_pts   %while nb_pts_wrong_count < controls.max_pts
                 % coordinate is the midpoint of the parameter space along the new direction. Here it's crucial that
                 % f(x)==f([x mp]), otherwise I have to reevaluate everything, which I do not want to do. I'll just raise a 
                 % warning for the time being
-                if MATLAB_SPARSE_KIT_VERBOSE,
+                if MATLAB_SPARSE_KIT_VERBOSE
                     disp('adding a new variable, hence a new coordinate to points. Does this change f evaluations? If so, the code does not work because it does not recompute function evaluations')                     
                 end
                 
@@ -436,7 +438,7 @@ while nb_pts < controls.max_pts   %while nb_pts_wrong_count < controls.max_pts
                 idx=idx_bin(k,:);
                 
             else
-                if MATLAB_SPARSE_KIT_VERBOSE,
+                if MATLAB_SPARSE_KIT_VERBOSE
                     disp('maximum number of variables to be explored reached, continuing as is') 
                 end
             end
@@ -480,12 +482,14 @@ adapted.Sr=Sr;
 adapted.f_on_Sr=f_on_Sr;
 adapted.nb_pts=nb_pts;
 if controls.nested
+    adapted.nested = true;
     adapted.nb_pts_visited = nb_pts;
 else
+    adapted.nested = false;
     adapted.nb_pts_visited = size(Hr.knots,2);
 end
 adapted.num_evals = num_evals;
-if num_evals>adapted.nb_pts_visited, 
+if num_evals>adapted.nb_pts_visited
     disp([  'Some points have been evaluated more than once. Total: ',num2str(num_evals-adapted.nb_pts_visited),...
             ' extra evaluations over ',num2str(adapted.nb_pts_visited),' function evaluations']); 
 end
