@@ -207,6 +207,43 @@ ylim([-1.5 12])
 legend show
 
 
+%% we also provide equispaced (trapezoidal quadrature rule) and midpoint, 
+% which should of course be used sparingly as they are not suitable for high-order 
+% interpolation (runge phenomenon)
+
+% trap nodes are nested if n points are added to a n-1 rule (e.g. m(i)=2^i+1 points at level k, or if they follow the doubling rule), 
+% while midpoint are nested if they are multiplied by three
+
+figure
+
+n=5; a=1; b=4;
+x=knots_midpoint(n,a,b);
+plot(x,1 + 0*x,'or','MarkerFaceColor','r','DisplayName','5 midpoints')
+
+hold on 
+
+n=6; a=1; b=4;
+x=knots_trap(n,a,b);
+plot(x,1 + 0*x,'ob','MarkerFaceColor','b','DisplayName','6 trapezoidal points')
+
+
+n=10; a=1; b=4;
+x=knots_midpoint(n,a,b);
+plot(x,2 + 0*x,'or','MarkerFaceColor','r','DisplayName','10 midpoints')
+
+n=11; a=1; b=4;
+x=knots_trap(n,a,b);
+plot(x,2 + 0*x,'ob','MarkerFaceColor','b','DisplayName','11 trapezoidal points (nested with 6, 6+5=11)')
+
+n=30; a=1; b=4;
+x=knots_midpoint(n,a,b);
+plot(x,3 + 0*x,'or','MarkerFaceColor','r','DisplayName','30 midpoints (nested with 10 midpoints)')
+
+grid on
+ylim([-0.5 4.5])
+legend show
+
+
 %% Gauss-Hermite points: quadrature points to approximate integrals like 
 %
 % 1/sqrt(2 sig pi) \int_R f(x) e^{ -(x-mi)^2 / (2 sig^2) } dx 
@@ -1175,6 +1212,34 @@ set(objs_h(1),'MarkerFaceColor','k');
 figure
 plot_sparse_grid(Sr)
 axis square
+
+
+%% as expected, the interpolant might be bad if equispaced point are used
+
+clear
+clc
+
+f = @(x) 1./(1+(5*x(1)).^2)*1./(1+(5*x(2)).^2); 
+
+a=-1; b=1;
+domain = [-1 -1; 1 1];
+
+N= 2; 
+w= 3;
+knots = @(n) knots_trap(n,a,b,'nonprob');
+lev2knots = @lev2knots_doubling;
+
+S = smolyak_grid(N,w,knots,lev2knots);
+Sr = reduce_sparse_grid(S);
+
+f_values = evaluate_on_sparse_grid(f,Sr);
+
+figure
+plot_sparse_grid(Sr,[],'o','MarkerSize',20,'LineWidth',4)
+
+plot_sparse_grids_interpolant(S,Sr,domain,f_values,'with_f_values','nb_plot_pts',40);
+
+
 
 %% case N=3
 

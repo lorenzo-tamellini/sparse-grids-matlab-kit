@@ -4,7 +4,7 @@ function [x,w] = knots_CC(nn,x_a,x_b,whichrho)
 % 
 % calculates the collocation points (x) 
 % and the weights (w) for the Clenshaw-Curtis integration formula
-% w.r.t to the weight function rho(x)=1/(b-a) 
+% w.r.t to the weight function rho(x)=1/(x_b-x_a) 
 % i.e. the density of a uniform random variable 
 % with range going from x=a to x=b. Note that for efficiency reasons
 % nn must an odd number
