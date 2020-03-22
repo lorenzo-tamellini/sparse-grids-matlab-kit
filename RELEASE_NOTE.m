@@ -12,7 +12,10 @@
 %
 %		    --> added functions to add a single multi-idx to a sparse grid, SMOLYAK_GRID_ADD_MULTIIDX	
 %
-%	            --> added function to compute the combination technique coefficients from a multiidx set, COMBINATION TECHNIQUE		
+%	            --> added function to compute the combination technique coefficients from a multiidx set, COMBINATION TECHNIQUE	
+%
+%		    --> changed interface of function ISTENSOR. The output can now take 3 values: 1 if the input is a tensor grid, -1 if the input is
+%			a tensor grid stored in a sparse grid struct (i.e., a standard tensor with the additional fields idx and coeff) and 0 otherwise	
 % 
 % -> 2019, Feb.23   --> added midpoint and trapezoidal univariate quadrature/intepolation rules
 %
@@ -20,7 +23,7 @@
 % 
 % -> 2019, Feb. 7   --> added error messages for functions that have been renamed
 %
-% -> 2019, Feb. 7   --> the output ADAPT_SPARSE_GRID now contains a field "nested" which is set to TRUE if nested points were used
+% -> 2019, Feb. 7   --> the output of ADAPT_SPARSE_GRID now contains a field "nested" which is set to TRUE if nested points were used
 %
 %
 %

@@ -1,7 +1,12 @@
 function ist = istensor(S)
 
-% ISTENSOR(S) returns 1 if S is a tensor grid. A tensor grid is a struct with fields 
-% 'knots','weights','size','knots_per_dim','m'.
+% ISTENSOR(S) returns 1 or 0 or -1 
+% -->  1 if returned if S is a tensor grid. A tensor grid is a struct with fields:
+%           'knots','weights','size','knots_per_dim','m'
+% --> -1 if returned if S is a tensor grid in a sparse grid struct. A tensor grid in a sparse grid struct is
+%        a struct with two more fields:
+%           'knots','weights','size','knots_per_dim','m','coeff','idx'
+% --> 0 is returned in any other case
 
 
 %----------------------------------------------------
@@ -11,7 +16,13 @@ function ist = istensor(S)
 %----------------------------------------------------
 
 if isstruct(S)
-    ist=isempty(setxor(fieldnames(S),{'knots','weights','size','knots_per_dim','m'})) && length(S)==1;
+    if isempty(setxor(fieldnames(S),{'knots','weights','size','knots_per_dim','m'})) && length(S)==1
+        ist = 1;
+    elseif isempty(setxor(fieldnames(S),{'knots','weights','size','knots_per_dim','m','coeff','idx'})) && length(S)==1
+        ist = -1;
+    else
+        ist = 0;
+    end
 else
     ist=0;
 end
