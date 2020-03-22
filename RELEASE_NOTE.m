@@ -5,7 +5,14 @@
 %----------------------------------------------------------------------------------
 %
 %
+%
+%
+%
 % -> 2020, Mar.22   --> added functions to test whether two tensor grids and two sparse grids are equal, ISEQUAL_SPARSE_GRIDS and ISEQUAL_TENSOR_GRIDS
+%
+%		    --> added functions to add a single multi-idx to a sparse grid, SMOLYAK_GRID_ADD_MULTIIDX	
+%
+%	            --> added function to compute the combination technique coefficients from a multiidx set, COMBINATION TECHNIQUE		
 % 
 % -> 2019, Feb.23   --> added midpoint and trapezoidal univariate quadrature/intepolation rules
 %
