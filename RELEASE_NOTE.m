@@ -6,7 +6,7 @@
 %
 %
 %
-% -> 2020, Mar.22   --> faster version of ADAPT_SPARSE_GRID, by using the new function SMOLYAK_GRID_ADD_MULTIIDX (see below) ******* TO BE CHECKED AGAIN!!!! ****** DIFF DOES NOT WORK
+% -> 2020, Mar.22   --> faster version of ADAPT_SPARSE_GRID, by using the new function SMOLYAK_GRID_ADD_MULTIIDX (see below) ******* TO BE CHECKED AGAIN!!!! ****** DIFF DOES NOT WORK BECAUSE ADAPT WAS A DOS FILE. MAYBE NOW that it's overwritten things will be ok
 %
 % 		    --> added functions to test whether two tensor grids and two sparse grids are equal, ISEQUAL_SPARSE_GRIDS and ISEQUAL_TENSOR_GRIDS
 %
