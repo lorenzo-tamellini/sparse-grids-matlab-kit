@@ -5,6 +5,8 @@
 %----------------------------------------------------------------------------------
 %
 %
+% -> 2020, Mar.22   --> added functions to test whether two tensor grids and two sparse grids are equal, ISEQUAL_SPARSE_GRIDS and ISEQUAL_TENSOR_GRIDS
+% 
 % -> 2019, Feb.23   --> added midpoint and trapezoidal univariate quadrature/intepolation rules
 %
 % -> 2019, Feb. 7   --> fixed a low-level bug in evaluate on sparse grid that would make the function stop with an error (very rare)
