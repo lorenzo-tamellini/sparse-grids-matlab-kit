@@ -145,6 +145,8 @@ function adapted = adapt_sparse_grid(f,N_full,knots,lev2knots,prev_adapt,control
 %
 %       adapted.nb_pts  : the number of points in Sr;
 %
+%       adapted.nested  : true if points used are nested
+%
 %       adapted.nb_pts_visited: the number of points visited while building the sparse grid. For non-nested
 %                           points, this will be larger than nb_pts, because some points enter and then exit
 %                           the grid when the corresponding idx exits from the combination technique.
@@ -154,8 +156,6 @@ function adapted = adapt_sparse_grid(f,N_full,knots,lev2knots,prev_adapt,control
 %                           points in expensive for N large) sometimes one point might be recomputed twice
 %
 %       adapted.N       : the current number of dimensions considered for exploration
-%
-%       adapted.nested  : true if nested points are used
 %
 %       adapted.private : a structure contained more detailed information on the status of the adaptive algorithm, that is needed
 %                         to resume the computation.  In particular, the needed data structure consists of:
@@ -191,6 +191,7 @@ function adapted = adapt_sparse_grid(f,N_full,knots,lev2knots,prev_adapt,control
 %
 %                           private.f_on_Hr :   for non-nested points, the evaluations of f on Hr. Empty for nested-points
 
+
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
 % Copyright (c) 2009-2018 L. Tamellini, F. Nobile, D. Guignard, F. Tesei, B. Sprungk
@@ -223,6 +224,8 @@ controls = default_controls(controls,N_full);
 %                 neighbour is yet to be explored. Corresponds to A in Gerstner-Griebel
 % --> profits   : is the corresponding set of profits
 % --> G         : is the set of the grid. Corresponds to I in Gerstner-Griebel
+% --> G_log     : same as I_log,  but for G
+% --> coeff_G   : coefficients of the combination technique applied to G
 % --> nb_pts    : the number of points in the grid
 % --> nb_pts_visited : the number of points visited during the sparse grid construction
 % --> num_evals : the number of function evaluations performed
@@ -244,7 +247,7 @@ controls = default_controls(controls,N_full);
 N = controls.var_buffer_size;
 
 
-[N,N_log,var_with_pts,S,Sr,f_on_Sr,I,I_log,idx,maxprof,idx_bin,profits,G,G_log,Hr,f_on_Hr,...
+[N,N_log,var_with_pts,S,Sr,f_on_Sr,I,I_log,idx,maxprof,idx_bin,profits,G,G_log,coeff_G,Hr,f_on_Hr,...
     nb_pts,nb_pts_log,num_evals,intf] = start_adapt(f,N,knots,lev2knots,prev_adapt); 
 
 
@@ -287,11 +290,14 @@ while nb_pts < controls.max_pts   %while nb_pts_wrong_count < controls.max_pts
     
     
     for m=1:M
-        
-        G = sortrows([G; Ng(m,:)]);
-        G_log = [G_log; Ng(m,:)]; %#ok<AGROW>
-        %T = smolyak_grid_multiidx_set(G,knots,lev2knots);
-        T = smolyak_grid_multiidx_set(G,knots,lev2knots,S); % recycle tensor grids from previous sparse
+             
+        % the current idx
+        jj = Ng(m,:);
+            
+        G_log = [G_log; jj];
+        [T,G,coeff_G] = smolyak_grid_add_multiidx(jj,S,G,coeff_G,knots,lev2knots);
+
+        % T = smolyak_grid_multiidx_set(G,knots,lev2knots,S); % recycle tensor grids from previous sparse
         Tr = reduce_sparse_grid(T);
 
         [nb_pts,num_evals,nb_pts_log,Prof_temp(m),f_on_Tr,Hr,f_on_Hr,intnew] = ...
@@ -407,10 +413,14 @@ while nb_pts < controls.max_pts   %while nb_pts_wrong_count < controls.max_pts
 
                 Ng=ones(1,N); Ng(end)=2;
                 
-                G = sortrows([G; Ng]);
+                
                 G_log = [G_log; Ng];  %#ok<AGROW>
-                %T = smolyak_grid_multiidx_set(G,knots,lev2knots);
-                T = smolyak_grid_multiidx_set(G,knots,lev2knots,S); % recycle tensor grids from previos sparse
+                
+                % G = sortrows([G; Ng]);
+                % T = smolyak_grid_multiidx_set(G,knots,lev2knots,S); % recycle tensor grids from previos sparse
+
+                [T,G,coeff_G] = smolyak_grid_add_multiidx(Ng,S,G,coeff_G,knots,lev2knots);
+
                 Tr = reduce_sparse_grid(T);
 
                 % [nb_pts,nb_pts_log,nb_pts_wrong_count,Prof_temp,f_on_Tr,Hr,f_on_Hr,intnew] = ...
@@ -498,6 +508,7 @@ adapted.intf=intf;
 
 private.G=G;
 private.G_log=G_log;
+private.coeff_G=coeff_G;
 private.I=I;
 private.I_log = I_log;
 private.maxprof=maxprof;
@@ -592,7 +603,7 @@ end
 %---------------------------------------------------------------------------------
 
 
-function [N,N_log,var_with_pts,S,Sr,f_on_Sr,I,I_log,idx,maxprof,idx_bin,profits,G,G_log,Hr,f_on_Hr,...
+function [N,N_log,var_with_pts,S,Sr,f_on_Sr,I,I_log,idx,maxprof,idx_bin,profits,G,G_log,coeff_G,Hr,f_on_Hr,...
     nb_pts,nb_pts_log,num_evals,intf] = start_adapt(f,N,knots,lev2knots,prev_adapt)
 
 
@@ -604,6 +615,8 @@ function [N,N_log,var_with_pts,S,Sr,f_on_Sr,I,I_log,idx,maxprof,idx_bin,profits,
 % --> idx_bin   : is the set of idx whose profit has been computed. They have been added to the grid but their neighbour is yet to be explored
 % --> profits   : is the corresponding set of profits
 % --> G         : is the set of the grid.
+% --> G_log     : same as I_log,  but for G
+% --> coeff_G   : coefficients of the combination technique applied to G
 % --> nb_pts    : the number of points in the grid
 % --> num_evals : the number of function evaluations
 % --> nb_pts_log: for each iteration, the current nb_pts
@@ -641,6 +654,7 @@ if isempty(prev_adapt)
     
     G = I;    
     G_log = G;
+    coeff_G = 1;
     S  = smolyak_grid_multiidx_set(G,knots,lev2knots);
     Sr = reduce_sparse_grid(S);
     f_on_Sr = evaluate_on_sparse_grid(f,Sr);
@@ -657,7 +671,7 @@ else
     % we are resuming from a previous run
     %--------------------------------------------
 
-    if MATLAB_SPARSE_KIT_VERBOSE,
+    if MATLAB_SPARSE_KIT_VERBOSE
         disp('adapt--recycling')
     end
 
@@ -674,6 +688,7 @@ else
     
     G = prev_adapt.private.G;    
     G_log = prev_adapt.private.G_log;    
+    coeff_G = prev_adapt.private.coeff_G;    
     S = prev_adapt.S;
     Sr= prev_adapt.Sr;
     f_on_Sr = prev_adapt.f_on_Sr;
