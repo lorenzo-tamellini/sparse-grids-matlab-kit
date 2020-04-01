@@ -4,18 +4,18 @@
 % See LICENSE.txt for license
 %----------------------------------------------------------------------------------
 %
-%
+% -> 2020, Apr. 1   --> fixed a bug in SMOLYAK_GRID_MULTIIDX_SET, which would otherwise throw an error when called as SMOLYAK_GRID_MULTIIDX_SET(C,KNOTS,LEV2KNOTS,[])
 %
 % -> 2020, Mar.22   --> faster version of ADAPT_SPARSE_GRID, by using the new function SMOLYAK_GRID_ADD_MULTIIDX (see below) ******* TO BE CHECKED AGAIN!!!! ****** DIFF DOES NOT WORK BECAUSE ADAPT WAS A DOS FILE. MAYBE NOW that it's overwritten things will be ok
 %
-% 		    --> added functions to test whether two tensor grids and two sparse grids are equal, ISEQUAL_SPARSE_GRIDS and ISEQUAL_TENSOR_GRIDS
+%                   --> added functions to test whether two tensor grids and two sparse grids are equal, ISEQUAL_SPARSE_GRIDS and ISEQUAL_TENSOR_GRIDS
 %
-%		    --> added functions to add a single multi-idx to a sparse grid, SMOLYAK_GRID_ADD_MULTIIDX	
+%                   --> added functions to add a single multi-idx to a sparse grid, SMOLYAK_GRID_ADD_MULTIIDX	
 %
-%	            --> added function to compute the combination technique coefficients from a multiidx set, COMBINATION TECHNIQUE	
+%                   --> added function to compute the combination technique coefficients from a multiidx set, COMBINATION TECHNIQUE	
 %
-%		    --> changed interface of function ISTENSOR. The output can now take 3 values: 1 if the input is a tensor grid, -1 if the input is
-%			a tensor grid stored in a sparse grid struct (i.e., a standard tensor with the additional fields idx and coeff) and 0 otherwise	
+%                   --> changed interface of function ISTENSOR. The output can now take 3 values: 1 if the input is a tensor grid, -1 if the input is
+%                       a tensor grid stored in a sparse grid struct (i.e., a standard tensor with the additional fields idx and coeff) and 0 otherwise	
 % 
 % -> 2019, Feb.23   --> added midpoint and trapezoidal univariate quadrature/intepolation rules
 %
@@ -32,7 +32,7 @@
 %
 % -> 2018, Oct. 10  --> added DERIVE_SPARSE_GRID to compute gradients of a sparse grid interpolant
 %
-%                   --> added COMPUTE_SOBOL_INDICES_FROM_SPARSE_GRID to compute Sobolo indices of a function by its sparse grid interpolant
+%                   --> added COMPUTE_SOBOL_INDICES_FROM_SPARSE_GRID to compute Sobol indices of a function by its sparse grid interpolant
 %
 %                   --> added KNOTS_GAUSSIAN_LEJA, i.e., weighted Leja for quadrature with respect to the
 %                       gaussian weight function. Added example file where Gaussian Leja are computed

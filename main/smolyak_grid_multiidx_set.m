@@ -48,7 +48,7 @@ end
 if exist('arg4','var') 
     if isa(arg4,'function_handle')
         map = arg4;
-    elseif issmolyak(arg4)
+    elseif issmolyak(arg4) || isempty(arg4)
         S2 = arg4;
     else
         error('SparseGKit:WrongInput','unknown type for 4th input')
@@ -89,7 +89,7 @@ if isa(lev2knots,'function_handle')
 end
 
 
-if exist('S2','var') 
+if exist('S2','var') && ~isempty(S2) 
     % get index set of S2. Note that if S2 has empty fields, C2==[]
     nb_idx_C2 = length(S2);
     C2 = reshape([S2.idx],N,nb_idx_C2)'; % [S2.idx] puts all indices on a row. I reshape them and each N elements I get one column. 
