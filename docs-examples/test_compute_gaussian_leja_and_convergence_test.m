@@ -16,16 +16,18 @@ tol = 1e-16;
 % Initial and refinement step size
 h0 = 1e-2;
 % Initial or coarse search grid
-x = -20:h0:20;
+x = -40:h0:40;
 % Corresponding weight function values
 w = exp(-0.25 * x.^2);
 % Initializing node vector
 X = 0;
 
-disp = 0:5:50; % indicating if nodes function and attained minimum is plotted
+% number of points to be computed
+NMAX = 150; 
+disp = 0:5:NMAX; % indicating if nodes function and attained minimum is plotted
 
 % Loop over length of node vector
-for n = 2:50
+for n = 2:NMAX
     % Update weighted node function to be maximized
     x_k = X(n-1);
     w = abs(x-x_k) .* w;
@@ -64,10 +66,10 @@ toc;
 % Computation of corresponding weights
 
 tic;
-W = zeros(50);
+W = zeros(NMAX); % we store quadrature weights for rule with P points as P-th column
 
 
-for n= 1:50
+for n= 1:NMAX
     nodes = X(1:n);
     [x_quad,w_quad] = knots_gaussian(ceil(n/2),0,1);
     nnn = 1:n;
@@ -77,6 +79,17 @@ for n= 1:50
 end
 toc;
 
+% plot(X) when X is matrix plots the columns of X, therefore
+
+figure
+plot(W,'-') % plots weights of each quadrature rule
+semilogy(abs(W),'-') % plots weights of each quadrature rule
+
+figure
+plot(W','-') % plots trend of weights of each quadrature rule
+
+% save('GaussianLejaPrecomputedKnotsAndWeights','X','W')
+% save('gaussian_leja.txt','X','W','-ascii','-double')
 
 
 %% Testing each Normal-Leja quadrature on computation of moments of a gaussian random variable
@@ -137,12 +150,12 @@ end
 
 clear
 
-imax=45;
+imax=150;
 
 % function to be integrated 
 
-%f=@(x) 1./(1+x.^2); 
-f=@(x) 1./(2+exp(x)); 
+f=@(x) 1./(1+1.0*x.^2); 
+%f=@(x) 1./(2+exp(x)); 
 %f=@(x) cos(3*x+1); 
 
 quad_Lj=zeros(1,imax);
@@ -178,7 +191,7 @@ for i=1:5
 end
 
 % exact integral
-[x_GH,w_GH] = knots_gaussian(50,0,1);
+[x_GH,w_GH] = knots_gaussian(160,0,1);
 exact = dot(f(x_GH),w_GH);
 err_Lj=abs(quad_Lj - exact);
 err_GH=abs(quad_GH - exact);
@@ -211,11 +224,12 @@ clear
 N=2;
 
 % we use a simple TD rule, up to this level
-w_max=9;
+w_max=15;
 
 % function to be integrated
-f=@(x) 1./(1+0.1*norm(x).^2); 
-%f=@(x) 1./(2+exp(0.25*sum(x))); 
+%f=@(x) 1./(1+0.1*norm(x).^2); 
+f=@(x) 1./(2+exp(0.2*sum(x))); 
+%f=@(x) 1./(2+exp(sum(x))); 
 
 knots_Lj = @(n) knots_gaussian_leja(n);   
 knots_GH = @(n) knots_gaussian(n,0,1);
@@ -241,7 +255,7 @@ for w=1:w_max
     disp(w); %#ok<*NOEFF>
     
     disp('Leja');
-    S_Lj = smolyak_grid(N,w,knots_Lj,@lev2knots_lin, @(i) sum(i-1), S_Lj_old);
+    S_Lj = smolyak_grid(N,w,knots_Lj,@lev2knots_2step, @(i) sum(i-1), S_Lj_old); %using 2step rule to ramp faster to rules with high number of points
     Sr_Lj = reduce_sparse_grid(S_Lj);
     [res,evals]= quadrature_on_sparse_grid(f, S_Lj, Sr_Lj, evals_Lj_old, S_Lj_old, Sr_Lj_old);
     quad_Lj(w) = res;
@@ -331,7 +345,7 @@ sampleset = randn(1,samplesize);
 F_samples = f(sampleset);
 
 % the convergence analysis
-imax=45;
+imax=150;
 
 err_Lj=zeros(1,imax);
 err_GH=zeros(1,imax);
@@ -416,7 +430,7 @@ sampleset = randn(N,samplesize);
 f_sampled = f(sampleset);
 
 % as before, we use simple TD sparse grids, up to this level
-w_max=16;
+w_max=55;
 
 
 % the convergence loop, with auxiliary containers to recycle evaluations between iterations
@@ -443,7 +457,7 @@ for w=1:w_max
     disp(w); %#ok<*NOEFF>
     
     disp('Leja');
-    S_Lj = smolyak_grid(N,w,knots_Lj,@lev2knots_lin, @(i) sum(i-1), S_Lj_old);
+    S_Lj = smolyak_grid(N,w,knots_Lj,@lev2knots_2step, @(i) sum(i-1), S_Lj_old); %using 2step rule to ramp faster to rules with high number of points
     Sr_Lj = reduce_sparse_grid(S_Lj);
     evals_Lj = evaluate_on_sparse_grid(f, S_Lj, Sr_Lj, evals_Lj_old, S_Lj_old, Sr_Lj_old);
     err_Lj(w) = max(abs(f_sampled - interpolate_on_sparse_grid(S_Lj,Sr_Lj,evals_Lj,sampleset)));
