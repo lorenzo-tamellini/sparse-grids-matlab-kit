@@ -9,11 +9,11 @@
 %                   --> Added more GAUSSIAN_LEJA points, we now have 150 instead of 50. Also, they are no more saved as a .mat file, 
 %                       but pasted in ascii format in the knots_gaussian_leja, it's much faster than loading the matlab file each time
 %
-% -> 2020, Mar.22   --> faster version of ADAPT_SPARSE_GRID, by using the new function SMOLYAK_GRID_ADD_MULTIIDX (see below) ******* TO BE CHECKED AGAIN!!!! ****** DIFF DOES NOT WORK BECAUSE ADAPT WAS A DOS FILE. MAYBE NOW that it's overwritten things will be ok
+% -> 2020, Mar.22   --> faster version of ADAPT_SPARSE_GRID, by using the new function SMOLYAK_GRID_ADD_MULTIIDX (see below) 
 %
 %                   --> added functions to test whether two tensor grids and two sparse grids are equal, ISEQUAL_SPARSE_GRIDS and ISEQUAL_TENSOR_GRIDS
 %
-%                   --> added functions to add a single multi-idx to a sparse grid, SMOLYAK_GRID_ADD_MULTIIDX	
+%                   --> added functions to add a single multi-idx to a sparse grid, SMOLYAK_GRID_ADD_MULTIIDX and the ancillary function DELTA_TO_COMBITEC	
 %
 %                   --> added function to compute the combination technique coefficients from a multiidx set, COMBINATION TECHNIQUE	
 %

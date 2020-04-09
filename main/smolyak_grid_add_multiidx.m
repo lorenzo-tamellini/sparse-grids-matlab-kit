@@ -1,7 +1,7 @@
 function [S,I,coeff] = smolyak_grid_add_multiidx(new_idx,S_in,I_in,coeff_in,knots,lev2knots,map,weights_coeff)
 
 % SMOLYAK_GRID_ADD_MULTIIDX produces a grid obtained by adding a single multi-idx to a previously existing grid.
-
+%
 % [S,I,COEFF] = SMOLYAK_GRID_ADD_MULTIIDX(NEW_IDX,S_IN,I_IN,COEFF_IN,KNOTS,LEV2KNOTS) takes as inputs:
 %       --> an index NEW_IDX. It must be admissible wrt to the index set I_IN described below, and this condition **won't** be checked
 %           by the function
