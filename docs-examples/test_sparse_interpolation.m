@@ -48,10 +48,6 @@ for w=0:w_max
     
     Sr=reduce_sparse_grid(S);
 
-    
-    % move points to actual interval here point are columns
-    % Sr.knots=interval_map(Sr.knots);
-
     % compute work
     work(w+1)=Sr.size;
     

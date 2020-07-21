@@ -529,31 +529,22 @@ isequal(T,T_rec)
 
 %% PART 1: INTRODUCTION - MODIFY THE DOMAIN OF A SPARSE GRID
 
-% it is easy to modify the domain of a sparse grid from (-1,1)^N to other hyper-rectangles. Two options are available
+% it is easy to modify the domain of a sparse grid from (-1,1)^N to other hyper-rectangles.
 
 clc
 clear
 N=2;
 
-% 1) generate knots on the desired hyper-rectangle (here (0,2)^2 )
+% generate knots on the desired hyper-rectangle (here (0,2)^2 )
 knots=@(n) knots_CC(n,0,2,'nonprob');
 w = 4;
 S = smolyak_grid(N,w,knots,@lev2knots_doubling);
 
 
-% 2) alternatively, use the standard interval and provide a shifting function to smolyak_grid. 
-map=get_interval_map([0 0],[2 2],'uniform');
-knots=@(n) knots_CC(n,-1,1,'nonprob');
-S2 = smolyak_grid(N,w,knots,@lev2knots_doubling,[],map); % uses the default idxset
-
-disp('maximum difference between corresponding points in the two grids')
-max(max(abs([S.knots]-[S2.knots])))
 
 figure
 plot_sparse_grid(S);
-hold on
-plot_sparse_grid(S2,[],'MarkerSize',10,'Marker','o');
-legend('grid S','grid S2')
+legend('grid S')
 set(legend,'Location','NorthEastOutside')
 
 % one can mix different intervals / different knots families on different directions. 
@@ -569,32 +560,6 @@ S = smolyak_grid(N,w,{knots1,knots2},{@lev2knots_doubling,@lev2knots_lin});
 
 figure
 plot_sparse_grid(S);
-
-% in case knots and lev2knots functions in the different directions are the same and the only thing that changes
-% is the definition interval, also using the standard interval and providing a shifting function to
-% smolyak_grid will do
-
-clc
-clear
-N=2;
-
-knots1=@(n) knots_CC(n,0,2,'nonprob');
-knots2=@(n) knots_CC(n,-1,5,'nonprob');
-w = 4;
-S = smolyak_grid(N,w,{knots1,knots2},@lev2knots_doubling);
-
-
-map=get_interval_map([0 -1],[2 5],'uniform');
-knots=@(n) knots_CC(n,-1,1,'nonprob');
-S2 = smolyak_grid(N,w,knots,@lev2knots_doubling,[],map); % uses the default idxset
-
-figure
-plot_sparse_grid(S);
-hold on
-plot_sparse_grid(S2,[],'MarkerSize',10,'Marker','o');
-%max(max(abs([S.knots]-[S2.knots])))
-legend('grid S','grid S2')
-set(legend,'Location','NorthEastOutside')
 
 
 
@@ -897,31 +862,6 @@ Sr= reduce_sparse_grid(S);
 I=quadrature_on_sparse_grid(@(x)f(x,b) , Sr);
 
 
-% alternatively, use points on (-1,1) and provide a map to smolyak_grid. VERY IMPORTANT: note that since we
-% are using 'nonprob' quadrature weights, we need to modify the quadrature weights as well. More precisely, 
-% since the original interval is -1,1 and the final interval is -1,3, weights in each direction should be 
-% multiplied by 2, which means that the weights of the sparse grid should be multiplied by 2^N. Pass this
-% value as input to smolyak_grid. However, we discourage this procedure and we suggest to initialize the 
-% sparse grid with knots already in their final interval. Modification of weights is not needed when using 
-% 'probability' weights which must sum to 1 regardless of the integration interval.
-
-
-knots=@(n) knots_CC(n,-1,1,'nonprob');
-map=get_interval_map([-1 -1 -1 -1],[3 3 3 3],'uniform');
-
-
-S2 = smolyak_grid(N,w,knots,@lev2knots_doubling,[],map,2^N);
-S2r = reduce_sparse_grid(S2);
-
-
-I2=quadrature_on_sparse_grid(@(x)f(x,b) , S2r);
-
-disp('----------')
-disp('difference between the two sparse grids')
-
-I-I2  %#ok<MNEFF,NOPTS>
-
-
 % compare with exact value
 disp('----------')
 disp('quad error')
@@ -948,34 +888,6 @@ w = 6;
 S = smolyak_grid(N,w,{knots1,knots2},@lev2knots_doubling);
 Sr = reduce_sparse_grid(S);
 I=quadrature_on_sparse_grid(@(x)f(x,b) , Sr);
-
-
-% as an alternative, generate probabilitstic weights on -1,1 and provide a map to smolyak_grid. Note that
-% probabilistic weights always sum to 1, so there is no need to rescale weights
-knots=@(n) knots_CC(n,-1,1);
-map = get_interval_map([-2 0.5],[1 6],'uniform');
-w = 7;
-T = smolyak_grid(N,w,knots,@lev2knots_doubling,[],map);
-Tr = reduce_sparse_grid(T);
-I2=quadrature_on_sparse_grid(@(x)f(x,b) , Tr);
-
-
-% clearly, you may as well generate non-probabilitstic weights on -1,1 and provide both a map and a weight_fact to smolyak_grid. 
-knots=@(n) knots_CC(n,-1,1,'nonprob');
-map = get_interval_map([-2 0.5],[1 6],'uniform');
-w = 7;
-R = smolyak_grid(N,w,knots,@lev2knots_doubling,[],map,1/2^2);
-Rr = reduce_sparse_grid(R);
-I3=quadrature_on_sparse_grid(@(x)f(x,b) ,Rr);
-
-
-
-disp('----------')
-disp('compare the values')
-
-[I;
-I2;
-I3]  %#ok<NOPTS>
 
 
 % compare with exact value

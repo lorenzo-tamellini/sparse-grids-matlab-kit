@@ -1,4 +1,4 @@
-function [S,I,coeff] = smolyak_grid_add_multiidx(new_idx,S_in,I_in,coeff_in,knots,lev2knots,map,weights_coeff)
+function [S,I,coeff] = smolyak_grid_add_multiidx(new_idx,S_in,I_in,coeff_in,knots,lev2knots)
 
 % SMOLYAK_GRID_ADD_MULTIIDX produces a grid obtained by adding a single multi-idx to a previously existing grid.
 %
@@ -17,11 +17,6 @@ function [S,I,coeff] = smolyak_grid_add_multiidx(new_idx,S_in,I_in,coeff_in,knot
 %       --> S, the new sparse grid
 %       --> I, the new multiidx set, i.e. I = sortrows([I_IN; NEW_IDX])
 %       --> COEFF, the updated vector of coefficients of the combination technique
-%
-%
-% [S,I,COEFF] = SMOLYAK_GRID_ADD_MULTIIDX(NEW_IDX,S_IN,I_IN,COEFF_IN,KNOTS,LEV2KNOTS,MAP,WEIGHTS_COEFF)
-%
-%       Applies MAP and WEIGHTS_COEFF,  see e.g. SMOLYAK_GRID
 
 
 %----------------------------------------------------
@@ -153,21 +148,6 @@ for j=1:length(coeff)
 end
 
     
-    
-% finally, shift the points according to map if needed
-if exist('map','var') && ~isempty(map)
-    for ss=1:nb_grids
-        S(ss).knots = map(S(ss).knots);
-    end
-end
-
-% and possibly fix weights
-if exist('weights_coeff','var') && ~isempty(weights_coeff)
-    for ss=1:nb_grids
-        S(ss).weights = S(ss).weights*weights_coeff;
-    end
-end
-
 % now store the coeff value. It has to be stored after the first loop, becuase tensor_grid returns a grid
 % WITHOUT coeff field, and Matlab would throw an error (Subscripted assignment between dissimilar structures)
 

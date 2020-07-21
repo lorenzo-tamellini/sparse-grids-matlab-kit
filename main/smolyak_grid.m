@@ -1,4 +1,4 @@
-function [S,C] = smolyak_grid(N,w,knots,lev2knots,idxset,arg6,weights_coeff)
+function [S,C] = smolyak_grid(N,w,knots,lev2knots,idxset,S2)
 
 
 %  SMOLYAK_GRID generates a Smolyak sparse grid (and corresponding quadrature weights)
@@ -59,24 +59,7 @@ function [S,C] = smolyak_grid(N,w,knots,lev2knots,idxset,arg6,weights_coeff)
 %       tries to recycle tensor grids from S2 to build those of S instead of recomputing them.
 %       This can be helpful whenever sequences of Smolyak grid are generates. Note that *NO* check
 %       will performed whether S2 was generated with the same lev2knots as the one given as input.
-%       S2 can also be empty, S2=[]
-%
-%
-%
-%  [S,C] = SMOLYAK_GRID(N,W,KNOTS,LEV2KNOTS,IDXSET,MAP,WEIGHTS_COEFF) can be used as an alternative
-%       to generate a sparse grid on a hyper-rectangle. 
-%       Instead of typing out one KNOTS function and one LEV2KNOTS for each dimension, like in
-%
-%       [S,C] = SMOLYAK_GRID(N,W,{@knots1, @knots2, ...},{@m1, @m2 ...}),
-%
-%       one can use 
-%
-%       [S,C] = SMOLYAK_GRID(N,W,@KNOTS,@M,MAP,WEIGHTS_COEFF),
-%
-%       which generates the sparse grid on the hypercube corresponding to @KNOTS and and then shifts it 
-%       according to the mapping defined by MAP, e.g. from (-1,1)^N to (a1,b1)x(a2,b2)x...x(a_N,b_N). 
-%       See also GET_INTERVAL_MAP. Specifying the scalar value WEIGHTS_COEFF will also multiply the 
-%       quadrature weights by WEIGHTS_COEFF. Use IDXSET=[] to use the default value, IDXSET = @(i) sum(i-1).    
+%       S2 can also be empty, S2=[]. To use the default IDXSET, use IDXSET=[];
 
 
 
@@ -98,23 +81,9 @@ end
 %----------------------------------------------------------
 % input handling
 
-if nargin==4 || (nargin==6 && isempty(idxset)) || (nargin==7 && isempty(idxset)) 
+if nargin==4 || (nargin==6 && isempty(idxset)) 
     idxset=@(i) sum(i-1);
 end
-
-% discriminate between calls:
-if exist('arg6','var') 
-    if isa(arg6,'function_handle') % we are in the case smolyak_grid(N,w,knots,lev2knots,idxset,map,weights_coeff)
-        map = arg6;
-    elseif issmolyak(arg6) || isempty(arg6) % we are in the case smolyak_grid(N,w,knots,lev2knots,idxset,S2)
-        S2 = arg6;
-    else
-        error('SparseGKit:WrongInput','unknown type for 6th input')
-    end
-    clear arg6
-end
-
-
 
 % if knots and  lev2knots are simple function, we replicate them in a cell
 if isa(knots,'function_handle')
@@ -276,21 +245,7 @@ else
             end
         end
     end
-        
-    % finally, shift the points according to map if needed
-    if exist('map','var') && ~isempty(map)
-        for ss=1:nb_grids
-            S(ss).knots = map(S(ss).knots);
-        end
-    end
-    
-    % and possibly fix weights
-    if exist('weights_coeff','var') && ~isempty(weights_coeff)
-        for ss=1:nb_grids
-            S(ss).weights = S(ss).weights*weights_coeff;
-        end
-    end
-    
+            
     % now store the coeff value. It has to be stored after the first loop, becuase tensor_grid returns a grid
     % WITHOUT coeff field, and Matlab would throw an error (Subscripted assignment between dissimilar structures)
     

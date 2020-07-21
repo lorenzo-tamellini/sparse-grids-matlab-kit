@@ -1,4 +1,4 @@
-function S = smolyak_grid_multiidx_set(C,knots,lev2knots,arg4,arg5)
+function S = smolyak_grid_multiidx_set(C,knots,lev2knots,S2)
 
 % SMOLYAK_GRID_MULTIIDX_SET produces a sparse grid starting from a multiindex-set rather than
 % from a rule IDXSET(I) <= W.
@@ -13,13 +13,8 @@ function S = smolyak_grid_multiidx_set(C,knots,lev2knots,arg4,arg5)
 %       will performed whether S2 was generated with the same lev2knots as the one given as input.
 %       S2 can also be empty, S2=[]
 %
-%
-% S = SMOLYAK_GRID_MULTIIDX_SET(C,KNOTS,LEV2KNOTS,MAP,WEIGHTS_COEFF) can be used as an alternative
-%       to generate a sparse grid on a hyper-rectangle.
-%
-%
 % See also CHECK_SET_ADMISSIBILITY for admissibility check, and SMOLYAK_GRID for further information on
-% KNOTS, LEV2KNOTS, MAP, WEIGHTS_COEFF and on the sparse grid data structure S
+% KNOTS, LEV2KNOTS, and on the sparse grid data structure S
 
 
 %----------------------------------------------------
@@ -36,29 +31,6 @@ if isempty(MATLAB_SPARSE_KIT_VERBOSE)
     MATLAB_SPARSE_KIT_VERBOSE=1;
 end
 
-
-% handle inputs, to distinguish between 
-%
-% S = SMOLYAK_GRID_MULTIIDX_SET(C,KNOTS,LEV2KNOTS,MAP,WEIGHTS_COEFF) 
-%
-% and
-%
-% S = SMOLYAK_GRID_MULTIIDX_SET(C,KNOTS,LEV2KNOTS,S2)
-
-if exist('arg4','var') 
-    if isa(arg4,'function_handle')
-        map = arg4;
-    elseif issmolyak(arg4) || isempty(arg4)
-        S2 = arg4;
-    else
-        error('SparseGKit:WrongInput','unknown type for 4th input')
-    end
-    clear arg4
-end
-if exist('arg5','var')
-    weights_coeff = arg5;
-    clear arg5
-end
 
 
 % first a check on C being sorted. Observe that the function sortrows used is very efficient
@@ -213,19 +185,6 @@ else
     end
 end
 
-% finally, shift the points according to map if needed
-if exist('map','var') && ~isempty(map)
-    for ss=1:nb_grids
-        S(ss).knots = map(S(ss).knots);
-    end
-end
-
-% and possibly fix weights
-if exist('weights_coeff','var') && ~isempty(weights_coeff)
-    for ss=1:nb_grids
-        S(ss).weights = S(ss).weights*weights_coeff;
-    end
-end
 
 % now store the coeff value. It has to be stored after the first loop, becuase tensor_grid returns a grid
 % WITHOUT coeff field, and Matlab would throw an error (Subscripted assignment between dissimilar structures)
