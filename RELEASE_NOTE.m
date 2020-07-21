@@ -10,7 +10,7 @@
 %                       and then invoking e.g.
 %                       [S,C] = SMOLYAK_GRID(N,W,{@knots1, @knots2, ...},{@m1, @m2 ...}),
 %
-%                   --> removed QUADRATURE_ON_SPARSE_GRID_LEGACY
+%                   --> removed QUADRATURE_ON_SPARSE_GRID_LEGACY and EVALUATE_ON_SPARSE_GRIDS_LEGACY
 %
 %                   --> improved the help function of PLOT_SPARSE_GRIDS_INTERPOLANT and COMPUTE_SOBOL_INDICES_FROM_SPARSE_GRID, DERIVE_SPARSE_GRID
 %
