@@ -4,6 +4,21 @@
 % See LICENSE.txt for license
 %----------------------------------------------------------------------------------
 %
+%
+% -> 2020, Jul. 21  --> for robustness, SMOLYAK_GRID, SMOLYAK_GRID_MULTIIDX_SET no longer accept MAP and COEFF_WEIGHTS. The knots and weights
+%                       need to be already properly rescaled beforehand, by using the optional arguments to defind correctly the 1D families of points to be used, 
+%                       and then invoking e.g.
+%                       [S,C] = SMOLYAK_GRID(N,W,{@knots1, @knots2, ...},{@m1, @m2 ...}),
+%
+%                   --> removed QUADRATURE_ON_SPARSE_GRID_LEGACY
+%
+%                   --> improved the help function of PLOT_SPARSE_GRIDS_INTERPOLANT
+%
+%                   --> added function PLOT_MULTIIDX_SET (works for N=2 and N=3 only. For larger dimensions,  the user needs to specify which dimensions should be plotted)
+%
+%
+%
+%
 % -> 2020, Apr. 1   --> fixed a bug in SMOLYAK_GRID_MULTIIDX_SET, which would otherwise throw an error when called as SMOLYAK_GRID_MULTIIDX_SET(C,KNOTS,LEV2KNOTS,[])
 %
 %                   --> Added more GAUSSIAN_LEJA points, we now have 150 instead of 50. Also, they are no more saved as a .mat file, 

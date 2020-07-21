@@ -13,7 +13,13 @@ function h = plot_sparse_grids_interpolant(S,Sr,domain,f_values,varargin) %with_
 %       two-dimensional plot will be produced
 %
 %
-% PLOTS_SPARSE_GRIDS_INTERPOLANT(S,SR,DOMAIN,F_VALUES) produces the plots discussed above
+% PLOTS_SPARSE_GRIDS_INTERPOLANT(S,SR,DOMAIN,F_VALUES) produces the plots discussed above,  where
+% 
+%       S is a sparse grid
+%       Sr is its reduced version
+%       DOMAIN is a matrix 2 x N, describing the domain where the sparse grids shuold be plotted. 
+%       The first row contains the lower bounds, the second row the upper bounds, so e.g. 
+%       to plot over the hypercube [0,1]^N, DOMAIN = [0 0 0 0 .....; 1 1 1 1  ....]
 %
 % Additional inputs can be passed to control the behavior of the plots. Any combination of these optional
 % inputs is allowed

@@ -423,12 +423,15 @@ jj=[2 3];
 C=multiidx_box_set([2 3],0);
 D=multiidx_box_set([2 3],1);
 
-figure 
-plot(C(:,1),C(:,2),'xr','MarkerFaceColor','r','LineWidth',2,'MarkerSize',12,'DisplayName','Multiidx box set, min=0')
+% the package comes with a convenience function to plot a multiidx set
+
+figure
+plot_multiidx_set(C,'xr','MarkerFaceColor','r','LineWidth',2,'MarkerSize',12,'DisplayName','Multiidx box set, min=0')
 hold on
-plot(D(:,1),D(:,2),'ok','MarkerFaceColor','k','DisplayName','Multiidx box set, min=1')
+plot_multiidx_set(D,'ok','MarkerFaceColor','k','DisplayName','Multiidx box set, min=1')
 axis([-0.5 4 -0.5 4])
 legend show
+
 
 % b) MULTIIDX_BOX_GEN generates the set of all indices ii such that rule(ii)<=w, where rule is a function that takes as input a row vector
 % (or a matrix where each multiidx is stored as a row) and returns a scalar value (or a column vector with the result of the operation applied
@@ -440,12 +443,23 @@ rule=@(I) sum(I,2);
 E=multiidx_gen(N,rule,w,0);
 F=multiidx_gen(N,rule,w,1);
 
+
 figure 
-plot(E(:,1),E(:,2),'xr','MarkerFaceColor','r','LineWidth',2,'MarkerSize',12,'DisplayName','Multiidx gen, min=0')
+plot_multiidx_set(E,'xr','MarkerFaceColor','r','LineWidth',2,'MarkerSize',12,'DisplayName','Multiidx gen, min=0')
 hold on
-plot(F(:,1),F(:,2),'ok','MarkerFaceColor','k','DisplayName','Multiidx gen, min=1')
+plot_multiidx_set(F,'ok','MarkerFaceColor','k','DisplayName','Multiidx gen, min=1')
 legend show
 axis([-0.5 8 -0.5 8])
+
+% incidentally, PLOT_MULTIIDX_SET works also for N=3. For larger dimensions, one needs to input the subset of dimensions that are to be plotted
+G=multiidx_box_set([2 3 5],1);
+figure
+plot_multiidx_set(G)
+
+
+H=multiidx_box_set([2 3 5 4],1);
+figure
+plot_multiidx_set(G(:,[1 3]))
 
 
 %% when building a large sparse grid, it might be useful to recycle from previous grids to speed-up the computation
