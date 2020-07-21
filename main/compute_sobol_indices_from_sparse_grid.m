@@ -1,7 +1,7 @@
 function [Sob_i,Tot_Sob_i,Mean,Var] = compute_sobol_indices_from_sparse_grid(S,Sr,nodal_values,domain,flags)
 
 
-% COMPUTE_SOBOL_INDICES_FROM_SPARSE_GRID computes the Sobol indices of a function in two steps: 
+% COMPUTE_SOBOL_INDICES_FROM_SPARSE_GRID computes the Sobol indices of a scalar-valued function f:R^N -> R  in two steps: 
 % 1) converts the sparse grid approximation of that function into its equivalent Polynomial Chaos Expansion (PCE);
 %    this operation is performed by calling CONVERT_TO_MODAL
 % 2) performs algebraic manipulations of the PCE coefficients.

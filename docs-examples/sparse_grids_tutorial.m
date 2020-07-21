@@ -1330,7 +1330,8 @@ Sr = reduce_sparse_grid(S);
 
 values_on_grid=evaluate_on_sparse_grid(f,Sr);
 
-% compute Sobol indices. The function uses internally the function CONVERT_TO_MODAL and it uses the same inputs
+% compute Sobol indices. The function uses internally the function CONVERT_TO_MODAL and it uses the same inputs. It works for scalar-values functions only, 
+% so we need to run it 4 times
 [Sob_i1,Tot_Sob_i1,Mean1,Var1] = compute_sobol_indices_from_sparse_grid(S,Sr,values_on_grid(1,:),domain,'legendre');
 [Sob_i2,Tot_Sob_i2,Mean2,Var2] = compute_sobol_indices_from_sparse_grid(S,Sr,values_on_grid(2,:),domain,'legendre');
 [Sob_i3,Tot_Sob_i3,Mean3,Var3] = compute_sobol_indices_from_sparse_grid(S,Sr,values_on_grid(3,:),domain,'legendre');
