@@ -12,7 +12,7 @@
 %
 %                   --> removed QUADRATURE_ON_SPARSE_GRID_LEGACY
 %
-%                   --> improved the help function of PLOT_SPARSE_GRIDS_INTERPOLANT and COMPUTE_SOBOL_INDICES_FROM_SPARSE_GRID
+%                   --> improved the help function of PLOT_SPARSE_GRIDS_INTERPOLANT and COMPUTE_SOBOL_INDICES_FROM_SPARSE_GRID, DERIVE_SPARSE_GRID
 %
 %                   --> added function PLOT_MULTIIDX_SET (works for N=2 and N=3 only. For larger dimensions, the user needs to specify which dimensions should be plotted)
 %
@@ -27,7 +27,8 @@
 %
 %                   --> added ISEQUAL_TOL, ISLEXICO_TOL, FIND_LEXICOGRAPHIC_TOL, to deal with vectors with numerical noise
 %
-% 
+%                   --> added HESSIAN_SPARSE_GRID to compute the hessian of a function by taking finite differences of its sparse grids approximation
+%
 % 
 % -> 2020, Apr. 1   --> fixed a bug in SMOLYAK_GRID_MULTIIDX_SET, which would otherwise throw an error when called as SMOLYAK_GRID_MULTIIDX_SET(C,KNOTS,LEV2KNOTS,[])
 %

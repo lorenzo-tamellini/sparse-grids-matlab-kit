@@ -1,13 +1,15 @@
 function grads = derive_sparse_grid(S,Sr,values_on_grid,domain,eval_points,h)
 
-% DERIVE_SPARSE_GRID computes derivatives (gradients) of sparse grid by centered finite differences
+% DERIVE_SPARSE_GRID computes derivatives (gradients) of a scalar-valued function f: R^N -> R
+% by centered finite differences formulas applied to the sparse grid approximation of f. 
+% The gradients can be computed at *several* points simultaneously.
 % 
 % 
-% GRADS = DERIVE_SPARSE_GRID(S,SR,VALUES_ON_GRID,DOMAIN,EVAL_POINTS) computes the derivative of the sparse grid.
+% GRADS = DERIVE_SPARSE_GRID(S,SR,VALUES_ON_GRID,DOMAIN,EVAL_POINTS) computes the derivative of f
 %        by finite differences (see below for default value of increment size).
 %
 %        S is a sparse grid struct, SR is the reduced version of S, VALUES_ON_GRID are the values of the interpolated
-%        function on SR. 
+%        function on SR (VALUES_ON_GRID is a vector, because the function is scalar-valued). 
 %        DOMAIN is a 2xN matrix = [a1, a2, a3, ...; b1, b2, b3, ...] defining the lower and upper bound of the 
 %        hyper-rectangle on which the sparse grid is defined. The finite differences increment size is chosen according to
 %        to the length of each interval [an bn] as h_n = (b_n - a_n)/1E5 
