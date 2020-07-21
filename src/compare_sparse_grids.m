@@ -4,7 +4,7 @@ function [pts_in_S_only,pts_in_both_grids_S,pts_in_both_grids_S_old,pts_in_S_old
 % 
 % [PTS_IN_S_ONLY, PTS_IN_BOTH_GRIDS_S, PTS_IN_BOTH_GRIDS_S_OLD, PTS_IN_S_OLD_ONLY] = COMPARE_SPARSE_GRIDS(S,SR,S_OLD,SR_OLD,TOL)
 %
-% compares the points in S and S_OLD, and determines and determines those in common, and those belonging
+% compares the points in S and S_OLD, and determines those in common, and those belonging
 % exclusively to each of the two. Points are considered equal is coordinate-wise they are closer than TOL.
 % SR is the reduced version of S and SR_OLD is the reduced version of S_OLD.
 %

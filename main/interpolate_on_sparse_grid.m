@@ -21,6 +21,13 @@ function f_values = interpolate_on_sparse_grid(S,Sr,function_on_grid,non_grid_po
 % See LICENSE.txt for license
 %----------------------------------------------------
 
+% declare a global variable controlling verbosity
+global MATLAB_SPARSE_KIT_VERBOSE
+if isempty(MATLAB_SPARSE_KIT_VERBOSE)
+    MATLAB_SPARSE_KIT_VERBOSE=1;
+end
+
+
 
 if nargin == 5
     errmsg=['Too many input arguments. Note that starting from release 14.4 '...
@@ -82,6 +89,12 @@ for i=1:nb_grids
     % some of the grids in S structure are empty, so I skip it
     if isempty(S(i).weights)
         continue
+    end
+    
+    if MATLAB_SPARSE_KIT_VERBOSE
+        if ~mod(i,floor(nb_grids/20))
+            disp(['interpolate on grid ',num2str(i), '/',num2str(nb_grids)])
+        end
     end
     
     % this is the set of points where I build the tensor lagrange function

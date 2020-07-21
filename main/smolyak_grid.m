@@ -44,8 +44,14 @@ function [S,C] = smolyak_grid(N,w,knots,lev2knots,idxset,arg6,weights_coeff)
 %
 %       The outputs of SMOLYAK_GRID are 
 %       S: structure containing the information on the sparse grid (vector of tensor grids; see above)
-%       C: multi-index set used to generate the sparse grid  
-%
+%       C: multi-index set used to generate the sparse grid. It is sorted lexicographically and contains all
+%           multi-indices, even those whose coefficient in the combination technique is 0. 
+%           The reduced multi-idx set D with only the indices with non-zero coefficient can be obtained as 
+%           
+%           nb_idx = length(S);
+%           D = reshape([S.idx],N,nb_idx)'; 
+% 
+%           and will be lexicographic sorted as well
 %
 %
 %
