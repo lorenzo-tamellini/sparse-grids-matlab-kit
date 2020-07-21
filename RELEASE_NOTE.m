@@ -25,7 +25,10 @@
 %                       where F_VALS is a row vector containing the values of the function whose quadrature we need to compute, that we might have already available. 
 %                       It works also for multivariate functions (each component as row of a matrix)
 %
+%                   --> added ISEQUAL_TOL, ISLEXICO_TOL, FIND_LEXICOGRAPHIC_TOL, to deal with vectors with numerical noise
 %
+% 
+% 
 % -> 2020, Apr. 1   --> fixed a bug in SMOLYAK_GRID_MULTIIDX_SET, which would otherwise throw an error when called as SMOLYAK_GRID_MULTIIDX_SET(C,KNOTS,LEV2KNOTS,[])
 %
 %                   --> Added more GAUSSIAN_LEJA points, we now have 150 instead of 50. Also, they are no more saved as a .mat file, 
