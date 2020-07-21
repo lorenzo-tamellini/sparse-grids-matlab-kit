@@ -824,6 +824,21 @@ disp('----------')
 disp('quad error')
 abs(I-I_ex)
 
+% sometimes, we have access to the evaluations of f from earlier code, then we just need to do the linear combination. The package provides
+% a convenience wrapper to this end,  instead of typing f_vals*Sr.weights'  
+
+disp('----------')
+disp('convenience wrapper')
+
+f_vals = f([Sr.knots],b);
+I3 = quadrature_on_sparse_grid(f_vals,Sr);
+
+I2-I3
+
+% the convenience wrapper can also handle the case of computing quadrature for multiple functions at the same time. The values of each function
+% must be stored as rows of a matrix
+many_f = [f_vals; f_vals; f_vals; f_vals; f_vals];
+quadrature_on_sparse_grid(many_f,Sr)
 
 
 %% PART 3: INTEGRATION - USE OTHER QUADRATURE KNOTS

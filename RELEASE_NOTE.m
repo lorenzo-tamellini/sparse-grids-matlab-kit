@@ -5,7 +5,7 @@
 %----------------------------------------------------------------------------------
 %
 %
-% -> 2020, Jul. 21  --> for robustness, SMOLYAK_GRID, SMOLYAK_GRID_MULTIIDX_SET no longer accept MAP and COEFF_WEIGHTS. The knots and weights
+% -> 2020, Jul. 21  --> for robustness, SMOLYAK_GRID, SMOLYAK_GRID_MULTIIDX_SET no longer accepts MAP and COEFF_WEIGHTS as inputs. The knots and weights
 %                       need to be already properly rescaled beforehand, by using the optional arguments to defind correctly the 1D families of points to be used, 
 %                       and then invoking e.g.
 %                       [S,C] = SMOLYAK_GRID(N,W,{@knots1, @knots2, ...},{@m1, @m2 ...}),
@@ -14,15 +14,23 @@
 %
 %                   --> improved the help function of PLOT_SPARSE_GRIDS_INTERPOLANT and COMPUTE_SOBOL_INDICES_FROM_SPARSE_GRID
 %
-%                   --> added function PLOT_MULTIIDX_SET (works for N=2 and N=3 only. For larger dimensions,  the user needs to specify which dimensions should be plotted)
+%                   --> added function PLOT_MULTIIDX_SET (works for N=2 and N=3 only. For larger dimensions, the user needs to specify which dimensions should be plotted)
 %
 %                   --> PLOT_SPARSE_GRID_INTERPOLANT does not generate a new figure, unless cuts are requested  (N>3)
+%
+%                   --> for convenience, QUADRATURE_ON_SPARSE_GRID now can also be called as 
+%
+%                       QUADRATURE_ON_SPARSE_GRID(F_VALS,SR)                   
+%   
+%                       where F_VALS is a row vector containing the values of the function whose quadrature we need to compute, that we might have already available. 
+%                       It works also for multivariate functions (each component as row of a matrix)
 %
 %
 % -> 2020, Apr. 1   --> fixed a bug in SMOLYAK_GRID_MULTIIDX_SET, which would otherwise throw an error when called as SMOLYAK_GRID_MULTIIDX_SET(C,KNOTS,LEV2KNOTS,[])
 %
 %                   --> Added more GAUSSIAN_LEJA points, we now have 150 instead of 50. Also, they are no more saved as a .mat file, 
 %                       but pasted in ascii format in the knots_gaussian_leja, it's much faster than loading the matlab file each time
+%
 %
 % -> 2020, Mar.22   --> faster version of ADAPT_SPARSE_GRID, by using the new function SMOLYAK_GRID_ADD_MULTIIDX (see below) 
 %
@@ -34,12 +42,16 @@
 %
 %                   --> changed interface of function ISTENSOR. The output can now take 3 values: 1 if the input is a tensor grid, -1 if the input is
 %                       a tensor grid stored in a sparse grid struct (i.e., a standard tensor with the additional fields idx and coeff) and 0 otherwise	
-% 
+%
+%
 % -> 2019, Feb.23   --> added midpoint and trapezoidal univariate quadrature/intepolation rules
 %
+%
 % -> 2019, Feb. 7   --> fixed a low-level bug in evaluate on sparse grid that would make the function stop with an error (very rare)
-% 
+%
+%
 % -> 2019, Feb. 7   --> added error messages for functions that have been renamed
+%
 %
 % -> 2019, Feb. 7   --> the output of ADAPT_SPARSE_GRID now contains a field "nested" which is set to TRUE if nested points were used
 %
