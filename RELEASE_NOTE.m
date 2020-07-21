@@ -12,7 +12,7 @@
 %
 %                   --> removed QUADRATURE_ON_SPARSE_GRID_LEGACY
 %
-%                   --> improved the help function of PLOT_SPARSE_GRIDS_INTERPOLANT
+%                   --> improved the help function of PLOT_SPARSE_GRIDS_INTERPOLANT and COMPUTE_SOBOL_INDICES_FROM_SPARSE_GRID
 %
 %                   --> added function PLOT_MULTIIDX_SET (works for N=2 and N=3 only. For larger dimensions,  the user needs to specify which dimensions should be plotted)
 %
