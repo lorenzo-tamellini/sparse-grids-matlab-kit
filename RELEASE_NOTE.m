@@ -16,7 +16,7 @@
 %
 %                   --> added function PLOT_MULTIIDX_SET (works for N=2 and N=3 only. For larger dimensions,  the user needs to specify which dimensions should be plotted)
 %
-%
+%                   --> PLOT_SPARSE_GRID_INTERPOLANT does not generate a new figure, unless cuts are requested  (N>3)
 %
 %
 % -> 2020, Apr. 1   --> fixed a bug in SMOLYAK_GRID_MULTIIDX_SET, which would otherwise throw an error when called as SMOLYAK_GRID_MULTIIDX_SET(C,KNOTS,LEV2KNOTS,[])

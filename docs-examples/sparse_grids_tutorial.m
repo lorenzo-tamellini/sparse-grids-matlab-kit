@@ -1120,17 +1120,21 @@ Sr = reduce_sparse_grid(S);
 
 values_on_grid=evaluate_on_sparse_grid(f,Sr);
 
-% the plot. The function returns a handle to the graphic => end line with ";" or you'll get output on
-% the command window
+% the plot: several examples of usage 
+figure
 plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid);
 view([200 16])
 
+figure
 plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid,'with_f_values');
 
+figure
 plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid,'nb_plot_pts',10);
 
 % access to plot handles for further editing is available. E.g., this sets dots to black
-h = plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid,'with_f_values','nb_plot_pts',10);
+figure
+plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid,'with_f_values','nb_plot_pts',10);
+h=gcf;
 axes_h = get(h,'Children');
 objs_h = get(axes_h,'Children');
 set(objs_h(1),'MarkerFaceColor','k');
@@ -1163,6 +1167,7 @@ f_values = evaluate_on_sparse_grid(f,Sr);
 figure
 plot_sparse_grid(Sr,[],'o','MarkerSize',20,'LineWidth',4)
 
+figure
 plot_sparse_grids_interpolant(S,Sr,domain,f_values,'with_f_values','nb_plot_pts',40);
 
 
@@ -1191,10 +1196,11 @@ Sr = reduce_sparse_grid(S);
 
 values_on_grid=evaluate_on_sparse_grid(f,Sr);
 
-
+figure
 plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid);
  
-% specify number of contour lines
+% specify PlotSpec
+figure
 plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid,'with_f_values','nb_plot_pts',10,'nb_contourfs',10,'nb_contourf_lines',40);
 
 figure
@@ -1229,10 +1235,13 @@ values_on_grid=evaluate_on_sparse_grid(f,Sr);
 % add f_values. Note that there are possibly several points which share the values of the coordinates in the cuts,
 % therefore there will be points not on the surface. This helps understanding the fluctuations of the function
 % when the coordinates not in the cut are not fixed to their average value. In this specific example, changing the
-% values of the frozen variables from their averages happens to lower the value of the function
+% values of the frozen variables from their averages happens to lower the value of the function. The function generates
+% one new figure per cut
 plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid,'with_f_values');
 
-% specify cuts
+% specify cuts. Again, because we are specifying cuts, a new figure per cut is generated.  The code below generates two figures 
+% (the first one is empty)
+figure
 plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid,'two_dim_cuts',[1 4 2 7]);
 
 
