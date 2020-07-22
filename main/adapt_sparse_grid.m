@@ -167,8 +167,13 @@ function adapted = adapt_sparse_grid(f,N_full,knots,lev2knots,prev_adapt,control
 %                                               This is called \mathcal{O} in Gerstner-Griebel paper. I is sorted
 %                                               lexicographically
 %
+%                           private.G_log   :   same as private.G, but sorted in the order with which indices
+%                                               are added to G insted of lexicographic
+%
 %                           private.I_log   :   same as private.I, but sorted in the order with which indices
 %                                               are added to I insted of lexicographic
+%
+%                           private.coeff_G :   the coefficients of the indices in private.G in the combination technique
 %
 %                           private.N_log   :   for each iteration, the value of N_curr
 %
