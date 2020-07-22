@@ -268,7 +268,7 @@ if isempty(MATLAB_SPARSE_KIT_VERBOSE)
 end
 
 
-if nargin==2,
+if nargin==2
     paral=NaN;
 end
     
