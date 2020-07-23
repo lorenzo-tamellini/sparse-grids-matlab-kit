@@ -30,7 +30,7 @@ function [S,C] = smolyak_grid(N,w,knots,lev2knots,idxset,arg6,weights_coeff)
 %       In both cases, the header of m_function is m=m_function(i)
 %
 %       The sparse grid information is stored as a vector of "tensor grids", 
-%       each "tensor grid" S(j) is a four fields structure:
+%       each "tensor grid" S(j) is a seven fields structure:
 %           S(j).knots: vector containing the tensor grid knots
 %           S(j).weights: vector containing the corresponding weights
 %           S(j).size: size of the tensor grid, S(j).size = prod(m)
