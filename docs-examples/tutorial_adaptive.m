@@ -248,7 +248,7 @@ plot_idx_status(adapt1.private.G(:,3:4),adapt1.private.I(:,3:4),adapt1.private.i
 
 
 
-%% now we verify that using partial exploration we gain in computational work
+%% now we verify that using partial exploration we gain in computational work (in a case in which the buffer is applicable,  see help)
 
 clear
 
@@ -520,3 +520,144 @@ figure
 loglog(sg_pts,sg_err,'-ob','LineWidth',2,'MarkerFaceColor','b','DisplayName','adaptive sg')
 title('interp error')
 grid on
+
+
+%% an example 2D using different knots in different directions
+
+clear
+clc
+
+f=@(x) 1./(x(1)^2+x(2)^2 + 2);
+N=2;
+
+controls.paral=NaN; %no parallel evaluation of f over grids
+controls.max_pts=200;
+controls.prof_toll = 1e-10;
+prev_adapt = [];
+controls.plot=false;
+
+
+% try this setting for non-nested
+%--------------------------------------
+% knots = {@(n) knots_uniform(n,-1,1) @(n) knots_uniform(n,-1,1)}; 
+% lev2knots = @lev2knots_lin;
+% controls.nested=false;
+
+% try this setting for nested
+%--------------------------------------
+knots = {@(n) knots_CC(n,0,1) @(n) knots_CC(n,3,5)};
+lev2knots = @lev2knots_doubling;
+controls.nested=true;
+
+
+adapt = adapt_sparse_grid(f,N,knots,lev2knots,prev_adapt,controls);
+%adapt = legacy_adapt_sparse_grid(f,N,knots,lev2knots,prev_adapt,controls);
+adapt.intf
+
+G = adapt.private.G;
+S = smolyak_grid_multiidx_set(G,knots,lev2knots);
+Sr = reduce_sparse_grid(S);
+Q1 = quadrature_on_sparse_grid(f,Sr)
+
+
+S2 = smolyak_grid_multiidx_set(fast_TD_set(N,8),knots,lev2knots);
+Sr2 = reduce_sparse_grid(S2);
+Q2 = quadrature_on_sparse_grid(f,Sr2)
+
+
+
+
+%% more examples on using the buffer, to check that in some setups it won't work. To do this,  we compare results with and without buffer,  which will be different
+
+
+clear
+clc
+
+global MATLAB_SPARSE_KIT_VERBOSE
+MATLAB_SPARSE_KIT_VERBOSE=0;
+
+for test_case = 1:5
+
+switch test_case
+    case 1 %--> this case works
+        f=@(x) 1./exp(sum(x));
+        knots1 = @(n) knots_CC(n, -0.5, 0.5);
+        knots2 = @(n) knots_CC(n, -0.5, 0.5);
+        knots3 = @(n) knots_CC(n, -0.2, 0.2);
+        knotsf = {knots1 knots2 knots3};
+        lev2knots=@lev2knots_doubling;
+        controls.nested=true;
+        
+        
+    case 2 %--> this case does not work
+        f=@(x) 1./exp(sum(x));
+        knots1 = @(n) knots_CC(n, 0, 1);
+        knots2 = @(n) knots_CC(n, 0, 1);
+        knots3 = @(n) knots_CC(n, 0, 1);
+        knotsf = {knots1 knots2 knots3};
+        lev2knots=@lev2knots_doubling;
+        controls.nested=true;
+
+    case 3 %--> this case does not work
+        f=@(x) prod(x);
+        knots1 = @(n) knots_CC(n, 0, 1);
+        knots2 = @(n) knots_CC(n, 0, 1);
+        knots3 = @(n) knots_CC(n, 0, 1);
+        knotsf = {knots1 knots2 knots3};
+        lev2knots=@lev2knots_doubling;
+        controls.nested=true;
+        
+    case 4 %--> this case does not work
+        f=@(x) sum(cos(x));
+        knots1 = @(n) knots_CC(n, -1, 1);
+        knots2 = @(n) knots_CC(n, -1, 1);
+        knots3 = @(n) knots_CC(n, -1, 1);
+        knotsf = {knots1 knots2 knots3};
+        lev2knots=@lev2knots_doubling;
+        controls.nested=true;
+        
+    case 5 %--> this case works
+        f=@(x) prod(x);
+        knots1 = @(n) knots_CC(n, 0, 2);
+        knots2 = @(n) knots_CC(n, 0, 2);
+        knots3 = @(n) knots_CC(n, 0, 2);
+        knotsf = {knots1 knots2 knots3};
+        lev2knots=@lev2knots_doubling;
+        controls.nested=true;
+end
+
+
+
+
+
+N=3;
+
+
+% setup the adapt function
+controls.paral = NaN; 
+controls.max_pts = 200;
+controls.prof_toll = 1e-10;
+prev_adapt = [];
+controls.plot = false;
+
+% setup buffer and run
+controls.var_buffer_size = 2;
+adapt_buff = adapt_sparse_grid(f,N,knotsf, lev2knots, prev_adapt, controls);
+
+% redo without buffer
+controls.var_buffer_size = N;
+adapt_no_buff = adapt_sparse_grid(f,N,knotsf,lev2knots, prev_adapt, controls);
+
+% also verify with a one-shot construcution
+G = adapt_no_buff.private.G;
+S = smolyak_grid_multiidx_set(G,knotsf,lev2knots);
+Sr = reduce_sparse_grid(S);
+Q = quadrature_on_sparse_grid(f,Sr);
+
+disp('------------')
+disp(['test case:',num2str(test_case)])
+disp(['with buffer:',num2str(adapt_buff.intf)])
+disp(['no buffer:',num2str(adapt_no_buff.intf)])
+disp(['one shot:',num2str(Q)])
+
+end

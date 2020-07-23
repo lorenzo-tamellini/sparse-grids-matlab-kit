@@ -12,9 +12,9 @@
 %
 %                   --> removed QUADRATURE_ON_SPARSE_GRID_LEGACY and EVALUATE_ON_SPARSE_GRIDS_LEGACY
 %
-%                   --> improved the help function of PLOT_SPARSE_GRIDS_INTERPOLANT and COMPUTE_SOBOL_INDICES_FROM_SPARSE_GRID, DERIVE_SPARSE_GRID
+%                   --> improved the help function of PLOT_SPARSE_GRIDS_INTERPOLANT and COMPUTE_SOBOL_INDICES_FROM_SPARSE_GRID, DERIVE_SPARSE_GRID.
 %
-%                   --> added function PLOT_MULTIIDX_SET (works for N=2 and N=3 only. For larger dimensions, the user needs to specify which dimensions should be plotted)
+%                   --> added function PLOT_MULTIIDX_SET. Works for N=2 and N=3 only. For larger dimensions, the user needs to specify which dimensions should be plotted
 %
 %                   --> PLOT_SPARSE_GRID_INTERPOLANT does not generate a new figure, unless cuts are requested  (N>3)
 %
@@ -29,6 +29,13 @@
 %
 %                   --> added HESSIAN_SPARSE_GRID to compute the hessian of a function by taking finite differences of its sparse grids approximation
 %
+%                   --> ADAPT_SPARSE_GRID can now work with different families of knots in different directions. However, there are some restrictions, and
+%                       the user is encouraged to read the help function and take a look at the new version of TUTORIAL_ADAPTIVE.M
+%
+%                   --> clarified that the option "buffer" for ADAPT_SPARSE_GRID can only be used in certain cases.
+%                       The user is encouraged to read the help function and take a look at the new version of TUTORIAL_ADAPTIVE.M 
+%                       The default value of "controls.var_buffer_size" has been changed to min(N_full,5) to N_full.
+% 
 % 
 % -> 2020, Apr. 1   --> fixed a bug in SMOLYAK_GRID_MULTIIDX_SET, which would otherwise throw an error when called as SMOLYAK_GRID_MULTIIDX_SET(C,KNOTS,LEV2KNOTS,[])
 %

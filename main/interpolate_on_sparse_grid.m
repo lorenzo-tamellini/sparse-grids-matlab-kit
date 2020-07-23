@@ -79,11 +79,11 @@ for i=1:nb_grids
         continue
     end
     
-    if MATLAB_SPARSE_KIT_VERBOSE
-        if ~mod(i,floor(nb_grids/20))
-            disp(['interpolate on grid ',num2str(i), '/',num2str(nb_grids)])
-        end
-    end
+    %     if MATLAB_SPARSE_KIT_VERBOSE
+    %         if ~mod(i,floor(nb_grids/20))
+    %             disp(['interpolate on grid ',num2str(i), '/',num2str(nb_grids)])
+    %         end
+    %     end
     
     % this is the set of points where I build the tensor lagrange function
     knots=S(i).knots;

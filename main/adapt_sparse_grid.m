@@ -27,8 +27,28 @@ function adapted = adapt_sparse_grid(f,N_full,knots,lev2knots,prev_adapt,control
 %       Note that this is the full dimension, yet the algorithm might explore a smaller subset of variables to
 %       start with, N_curr, as specified in CONTROLS.var_buffer_size (see below)
 %
-% --> KNOTS, LEV2KNOTS are the quantities defining the knots to be used in each direction (same family of
-%       knots assumed in each direction of the space Gamma)
+% --> KNOTS, LEV2KNOTS are the quantities defining the knots to be used in each direction. 
+%
+%       --> KNOTS can be a function handle or a cell arrays of function handles to differentiate between directions, but they must be 
+%           either all nested or all non-nested formulae (the code cannot work partially with nested and partially with non-nested points)
+%
+%       --> KNOTS cannot be used with the 'nonprob' option if later the "buffer" controls functionality is used, see later
+%
+%       --> LEV2KNOTS must be a single function handle,  i.e., it is not possible to used e.g. lev2knots_2step in one direction and lev2knots_lin in the next one. 
+%       
+%       For instance,  in N=2, the following setups are ok:
+%
+%       knots = {@(n) knots_uniform(n,0,1) @(n) knots_uniform(n,3,5)}, lev2knots = @lev2knots_lin                        (same family on different intervals, same lev2knots) 
+%       knots = {@(n) knots_CC(n,0,1)      @(n) knots_CC(n,3,5)},      lev2knots = @lev2knots_doubling                   (same family on different intervals, same lev2knots)
+%
+%       are ok, while the following ones are not:
+%
+%       knots = {@(n) knots_uniform(n,0,1)      @(n) knots_CC(n,3,5)},           lev2knots = @lev2knots_doubling                   (one nested family,  one non-nested family)   
+%       knots = {@(n) knots_uniform(n,0,1)      @(n) knots_uniform(n,3,5)},      lev2knots = {@lev2knots_lin @lev2knots_doubling}  (different lev2knots in different directions)
+%       knots = {@(n) knots_CC(n,0,1,'nonprob') @(n) knots_CC(n,3,5,'nonprob')}, lev2knots = @lev2knots_doubling                   (nonprob weights, cannot be used together with buffer)
+%
+%       see tutorial_adaptive.m for an example that shows this.
+%
 %
 % --> PREV_ADAPT: by setting PREV_ADAPT as the output ADAPTED of a previous computation, the new computation
 %       will resume from where the previous one left. Set PREV_ADAPT = [] for a fresh start
@@ -124,7 +144,35 @@ function adapted = adapt_sparse_grid(f,N_full,knots,lev2knots,prev_adapt,control
 %       controls.var_buffer_size : the algorithm starts exploring N_curr = <var_buffer_size> dimensions. As soon as
 %                           points are placed in one dimension, a new dimension is added to the set of
 %                           explored variables, i.e., N_curr = N_curr+1. In this way we ensure that there are always <var_buffer_size>
-%                           explored but "non-activated" variables, i.e., along which no point is placed (default min(N_full,5) )                         
+%                           explored but "non-activated" variables, i.e., along which no point is placed (default N_full).
+%
+%                           IMPORTANT NOTE: use this option with care! is evaluating the function at a subset of variables
+%                           equivalent to evaluating the function at the entire set of variables, where the ones outside the buffer are fixed
+%                           at the mid-point of the interval? If this is not the case, the buffer cannot be used. 
+%
+%                           For instance:                        
+%
+%                           --> f1 = 1/exp(y1*c1 + y2*c2 + y3*c3),  with y1,y2 in [-0.5,0.5], y3 in [-0.2,0.2]
+%
+%                               this function is OK because f1 restricted to y1,y2 is y1*c1 + y2*c2 = y1*c1 + y2*c2 +0*c3 = y1*c1 + y2*c2 +y3*c3 with y3 held at midpoint
+%
+%                           --> f2 = 1/exp(y1*c1 + y2*c2 + y3*c3),  with y1,y2,y3 in [0,1] (note the interval not centered in 0)
+%
+%                               this function is NOT OK because f1 restricted to y1,y2 is y1*c1 + y2*c2 \neq y1*c1 + y2*c2 +0.5*c3 = y1*c1 + y2*c2 +y3*c3 with y3 held at midpoint
+%                           
+%                           --> f3 = y1 * y2 * y3,  with y1,y2,y3 in [0,1] 
+%
+%                               is NOT OK because f1 restricted to y1,y2 is y1*y2 \neq y1*y2*0.5 = y1*y2*y3 with y3 held at midpoint 
+%
+%                           --> f4 = cos(y1) + cos(y2) + cos(y3),  with y1,y2,y3 in [-1,1] 
+%                   
+%                               is NOT OK because f1 restricted to y1,y2 is cos(y1) + cos(y2) \neq cos(y1) + cos(y2) + 1 =  cos(y1) + cos(y2) + cos(y3) with y3 held at midpoint 
+%
+%                           --> f5 = y1 * y2 * y3,  with y1,y2,y3 in [0,2] 
+%
+%                               is OK because f1 restricted to y1,y2 is y1*y2 = y1*y2*1 = y1*y2*y3 with y3 held at midpoint 
+%
+%                           see tutorial_adaptive.m for example that shows this.
 %
 %
 %       controls.plot      : plot multiidx set and pause (default false)  
@@ -391,10 +439,16 @@ while nb_pts < controls.max_pts   %while nb_pts_wrong_count < controls.max_pts
                 % f(x)==f([x mp]), otherwise I have to reevaluate everything, which I do not want to do. I'll just raise a 
                 % warning for the time being
                 if MATLAB_SPARSE_KIT_VERBOSE
-                    disp('adding a new variable, hence a new coordinate to points. Does this change f evaluations? If so, the code does not work because it does not recompute function evaluations')                     
+                    disp('adding a new variable, hence a new coordinate to points, held ad midpoint. Does this change f evaluations? If so, the code does not work because it does not recompute function evaluations')                     
                 end
                 
-                mp = knots(1);
+                if isa(knots,'function_handle')
+                    mp = knots(1);
+                elseif iscell(knots)
+                    mp = knots{N}(1);
+                else
+                    error('SparseGKit:WrongInput','knots must be either a function handle or a cell array of function handles')
+                end
                 for j=1:size(S,2)
                     S(j).knots=[S(j).knots;mp*ones(1,S(j).size)];
                     S(j).knots_per_dim{end+1}=mp;
@@ -579,7 +633,7 @@ if strcmp(controls.prof,'weighted Linf/new_points') || strcmp(controls.prof,'wei
     end
 end
 if ~isfield(controls,'var_buffer_size')
-    controls.var_buffer_size = min(N_full,5);
+    controls.var_buffer_size = N_full;
 elseif isfield(controls,'var_buffer_size') && controls.var_buffer_size > N_full
     controls.var_buffer_size = N_full;
     warning('SparseGKit:BuffGTNfull','controls.var_buffer_size cannot be greater than N_full. The code will proceed with controls.var_buffer_size = N_full;') 
