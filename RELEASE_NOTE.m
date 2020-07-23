@@ -36,6 +36,9 @@
 %                       The user is encouraged to read the help function and take a look at the new version of TUTORIAL_ADAPTIVE.M 
 %                       The default value of "controls.var_buffer_size" has been changed to min(N_full,5) to N_full.
 % 
+%                   --> fixed a bug in ADAPT_SPARSE_GRID that would halt with error for certain values of controls.pts_tol    
+%               
+%
 % 
 % -> 2020, Apr. 1   --> fixed a bug in SMOLYAK_GRID_MULTIIDX_SET, which would otherwise throw an error when called as SMOLYAK_GRID_MULTIIDX_SET(C,KNOTS,LEV2KNOTS,[])
 %

@@ -301,7 +301,7 @@ N = controls.var_buffer_size;
 
 
 [N,N_log,var_with_pts,S,Sr,f_on_Sr,I,I_log,idx,maxprof,idx_bin,profits,G,G_log,coeff_G,Hr,f_on_Hr,...
-    nb_pts,nb_pts_log,num_evals,intf] = start_adapt(f,N,knots,lev2knots,prev_adapt); 
+    nb_pts,nb_pts_log,num_evals,intf] = start_adapt(f,N,knots,lev2knots,prev_adapt,controls); 
 
 
 % here's the adapt algo
@@ -351,7 +351,7 @@ while nb_pts < controls.max_pts   %while nb_pts_wrong_count < controls.max_pts
         [T,G,coeff_G] = smolyak_grid_add_multiidx(jj,S,G,coeff_G,knots,lev2knots);
 
         % T = smolyak_grid_multiidx_set(G,knots,lev2knots,S); % recycle tensor grids from previous sparse
-        Tr = reduce_sparse_grid(T);
+        Tr = reduce_sparse_grid(T,controls.pts_tol);
 
         [nb_pts,num_evals,nb_pts_log,Prof_temp(m),f_on_Tr,Hr,f_on_Hr,intnew] = ...
             compute_profit_idx(Ng(m,:),f,S,T,Tr,Sr,Hr,f_on_Sr,f_on_Hr,intf,nb_pts,num_evals,nb_pts_log,knots,lev2knots,controls);
@@ -480,7 +480,7 @@ while nb_pts < controls.max_pts   %while nb_pts_wrong_count < controls.max_pts
 
                 [T,G,coeff_G] = smolyak_grid_add_multiidx(Ng,S,G,coeff_G,knots,lev2knots);
 
-                Tr = reduce_sparse_grid(T);
+                Tr = reduce_sparse_grid(T,controls.pts_tol);
 
                 % [nb_pts,nb_pts_log,nb_pts_wrong_count,Prof_temp,f_on_Tr,Hr,f_on_Hr,intnew] = ...
                 %   compute_profit_idx(Ng,f,S,T,Tr,Sr,Hr,f_on_Sr,f_on_Hr,intf,nb_pts,nb_pts_log,knots,lev2knots,controls);
@@ -540,7 +540,7 @@ end
 if ~controls.nested && strcmp(controls.recycling,'priority_to_evaluation')
     % I need to make Hr look like a sequence of tensor grids. I actually only need to add to it a fake weights field
     Hr.weights = zeros(1,size(Hr.knots,2));
-    Hr= reduce_sparse_grid(Hr);
+    Hr= reduce_sparse_grid(Hr,controls.pts_tol);
     f_on_Hr = f_on_Hr(:,Hr.m); % here I remove duplicates in f_on_Hr too
 end
 
@@ -663,7 +663,7 @@ end
 
 
 function [N,N_log,var_with_pts,S,Sr,f_on_Sr,I,I_log,idx,maxprof,idx_bin,profits,G,G_log,coeff_G,Hr,f_on_Hr,...
-    nb_pts,nb_pts_log,num_evals,intf] = start_adapt(f,N,knots,lev2knots,prev_adapt)
+    nb_pts,nb_pts_log,num_evals,intf] = start_adapt(f,N,knots,lev2knots,prev_adapt,controls)
 
 
 % --> I         : is the set of explored indices (the grid is actually larger, it includes as well their neighbours)   
@@ -715,8 +715,8 @@ if isempty(prev_adapt)
     G_log = G;
     coeff_G = 1;
     S  = smolyak_grid_multiidx_set(G,knots,lev2knots);
-    Sr = reduce_sparse_grid(S);
-    f_on_Sr = evaluate_on_sparse_grid(f,Sr);
+    Sr = reduce_sparse_grid(S,controls.pts_tol);
+    f_on_Sr = evaluate_on_sparse_grid(f,Sr); % here we don't need controls.pts_tol, there is no check on new/old points
 
     Hr = Sr;
     f_on_Hr = f_on_Sr; % it is a matrix of size VxM where M is the number of points and f:R^N->R^V
