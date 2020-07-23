@@ -1,4 +1,4 @@
-function f_values = interpolate_on_sparse_grid(S,Sr,function_on_grid,non_grid_points,~) 
+function f_values = interpolate_on_sparse_grid(S,Sr,function_on_grid,non_grid_points) 
 
 % INTERPOLATE_ON_SPARSE_GRID interpolates a function on a sparse grid, i.e. evaluates the sparse  
 % grid polynomial approximation (surrogate model) on a generic point of the parameters space.
@@ -21,18 +21,13 @@ function f_values = interpolate_on_sparse_grid(S,Sr,function_on_grid,non_grid_po
 % See LICENSE.txt for license
 %----------------------------------------------------
 
-
-if nargin == 5
-    errmsg=['Too many input arguments. Note that starting from release 14.4 '...
-        'interpolate_on_sparse_grid does not accept any longer INTERVAL_MAP as second input argument. '...
-        'The new function call is '...
-        'F_VALUES = INTERPOLATE_ON_SPARSE_GRID(S,SR,FUNCTION_ON_GRID,NON_GRID_POINTS). '...
-        'To fix this, either regenerate your sparse grid using INTERVAL_MAP as input (see help SMOLYAK_GRID) '...
-        'or modify the fields KNOTS of your sparse grid and reduced sparse grid applying INTERVAL_MAP '...
-        '(e.g.  S(i).knots = interval_map(S(i).knots) ) '...
-        'This message will disappear in future releases of SPARSE_GRID_MATLAB_KIT'];
-    error('SparseGKit:WrongInput',errmsg)
+% declare a global variable controlling verbosity
+global MATLAB_SPARSE_KIT_VERBOSE
+if isempty(MATLAB_SPARSE_KIT_VERBOSE)
+    MATLAB_SPARSE_KIT_VERBOSE=1;
 end
+
+
 
 % in previous versions of interpolate_on_sparse_grid we needed
 % function_on_grid to row-oriented, i.e. the evaluation of F on each sparse
@@ -82,6 +77,12 @@ for i=1:nb_grids
     % some of the grids in S structure are empty, so I skip it
     if isempty(S(i).weights)
         continue
+    end
+    
+    if MATLAB_SPARSE_KIT_VERBOSE
+        if ~mod(i,floor(nb_grids/20))
+            disp(['interpolate on grid ',num2str(i), '/',num2str(nb_grids)])
+        end
     end
     
     % this is the set of points where I build the tensor lagrange function

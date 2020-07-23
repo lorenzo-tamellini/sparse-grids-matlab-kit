@@ -36,7 +36,7 @@ JacM=diag(a)+diag(sqrt(b(2:n)),1)+diag(sqrt(b(2:n)),-1);
 [W,X]=eig(JacM); 
 x=diag(X)'; 
 w=W(1,:).^2;
-[x,ind]=sort(x);  %#ok<UDIM>
+[x,ind]=sort(x); %#ok<TRSRT>
 w=w(ind);
 
 % modifies points according to mi, sigma (the weigths are unaffected)

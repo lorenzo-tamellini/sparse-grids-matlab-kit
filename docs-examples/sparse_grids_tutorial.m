@@ -423,12 +423,15 @@ jj=[2 3];
 C=multiidx_box_set([2 3],0);
 D=multiidx_box_set([2 3],1);
 
-figure 
-plot(C(:,1),C(:,2),'xr','MarkerFaceColor','r','LineWidth',2,'MarkerSize',12,'DisplayName','Multiidx box set, min=0')
+% the package comes with a convenience function to plot a multiidx set
+
+figure
+plot_multiidx_set(C,'xr','MarkerFaceColor','r','LineWidth',2,'MarkerSize',12,'DisplayName','Multiidx box set, min=0')
 hold on
-plot(D(:,1),D(:,2),'ok','MarkerFaceColor','k','DisplayName','Multiidx box set, min=1')
+plot_multiidx_set(D,'ok','MarkerFaceColor','k','DisplayName','Multiidx box set, min=1')
 axis([-0.5 4 -0.5 4])
 legend show
+
 
 % b) MULTIIDX_BOX_GEN generates the set of all indices ii such that rule(ii)<=w, where rule is a function that takes as input a row vector
 % (or a matrix where each multiidx is stored as a row) and returns a scalar value (or a column vector with the result of the operation applied
@@ -440,12 +443,23 @@ rule=@(I) sum(I,2);
 E=multiidx_gen(N,rule,w,0);
 F=multiidx_gen(N,rule,w,1);
 
+
 figure 
-plot(E(:,1),E(:,2),'xr','MarkerFaceColor','r','LineWidth',2,'MarkerSize',12,'DisplayName','Multiidx gen, min=0')
+plot_multiidx_set(E,'xr','MarkerFaceColor','r','LineWidth',2,'MarkerSize',12,'DisplayName','Multiidx gen, min=0')
 hold on
-plot(F(:,1),F(:,2),'ok','MarkerFaceColor','k','DisplayName','Multiidx gen, min=1')
+plot_multiidx_set(F,'ok','MarkerFaceColor','k','DisplayName','Multiidx gen, min=1')
 legend show
 axis([-0.5 8 -0.5 8])
+
+% incidentally, PLOT_MULTIIDX_SET works also for N=3. For larger dimensions, one needs to input the subset of dimensions that are to be plotted
+G=multiidx_box_set([2 3 5],1);
+figure
+plot_multiidx_set(G)
+
+
+H=multiidx_box_set([2 3 5 4],1);
+figure
+plot_multiidx_set(G(:,[1 3]))
 
 
 %% when building a large sparse grid, it might be useful to recycle from previous grids to speed-up the computation
@@ -529,31 +543,22 @@ isequal(T,T_rec)
 
 %% PART 1: INTRODUCTION - MODIFY THE DOMAIN OF A SPARSE GRID
 
-% it is easy to modify the domain of a sparse grid from (-1,1)^N to other hyper-rectangles. Two options are available
+% it is easy to modify the domain of a sparse grid from (-1,1)^N to other hyper-rectangles.
 
 clc
 clear
 N=2;
 
-% 1) generate knots on the desired hyper-rectangle (here (0,2)^2 )
+% generate knots on the desired hyper-rectangle (here (0,2)^2 )
 knots=@(n) knots_CC(n,0,2,'nonprob');
 w = 4;
 S = smolyak_grid(N,w,knots,@lev2knots_doubling);
 
 
-% 2) alternatively, use the standard interval and provide a shifting function to smolyak_grid. 
-map=get_interval_map([0 0],[2 2],'uniform');
-knots=@(n) knots_CC(n,-1,1,'nonprob');
-S2 = smolyak_grid(N,w,knots,@lev2knots_doubling,[],map); % uses the default idxset
-
-disp('maximum difference between corresponding points in the two grids')
-max(max(abs([S.knots]-[S2.knots])))
 
 figure
 plot_sparse_grid(S);
-hold on
-plot_sparse_grid(S2,[],'MarkerSize',10,'Marker','o');
-legend('grid S','grid S2')
+legend('grid S')
 set(legend,'Location','NorthEastOutside')
 
 % one can mix different intervals / different knots families on different directions. 
@@ -569,32 +574,6 @@ S = smolyak_grid(N,w,{knots1,knots2},{@lev2knots_doubling,@lev2knots_lin});
 
 figure
 plot_sparse_grid(S);
-
-% in case knots and lev2knots functions in the different directions are the same and the only thing that changes
-% is the definition interval, also using the standard interval and providing a shifting function to
-% smolyak_grid will do
-
-clc
-clear
-N=2;
-
-knots1=@(n) knots_CC(n,0,2,'nonprob');
-knots2=@(n) knots_CC(n,-1,5,'nonprob');
-w = 4;
-S = smolyak_grid(N,w,{knots1,knots2},@lev2knots_doubling);
-
-
-map=get_interval_map([0 -1],[2 5],'uniform');
-knots=@(n) knots_CC(n,-1,1,'nonprob');
-S2 = smolyak_grid(N,w,knots,@lev2knots_doubling,[],map); % uses the default idxset
-
-figure
-plot_sparse_grid(S);
-hold on
-plot_sparse_grid(S2,[],'MarkerSize',10,'Marker','o');
-%max(max(abs([S.knots]-[S2.knots])))
-legend('grid S','grid S2')
-set(legend,'Location','NorthEastOutside')
 
 
 
@@ -845,6 +824,21 @@ disp('----------')
 disp('quad error')
 abs(I-I_ex)
 
+% sometimes, we have access to the evaluations of f from earlier code, then we just need to do the linear combination. The package provides
+% a convenience wrapper to this end,  instead of typing f_vals*Sr.weights'  
+
+disp('----------')
+disp('convenience wrapper')
+
+f_vals = f([Sr.knots],b);
+I3 = quadrature_on_sparse_grid(f_vals,Sr);
+
+I2-I3
+
+% the convenience wrapper can also handle the case of computing quadrature for multiple functions at the same time. The values of each function
+% must be stored as rows of a matrix
+many_f = [f_vals; f_vals; f_vals; f_vals; f_vals];
+quadrature_on_sparse_grid(many_f,Sr)
 
 
 %% PART 3: INTEGRATION - USE OTHER QUADRATURE KNOTS
@@ -897,31 +891,6 @@ Sr= reduce_sparse_grid(S);
 I=quadrature_on_sparse_grid(@(x)f(x,b) , Sr);
 
 
-% alternatively, use points on (-1,1) and provide a map to smolyak_grid. VERY IMPORTANT: note that since we
-% are using 'nonprob' quadrature weights, we need to modify the quadrature weights as well. More precisely, 
-% since the original interval is -1,1 and the final interval is -1,3, weights in each direction should be 
-% multiplied by 2, which means that the weights of the sparse grid should be multiplied by 2^N. Pass this
-% value as input to smolyak_grid. However, we discourage this procedure and we suggest to initialize the 
-% sparse grid with knots already in their final interval. Modification of weights is not needed when using 
-% 'probability' weights which must sum to 1 regardless of the integration interval.
-
-
-knots=@(n) knots_CC(n,-1,1,'nonprob');
-map=get_interval_map([-1 -1 -1 -1],[3 3 3 3],'uniform');
-
-
-S2 = smolyak_grid(N,w,knots,@lev2knots_doubling,[],map,2^N);
-S2r = reduce_sparse_grid(S2);
-
-
-I2=quadrature_on_sparse_grid(@(x)f(x,b) , S2r);
-
-disp('----------')
-disp('difference between the two sparse grids')
-
-I-I2  %#ok<MNEFF,NOPTS>
-
-
 % compare with exact value
 disp('----------')
 disp('quad error')
@@ -948,34 +917,6 @@ w = 6;
 S = smolyak_grid(N,w,{knots1,knots2},@lev2knots_doubling);
 Sr = reduce_sparse_grid(S);
 I=quadrature_on_sparse_grid(@(x)f(x,b) , Sr);
-
-
-% as an alternative, generate probabilitstic weights on -1,1 and provide a map to smolyak_grid. Note that
-% probabilistic weights always sum to 1, so there is no need to rescale weights
-knots=@(n) knots_CC(n,-1,1);
-map = get_interval_map([-2 0.5],[1 6],'uniform');
-w = 7;
-T = smolyak_grid(N,w,knots,@lev2knots_doubling,[],map);
-Tr = reduce_sparse_grid(T);
-I2=quadrature_on_sparse_grid(@(x)f(x,b) , Tr);
-
-
-% clearly, you may as well generate non-probabilitstic weights on -1,1 and provide both a map and a weight_fact to smolyak_grid. 
-knots=@(n) knots_CC(n,-1,1,'nonprob');
-map = get_interval_map([-2 0.5],[1 6],'uniform');
-w = 7;
-R = smolyak_grid(N,w,knots,@lev2knots_doubling,[],map,1/2^2);
-Rr = reduce_sparse_grid(R);
-I3=quadrature_on_sparse_grid(@(x)f(x,b) ,Rr);
-
-
-
-disp('----------')
-disp('compare the values')
-
-[I;
-I2;
-I3]  %#ok<NOPTS>
 
 
 % compare with exact value
@@ -1194,17 +1135,21 @@ Sr = reduce_sparse_grid(S);
 
 values_on_grid=evaluate_on_sparse_grid(f,Sr);
 
-% the plot. The function returns a handle to the graphic => end line with ";" or you'll get output on
-% the command window
+% the plot: several examples of usage 
+figure
 plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid);
 view([200 16])
 
+figure
 plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid,'with_f_values');
 
+figure
 plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid,'nb_plot_pts',10);
 
 % access to plot handles for further editing is available. E.g., this sets dots to black
-h = plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid,'with_f_values','nb_plot_pts',10);
+figure
+plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid,'with_f_values','nb_plot_pts',10);
+h=gcf;
 axes_h = get(h,'Children');
 objs_h = get(axes_h,'Children');
 set(objs_h(1),'MarkerFaceColor','k');
@@ -1237,6 +1182,7 @@ f_values = evaluate_on_sparse_grid(f,Sr);
 figure
 plot_sparse_grid(Sr,[],'o','MarkerSize',20,'LineWidth',4)
 
+figure
 plot_sparse_grids_interpolant(S,Sr,domain,f_values,'with_f_values','nb_plot_pts',40);
 
 
@@ -1265,10 +1211,11 @@ Sr = reduce_sparse_grid(S);
 
 values_on_grid=evaluate_on_sparse_grid(f,Sr);
 
-
+figure
 plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid);
  
-% specify number of contour lines
+% specify PlotSpec
+figure
 plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid,'with_f_values','nb_plot_pts',10,'nb_contourfs',10,'nb_contourf_lines',40);
 
 figure
@@ -1303,10 +1250,13 @@ values_on_grid=evaluate_on_sparse_grid(f,Sr);
 % add f_values. Note that there are possibly several points which share the values of the coordinates in the cuts,
 % therefore there will be points not on the surface. This helps understanding the fluctuations of the function
 % when the coordinates not in the cut are not fixed to their average value. In this specific example, changing the
-% values of the frozen variables from their averages happens to lower the value of the function
+% values of the frozen variables from their averages happens to lower the value of the function. The function generates
+% one new figure per cut
 plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid,'with_f_values');
 
-% specify cuts
+% specify cuts. Again, because we are specifying cuts, a new figure per cut is generated.  The code below generates two figures 
+% (the first one is empty)
+figure
 plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid,'two_dim_cuts',[1 4 2 7]);
 
 
@@ -1395,7 +1345,8 @@ Sr = reduce_sparse_grid(S);
 
 values_on_grid=evaluate_on_sparse_grid(f,Sr);
 
-% compute Sobol indices. The function uses internally the function CONVERT_TO_MODAL and it uses the same inputs
+% compute Sobol indices. The function uses internally the function CONVERT_TO_MODAL and it uses the same inputs. It works for scalar-values functions only, 
+% so we need to run it 4 times
 [Sob_i1,Tot_Sob_i1,Mean1,Var1] = compute_sobol_indices_from_sparse_grid(S,Sr,values_on_grid(1,:),domain,'legendre');
 [Sob_i2,Tot_Sob_i2,Mean2,Var2] = compute_sobol_indices_from_sparse_grid(S,Sr,values_on_grid(2,:),domain,'legendre');
 [Sob_i3,Tot_Sob_i3,Mean3,Var3] = compute_sobol_indices_from_sparse_grid(S,Sr,values_on_grid(3,:),domain,'legendre');

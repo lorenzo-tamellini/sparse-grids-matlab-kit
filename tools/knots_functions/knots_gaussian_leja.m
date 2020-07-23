@@ -11,7 +11,7 @@ function [x,w,floc]=knots_gaussian_leja(n)
 % i.e. the density of a gaussian random variable 
 % with mean 0 and standard deviation 1.
 %
-% Knots and weights have been precomputed (up to 50) following the work
+% Knots and weights have been precomputed (up to 150) following the work
 % 
 % A. Narayan, J. Jakeman, "Adaptive Leja sparse grid constructions for stochastic collocation and high-dimensional approximation"
 % SIAM Journal on Scientific Computing,  Vol. 36, No. 6, pp. A2952–A2983, 2014

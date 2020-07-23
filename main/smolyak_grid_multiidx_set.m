@@ -1,25 +1,20 @@
-function [S,C] = smolyak_grid_multiidx_set(C,knots,lev2knots,arg4,arg5)
+function S = smolyak_grid_multiidx_set(C,knots,lev2knots,S2)
 
 % SMOLYAK_GRID_MULTIIDX_SET produces a sparse grid starting from a multiindex-set rather than
 % from a rule IDXSET(I) <= W.
 %
-% [S,C] = SMOLYAK_GRID_MULTIIIDX_SET(C,KNOTS,LEV2KNOTS) uses the multiindex set C. C must be
+% S = SMOLYAK_GRID_MULTIIIDX_SET(C,KNOTS,LEV2KNOTS) uses the multiindex set C. C must be
 %       in lexicographic order and admissible. 
 %
 %
-% [S,C] = SMOLYAK_GRID_MULTIIDX_SET(C,KNOTS,LEV2KNOTS,S2), where S2 is another Smolyak grid, 
+% S = SMOLYAK_GRID_MULTIIDX_SET(C,KNOTS,LEV2KNOTS,S2), where S2 is another Smolyak grid, 
 %       tries to recycle tensor grids from S2 to build those of S instead of recomputing them.
 %       This can be helpful whenever sequences of Smolyak grid are generates. Note that *NO* check
 %       will performed whether S2 was generated with the same lev2knots as the one given as input.
 %       S2 can also be empty, S2=[]
 %
-%
-% [S,C] = SMOLYAK_GRID_MULTIIDX_SET(C,KNOTS,LEV2KNOTS,MAP,WEIGHTS_COEFF) can be used as an alternative
-%       to generate a sparse grid on a hyper-rectangle.
-%
-%
 % See also CHECK_SET_ADMISSIBILITY for admissibility check, and SMOLYAK_GRID for further information on
-% KNOTS, LEV2KNOTS, MAP, WEIGHTS_COEFF and on the sparse grid data structure S
+% KNOTS, LEV2KNOTS, and on the sparse grid data structure S
 
 
 %----------------------------------------------------
@@ -37,36 +32,13 @@ if isempty(MATLAB_SPARSE_KIT_VERBOSE)
 end
 
 
-% handle inputs, to distinguish between 
-%
-% [S,C] = SMOLYAK_GRID_MULTIIDX_SET(C,KNOTS,LEV2KNOTS,MAP,WEIGHTS_COEFF) 
-%
-% and
-%
-% [S,C] = SMOLYAK_GRID_MULTIIDX_SET(C,KNOTS,LEV2KNOTS,S2)
-
-if exist('arg4','var') 
-    if isa(arg4,'function_handle')
-        map = arg4;
-    elseif issmolyak(arg4) || isempty(arg4)
-        S2 = arg4;
-    else
-        error('SparseGKit:WrongInput','unknown type for 4th input')
-    end
-    clear arg4
-end
-if exist('arg5','var')
-    weights_coeff = arg5;
-    clear arg5
-end
-
 
 % first a check on C being sorted. Observe that the function sortrows used is very efficient
 % so the cost of this preliminary analysis is negligible (e.g. it takes 0.02 sec to verify
 % that a TD set with w=5 and N=30, i.e. ~340600 indices is sorted,  and only 0.00027 sec that
 % the matrix A=randi(20,300000,30) is unsorted.
 
-if ~issorted(C,'rows'),
+if ~issorted(C,'rows')
     error('SparseGKit:SetNotSorted','the multiindex set C is not sorted')
 end
 
@@ -213,19 +185,6 @@ else
     end
 end
 
-% finally, shift the points according to map if needed
-if exist('map','var') && ~isempty(map)
-    for ss=1:nb_grids
-        S(ss).knots = map(S(ss).knots);
-    end
-end
-
-% and possibly fix weights
-if exist('weights_coeff','var') && ~isempty(weights_coeff)
-    for ss=1:nb_grids
-        S(ss).weights = S(ss).weights*weights_coeff;
-    end
-end
 
 % now store the coeff value. It has to be stored after the first loop, becuase tensor_grid returns a grid
 % WITHOUT coeff field, and Matlab would throw an error (Subscripted assignment between dissimilar structures)

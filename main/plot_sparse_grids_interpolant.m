@@ -1,4 +1,4 @@
-function h = plot_sparse_grids_interpolant(S,Sr,domain,f_values,varargin) %with_f_values,nb_plot_pts,couples)
+function plot_sparse_grids_interpolant(S,Sr,domain,f_values,varargin) %with_f_values,nb_plot_pts,couples)
 
 % PLOTS_SPARSE_GRIDS_INTERPOLANT plots the sparse grid interpolant of a function. Different plots
 % are produces depending on the number of dimensions of the sparse grid:
@@ -13,7 +13,13 @@ function h = plot_sparse_grids_interpolant(S,Sr,domain,f_values,varargin) %with_
 %       two-dimensional plot will be produced
 %
 %
-% PLOTS_SPARSE_GRIDS_INTERPOLANT(S,SR,DOMAIN,F_VALUES) produces the plots discussed above
+% PLOTS_SPARSE_GRIDS_INTERPOLANT(S,SR,DOMAIN,F_VALUES) produces the plots discussed above,  where
+% 
+%       S is a sparse grid
+%       Sr is its reduced version
+%       DOMAIN is a matrix 2 x N, describing the domain where the sparse grids shuold be plotted. 
+%       The first row contains the lower bounds, the second row the upper bounds, so e.g. 
+%       to plot over the hypercube [0,1]^N, DOMAIN = [0 0 0 0 .....; 1 1 1 1  ....]
 %
 % Additional inputs can be passed to control the behavior of the plots. Any combination of these optional
 % inputs is allowed
@@ -118,9 +124,8 @@ switch N
         
         % reshape to use surf
         FIP = reshape(f_interp_eval,size(XP));
-        
-        h=figure;
-        surf(XP,YP,FIP)
+                
+        surf(XP,YP,FIP);
         xlabel('y_1')
         ylabel('y_2')
 
@@ -146,7 +151,7 @@ switch N
         nb_pts = size(PTS_XY,2);
         
         
-        h=figure;
+        % h=figure;
         
         for z_lev = 1:length(zp)
             
@@ -161,7 +166,8 @@ switch N
             
             hold on
         end
-                
+        %h=o2;
+        
         view([-30 20])
         xlabel('y_1')
         ylabel('y_2')
@@ -180,7 +186,7 @@ switch N
         
         CUTS = floor(length(couples)/2);
         
-        h = zeros(1,CUTS);
+        %h = zeros(1,CUTS);
         
         for ii = 1:CUTS
             
@@ -215,11 +221,12 @@ switch N
             % reshape to use surf
             FIP = reshape(f_interp_eval,size(XP));
             
-            h(ii)=figure;
+            %h(ii)=figure;
+            figure
             surf(XP,YP,FIP);
             if with_f_values
                 hold on
-                plot3(Sr.knots(v1,:),Sr.knots(v2,:),f_values,'ok','MarkerSize',16,'MarkerFaceColor','r')
+                plot3(Sr.knots(v1,:),Sr.knots(v2,:),f_values,'ok','MarkerSize',16,'MarkerFaceColor','r');
             end
             title(['cut ',num2str(ii),' of ',num2str(CUTS),' over directions ',num2str(v1),' and ',num2str(v2)])
             xlabel(['y_',num2str(v1)])
