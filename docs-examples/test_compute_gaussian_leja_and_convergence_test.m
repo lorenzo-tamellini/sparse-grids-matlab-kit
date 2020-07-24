@@ -277,7 +277,7 @@ end
 
 
 % repeat for GK 
-knots_GK = @(n) knots_GK(n);   
+%knots_GK = @(n) knots_GK(n);   
 
 w_max_GK=4;
 
@@ -293,7 +293,7 @@ for w=1:w_max_GK
     
     disp(w);
     disp('GK knots');
-    S_GK = smolyak_grid(N,w,knots_GK,@lev2knots_GK, @(i) sum(i-1), S_GK_old);
+    S_GK = smolyak_grid(N,w,@knots_GK,@lev2knots_GK, @(i) sum(i-1), S_GK_old);
     Sr_GK = reduce_sparse_grid(S_GK);
     [res, evals] = quadrature_on_sparse_grid(f,S_GK,Sr_GK,evals_GK_old,S_GK_old,Sr_GK_old);
     quad_GK(w) = res;
@@ -480,7 +480,7 @@ end
 
 % repeat for GK knots
 
-knots_GK = @(n) knots_GK(n);   
+%knots_GK = @(n) knots_GK(n);   
 
 w_max_GK=4;
 
@@ -497,7 +497,7 @@ for w=1:w_max_GK
     
     disp(w);
     disp('GK knots');
-    S_GK = smolyak_grid(N,w,knots_GK,@lev2knots_GK, @(i) sum(i-1), S_GK_old);
+    S_GK = smolyak_grid(N,w,@knots_GK,@lev2knots_GK, @(i) sum(i-1), S_GK_old);
     Sr_GK = reduce_sparse_grid(S_GK);
     evals_GK = evaluate_on_sparse_grid(f, S_GK, Sr_GK, evals_GK_old, S_GK_old, Sr_GK_old);
     err_GK(w) = max(abs(f_sampled - interpolate_on_sparse_grid(S_GK,Sr_GK,evals_GK,sampleset)));   

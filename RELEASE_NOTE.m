@@ -36,7 +36,13 @@
 %                       The user is encouraged to read the help function and take a look at the new version of TUTORIAL_ADAPTIVE.M 
 %                       The default value of "controls.var_buffer_size" has been changed to min(N_full,5) to N_full.
 % 
-%                   --> fixed a bug in ADAPT_SPARSE_GRID that would halt with error for certain values of controls.pts_tol    
+%                   --> fixed a bug in ADAPT_SPARSE_GRID that would halt with error for certain values of controls.pts_tol   
+%
+%                   --> for consistency with the literature,  the knots KPN (Kronrod Patterson Normal, nested knots for gaussian rand var) have been renamed
+%                       as Genz--Keister. In particular: 
+%                       -- KNOTS_KPN is now KNOTS_GK; 
+%                       -- LEV2KNOTS_KPN is now LEV2KNOTS_GK; 
+%                       -- KPN_LEV_TABLE is now GK_LEV_TABLE
 %               
 %
 % 
