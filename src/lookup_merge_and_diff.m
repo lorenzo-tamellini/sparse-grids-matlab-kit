@@ -41,7 +41,7 @@ Merged = [pts_list_old; pts_list];
 
 
 % and a safety check: are we using a sufficiently fine tol when detecting identical points?
-detect_unsufficient_tolerance(Merged,Tol);
+detect_insufficient_tolerance(Merged,Tol);
 
 
 % next, let's order the rows of Merged in lexicographic order, obtaining Sorted. If I use mysortrows then two rows like

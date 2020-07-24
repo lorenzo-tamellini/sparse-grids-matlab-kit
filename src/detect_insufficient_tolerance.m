@@ -1,6 +1,6 @@
-function is_unsuf = detect_unsufficient_tolerance(pts,tol)
+function is_unsuf = detect_insufficient_tolerance(pts,tol)
 
-% is_unsuf = detect_unsufficient_tolerance(pts,tol)
+% is_unsuf = detect_insufficient_tolerance(pts,tol)
 %
 % for a matrix of points (one per row, as in mysortrows or lookup_merge_and_diff), 
 % computes an approximation of the support of the set of point in each direction 
