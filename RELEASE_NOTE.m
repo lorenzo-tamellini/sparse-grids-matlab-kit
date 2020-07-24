@@ -44,7 +44,8 @@
 %                       -- LEV2KNOTS_KPN is now LEV2KNOTS_GK; 
 %                       -- KPN_LEV_TABLE is now GK_LEV_TABLE
 %               
-%
+%                   --> renamed DETECT_UNSUFFICIENT_TOLERANCE to DETECT_INSUFFICIENT_TOLERANCE
+%                       
 % 
 % -> 2020, Apr. 1   --> fixed a bug in SMOLYAK_GRID_MULTIIDX_SET, which would otherwise throw an error when called as SMOLYAK_GRID_MULTIIDX_SET(C,KNOTS,LEV2KNOTS,[])
 %
