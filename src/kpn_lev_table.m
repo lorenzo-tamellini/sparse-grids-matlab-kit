@@ -1,8 +1,8 @@
-function A = kpn_lev_table(rows,cols)
+function A = GK_lev_table(rows,cols)
 
-% A = kpn_lev_table(rows,cols)
+% A = GK_lev_table(rows,cols)
 %
-% In the tabulated kpn knots, many levels have the same knots (with weights identical 
+% In the tabulated GK knots, many levels have the same knots (with weights identical 
 % up to 10th-11th digit. For each group of levels with same number of knots we
 % select 1 representative, and define a map as follows:
 % 

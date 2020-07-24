@@ -81,8 +81,8 @@ clear
 f=@(x) 1./(2+exp(x(1)) + exp(x(2))); 
 N=2;
 
-knots=@(n) knots_kpn(n);
-lev2knots=@lev2knots_kpn;
+knots=@(n) knots_GK(n);
+lev2knots=@lev2knots_GK;
 controls.paral=NaN;
 controls.max_pts=150;
 controls.prof_toll = 1e-10;
@@ -124,7 +124,7 @@ adapt3 = adapt_sparse_grid(f,N,knots,lev2knots,prev_adapt,controls);
 % this will be false, because num_evals and nb_pts_visited are now identical
 isequal(adapt2,adapt3)
 
-%% observe that there's a maximum number of tabulated points with KPN that one will hit sooner or later, so asking too many points
+%% observe that there's a maximum number of tabulated points with GK that one will hit sooner or later, so asking too many points
 % will result in an error
 
 
@@ -132,8 +132,8 @@ clear
 
 f=@(x) 1./(2+exp(x(1)) + exp(x(2))) 
 N=2;
-knots=@(n) knots_kpn(n);
-lev2knots=@lev2knots_kpn;
+knots=@(n) knots_GK(n);
+lev2knots=@lev2knots_GK;
 
 controls.paral=NaN; 
 controls.max_pts=1500;
@@ -159,8 +159,8 @@ clear
 
 f=@(x) 1./(2+exp(x(1)) + exp(x(2))) 
 N=2;
-knots=@(n) knots_kpn(n);
-lev2knots=@lev2knots_kpn;
+knots=@(n) knots_GK(n);
+lev2knots=@lev2knots_GK;
 
 controls.paral=NaN;
 controls.max_pts=1500;

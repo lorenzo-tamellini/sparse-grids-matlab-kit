@@ -175,18 +175,18 @@ for i=1:imax
     quad_GH(i) = dot(f(x_GH),w_GH);
 end
 
-% repeat for KPN knots, that have a different limit of precomputation
-quad_KPN=zeros(1,5);
-nb_pts_KPN =zeros(1,5);
+% repeat for GK knots, that have a different limit of precomputation
+quad_GK=zeros(1,5);
+nb_pts_GK =zeros(1,5);
 
 for i=1:5
     
-    n = lev2knots_kpn(i);
-    nb_pts_KPN(i) = n;
+    n = lev2knots_GK(i);
+    nb_pts_GK(i) = n;
 
-    [x_KPN,w_KPN] = knots_kpn(n);
+    [x_GK,w_GK] = knots_GK(n);
     
-    quad_KPN(i) = dot(f(x_KPN),w_KPN);
+    quad_GK(i) = dot(f(x_GK),w_GK);
     
 end
 
@@ -195,7 +195,7 @@ end
 exact = dot(f(x_GH),w_GH);
 err_Lj=abs(quad_Lj - exact);
 err_GH=abs(quad_GH - exact);
-err_KPN=abs(quad_KPN - exact);
+err_GK=abs(quad_GK - exact);
 
 
 % Plotting errors
@@ -204,7 +204,7 @@ semilogy(nb_pts, err_Lj,'-xr','LineWidth',2,'DisplayName','Normal Leja pts')
 grid on
 hold on
 semilogy(nb_pts, err_GH,'-ob','LineWidth',2,'DisplayName','Gauss Hermite pts')
-semilogy(nb_pts_KPN, err_KPN,'-^k','LineWidth',2,'DisplayName','KPN pts')
+semilogy(nb_pts_GK, err_GK,'-^k','LineWidth',2,'DisplayName','GK pts')
 
 
 legend show
@@ -214,7 +214,7 @@ set(legend,'Location','SouthWest')
 ylim([1e-16 10])
 
 
-%% because in 1D Weighted Leja suffer against KPN and GH, it is interesting to check 
+%% because in 1D Weighted Leja suffer against GK and GH, it is interesting to check 
 % the effect in the multi-variate case. Here the "granularity" of Leja should pay off.
 % However, the fact that Leja are not designed for quadrature still shows up
 
@@ -276,31 +276,31 @@ for w=1:w_max
 end
 
 
-% repeat for KPN 
-knots_KPN = @(n) knots_kpn(n);   
+% repeat for GK 
+knots_GK = @(n) knots_GK(n);   
 
-w_max_KPN=4;
+w_max_GK=4;
 
-quad_KPN=zeros(1,w_max_KPN);
-nb_pts_KPN =zeros(1,w_max_KPN);
+quad_GK=zeros(1,w_max_GK);
+nb_pts_GK =zeros(1,w_max_GK);
 
-S_KPN_old=[];
-Sr_KPN_old=[];
-evals_KPN_old=[];
+S_GK_old=[];
+Sr_GK_old=[];
+evals_GK_old=[];
 
 
-for w=1:w_max_KPN       
+for w=1:w_max_GK       
     
     disp(w);
-    disp('KPN knots');
-    S_KPN = smolyak_grid(N,w,knots_KPN,@lev2knots_kpn, @(i) sum(i-1), S_KPN_old);
-    Sr_KPN = reduce_sparse_grid(S_KPN);
-    [res, evals] = quadrature_on_sparse_grid(f,S_KPN,Sr_KPN,evals_KPN_old,S_KPN_old,Sr_KPN_old);
-    quad_KPN(w) = res;
-    evals_KPN_old = evals;
-    S_KPN_old = S_KPN;
-    Sr_KPN_old = Sr_KPN;    
-    nb_pts_KPN(w) = Sr_KPN.size;
+    disp('GK knots');
+    S_GK = smolyak_grid(N,w,knots_GK,@lev2knots_GK, @(i) sum(i-1), S_GK_old);
+    Sr_GK = reduce_sparse_grid(S_GK);
+    [res, evals] = quadrature_on_sparse_grid(f,S_GK,Sr_GK,evals_GK_old,S_GK_old,Sr_GK_old);
+    quad_GK(w) = res;
+    evals_GK_old = evals;
+    S_GK_old = S_GK;
+    Sr_GK_old = Sr_GK;    
+    nb_pts_GK(w) = Sr_GK.size;
 end
 
 
@@ -313,7 +313,7 @@ exact = quadrature_on_sparse_grid(f,S_GH,Sr_GH,evals_GH_old,S_GH_old,Sr_GH_old);
 % errors
 err_Lj=abs(quad_Lj - exact);%./abs(quad_GH(end));
 err_GH=abs(quad_GH - exact);%./abs(quad_GH(end));
-err_KPN=abs(quad_KPN - exact);%./abs(quad_GH(end));
+err_GK=abs(quad_GK - exact);%./abs(quad_GH(end));
 
 
 figure
@@ -321,7 +321,7 @@ loglog(nb_pts_Lj, err_Lj,'-xr','LineWidth',2,'DisplayName','Normal Leja pts')
 grid on
 hold on
 loglog(nb_pts_GH, err_GH,'-ob','LineWidth',2,'DisplayName','Gauss Hermite pts')
-loglog(nb_pts_KPN, err_KPN,'-^k','LineWidth',2,'DisplayName','KPN pts')
+loglog(nb_pts_GK, err_GK,'-^k','LineWidth',2,'DisplayName','GK pts')
 
 
 legend show
@@ -378,23 +378,23 @@ for i=1:imax
 
 end
 
-% repeat for KPN
-imax_KPN=5;
-err_KPN=zeros(1,imax_KPN);
-nb_pts_KPN =zeros(1,imax_KPN);
+% repeat for GK
+imax_GK=5;
+err_GK=zeros(1,imax_GK);
+nb_pts_GK =zeros(1,imax_GK);
 
-for i=1:imax_KPN
+for i=1:imax_GK
     
-    n = lev2knots_kpn(i);
-    nb_pts_KPN(i) = n;
+    n = lev2knots_GK(i);
+    nb_pts_GK(i) = n;
     nnn = 1:n;
     
-    [x_KPN,w_KPN]=knots_kpn(n);       
-    interp_KPN = zeros(1,samplesize);
+    [x_GK,w_GK]=knots_GK(n);       
+    interp_GK = zeros(1,samplesize);
     for k=nnn
-        interp_KPN =  interp_KPN + f(x_KPN(k))*lagr_eval(x_KPN(k), x_KPN(nnn~=k),sampleset);
+        interp_GK =  interp_GK + f(x_GK(k))*lagr_eval(x_GK(k), x_GK(nnn~=k),sampleset);
     end    
-    err_KPN(i) = max(abs(F_samples - interp_KPN)); 
+    err_GK(i) = max(abs(F_samples - interp_GK)); 
 
 end
 
@@ -405,7 +405,7 @@ figure
 semilogy(nb_pts, err_Lj,'-xr','LineWidth',2,'DisplayName','Normal Leja pts')
 hold on
 semilogy(nb_pts, err_GH,'-ob','LineWidth',2,'DisplayName','Gauss Hermite pts')
-semilogy(nb_pts_KPN, err_KPN,'-^k','LineWidth',2,'DisplayName','KPN pts')
+semilogy(nb_pts_GK, err_GK,'-^k','LineWidth',2,'DisplayName','GK pts')
 grid on
 
 legend show
@@ -478,34 +478,34 @@ for w=1:w_max
 end
 
 
-% repeat for KPN knots
+% repeat for GK knots
 
-knots_KPN = @(n) knots_kpn(n);   
+knots_GK = @(n) knots_GK(n);   
 
-w_max_KPN=4;
+w_max_GK=4;
 
-err_KPN=zeros(1,w_max_KPN);
-nb_pts_KPN =zeros(1,w_max_KPN);
+err_GK=zeros(1,w_max_GK);
+nb_pts_GK =zeros(1,w_max_GK);
 
-S_KPN_old=[];
-Sr_KPN_old=[];
-evals_KPN_old=[];
+S_GK_old=[];
+Sr_GK_old=[];
+evals_GK_old=[];
 
 
 
-for w=1:w_max_KPN       
+for w=1:w_max_GK       
     
     disp(w);
-    disp('KPN knots');
-    S_KPN = smolyak_grid(N,w,knots_KPN,@lev2knots_kpn, @(i) sum(i-1), S_KPN_old);
-    Sr_KPN = reduce_sparse_grid(S_KPN);
-    evals_KPN = evaluate_on_sparse_grid(f, S_KPN, Sr_KPN, evals_KPN_old, S_KPN_old, Sr_KPN_old);
-    err_KPN(w) = max(abs(f_sampled - interpolate_on_sparse_grid(S_KPN,Sr_KPN,evals_KPN,sampleset)));   
-    evals_KPN_old = evals_KPN;
-    S_KPN_old = S_KPN;
-    Sr_KPN_old = Sr_KPN;
+    disp('GK knots');
+    S_GK = smolyak_grid(N,w,knots_GK,@lev2knots_GK, @(i) sum(i-1), S_GK_old);
+    Sr_GK = reduce_sparse_grid(S_GK);
+    evals_GK = evaluate_on_sparse_grid(f, S_GK, Sr_GK, evals_GK_old, S_GK_old, Sr_GK_old);
+    err_GK(w) = max(abs(f_sampled - interpolate_on_sparse_grid(S_GK,Sr_GK,evals_GK,sampleset)));   
+    evals_GK_old = evals_GK;
+    S_GK_old = S_GK;
+    Sr_GK_old = Sr_GK;
     
-    nb_pts_KPN(w) = Sr_KPN.size;
+    nb_pts_GK(w) = Sr_GK.size;
 end
 
 % convergence plots
@@ -515,6 +515,6 @@ loglog(nb_pts_Lj, err_Lj,'-xr','LineWidth',2,'DisplayName','Normal Leja pts')
 grid on
 hold on
 semilogy(nb_pts_GH, err_GH,'-ob','LineWidth',2,'DisplayName','Gauss Hermite pts')
-semilogy(nb_pts_KPN, err_KPN,'-^k','LineWidth',2,'DisplayName','KPN pts')
+semilogy(nb_pts_GK, err_GK,'-^k','LineWidth',2,'DisplayName','GK pts')
 
 legend show

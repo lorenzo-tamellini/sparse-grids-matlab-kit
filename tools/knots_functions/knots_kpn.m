@@ -1,9 +1,9 @@
-function [x,w] = knots_kpn(n)
+function [x,w] = knots_GK(n)
 
-% [x,w] = knots_kpn(n)
+% [x,w] = knots_GK(n)
 %
 % returns the collocation points (x) and the weights (w) 
-% of the KPN quadrature formula (Kronrod-Patterson-Normal)
+% of the Genz-Keister quadrature formula (also known as Kronrod-Patterson-Normal)
 % for approximation of integrals w.r.t to the weight function 
 %
 % rho(x)=1/sqrt(2*pi)*exp(-x^2/2) 
@@ -37,14 +37,14 @@ function [x,w] = knots_kpn(n)
 
 
 % first recover the i-level
-i=knots2lev_kpn(n);
+i=knots2lev_GK(n);
 
 
 if isnan(i)
    error('SparseGKit:OutOfTable',strcat('this number of points is not available:',num2str(n)))
 else
     % now access the knots and weights table using the i2l map
-    [x_t,w_t]=kpn_tabulated(kpn_lev2l_map(i));
+    [x_t,w_t]=GK_tabulated(GK_lev2l_map(i));
     x = redistribute_knots(x_t);
     w = redistribute_weights(w_t);
 end
@@ -61,26 +61,26 @@ end
 
 
 %----------------------------------------------------------------
-function i = knots2lev_kpn(nb_knots)
+function i = knots2lev_GK(nb_knots)
 
-% i = knots2lev_kpn(nb_knots)
+% i = knots2lev_GK(nb_knots)
 %
 % given the number of points needed, returns the corresponding condensed level i,
-% according to kpn_lev_table.
+% according to GK_lev_table.
 
 switch nb_knots
     case 0
-        i=kpn_lev_table(1,1);
+        i=GK_lev_table(1,1);
     case 1
-        i=kpn_lev_table(2,1);
+        i=GK_lev_table(2,1);
     case 3
-        i=kpn_lev_table(3,1);
+        i=GK_lev_table(3,1);
     case 9
-        i=kpn_lev_table(4,1);
+        i=GK_lev_table(4,1);
     case 19
-        i=kpn_lev_table(5,1);
+        i=GK_lev_table(5,1);
     case 35
-        i=kpn_lev_table(6,1);
+        i=GK_lev_table(6,1);
     otherwise
         i=NaN;
 end
@@ -90,18 +90,18 @@ end
 
 
 %----------------------------------------------------------------
-function l = kpn_lev2l_map(i)
+function l = GK_lev2l_map(i)
 
-% l = kpn_lev2l_map(i)
+% l = GK_lev2l_map(i)
 %
 % returns the l-level (``true level'') corresponding to the level i (``condensed level''),
-% as from table in kpn_lev_table
+% as from table in GK_lev_table
 
 if i>5
     error('SparseGKit:OutOfTable','this level is not tabulated')
 else
     % i to l map
-    l=kpn_lev_table(i+1,2);
+    l=GK_lev_table(i+1,2);
     return 
 end
 end
@@ -147,19 +147,19 @@ end
 
 
 %----------------------------------------------------------------
-function [ n, w ] = kpn_tabulated ( l )
+function [ n, w ] = GK_tabulated ( l )
 
-% [n,w] = kpn_tabulated ( l )
+% [n,w] = GK_tabulated ( l )
 %
-% returns knots and weights kpn at level l from tabulated values.
+% returns knots and weights GK at level l from tabulated values.
 % l has to be in the interval 1 <= l <= 25
 % 
 %
-% type edit kpn_tabulated for credits and references
+% type edit GK_tabulated for credits and references
 
 
 
-% KPN provides data for Kronrod-Patterson quadrature with a normal weight.
+% GK provides data for Genz-Keister / Kronrod-Patterson quadrature with a normal weight.
 %
 %  Discussion:
 %

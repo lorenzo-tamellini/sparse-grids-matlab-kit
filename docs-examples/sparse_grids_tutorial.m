@@ -256,16 +256,16 @@ figure
 plot(x,0*x,'ok','MarkerFaceColor','k','DisplayName','9 GH points')
 grid on
 
-% Kronrod - Patterson Nodes : nested quadrature points to approximate integrals as the previous
+% Genz-Keister / Kronrod - Patterson Nodes : nested quadrature points to approximate integrals as the previous
 
 hold on
 n=3; 
-x=knots_kpn(n);
-plot(x,1 + 0*x,'or','MarkerFaceColor','r','DisplayName','3 KPN points')
+x=knots_GK(n);
+plot(x,1 + 0*x,'or','MarkerFaceColor','r','DisplayName','3 GK points')
 
 n=9; 
-x=knots_kpn(n);
-plot(x, 2 + 0*x,'ob','MarkerFaceColor','b','DisplayName','9 KPN points')
+x=knots_GK(n);
+plot(x, 2 + 0*x,'ob','MarkerFaceColor','b','DisplayName','9 GK points')
 
 
 % Gaussian-Leja : nested quadrature points to approximate integrals as the previous
@@ -313,12 +313,12 @@ lev2knots_2step([1 2 3 4 5])
 lev2knots_doubling([1 2 3 4 5])
 
 
-% -> lev2knots_kpn
+% -> lev2knots_GK
 %
-% needed when using kpn knots which are tabulated. consecutive rules have 1,3,9,19,35 points. The latter
+% needed when using GK knots which are tabulated. consecutive rules have 1,3,9,19,35 points. The latter
 % is the finest resolution possible
 
-lev2knots_kpn([1 2 3 4 5])
+lev2knots_GK([1 2 3 4 5])
 
 
 
