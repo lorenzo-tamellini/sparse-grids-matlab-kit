@@ -5,7 +5,7 @@ function [x,w]=knots_gaussian(n,mi,sigma)
 % calculates the collocation points (x) 
 % and the weights (w) for the gaussian integration 
 % w.r.t to the weight function 
-% rho(x)=1/sqrt(2*pi*sigma) *exp( -(x-mi)^2 / (2*sigma^2) ) 
+% rho(x)=1/sqrt(2*pi*sigma^2) *exp( -(x-mi)^2 / (2*sigma^2) ) 
 % i.e. the density of a gaussian random variable 
 % with mean mi and standard deviation sigma
 

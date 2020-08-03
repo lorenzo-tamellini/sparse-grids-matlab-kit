@@ -3,7 +3,7 @@ function [x,w]=knots_trap(n,x_a,x_b,whichrho)
 
 % [x,w]=KNOTS_TRAP(n,x_a,x_b) 
 %
-% implements the univariate n-points trapezoidal quadrature rule with weight function rho(x) = rho(x)=1/(x_b-x_a), 
+% implements the univariate n-points trapezoidal quadrature rule with weight function rho(x) = 1/(x_b-x_a), 
 % i.e., x = linspace(x_a,x_b,n) and w = 1/(x_b - x_a) * [h/2 h h ... h h/2], with h = (x_b - x_a)/(n-1) 
 %
 % [x,w]=KNOTS_TRAP(n,x_a,x_b,'prob') 

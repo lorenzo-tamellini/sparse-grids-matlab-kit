@@ -5,7 +5,7 @@ function [x,w]=knots_midpoint(n,x_a,x_b,whichrho)
 %
 % implements the univariate n-points midpoint quadrature rule, i.e.,
 % divides [x_a,x_b] in n subintervals of length h = (x_b - x_a)/n and returns as x the vector of midpoints
-% The weights are all equal to  1/n, i.e., weight function rho(x) = rho(x)=1/(x_b-x_a)
+% The weights are all equal to  1/n, i.e., weight function rho(x) = 1/(x_b-x_a)
 %
 % [x,w]=KNOTS_MIDPOINT(n,x_a,x_b,'prob') 
 %
