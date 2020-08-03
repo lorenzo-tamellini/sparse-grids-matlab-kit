@@ -128,7 +128,7 @@ end
 % several knots families. These functions also return the quadrature weights associated to the knots
 % (more on this later)
 
-% Gauss-Legendre points: quadrature points to approximate integrals like \int_a^b f(x) dx with n points
+% Gauss-Legendre points: quadrature points to approximate integrals like \int_a^b f(x) 1/(b-a) dx with n points
 n=5; a=1; b=4;
 x=knots_uniform(n,a,b);
 
@@ -136,7 +136,7 @@ figure
 plot(x,0*x,'ok','MarkerFaceColor','k','DisplayName','5 GL points')
 grid on
 
-% Clenshaw-Curtis points: nested quadrature points to approximate integrals like \int_a^b f(x) dx with n
+% Clenshaw-Curtis points: nested quadrature points to approximate integrals like \int_a^b f(x) 1/(b-a) dx with n
 % points. If one "doubles" the number of points, the new points will include the old ones
 
 hold on
@@ -160,7 +160,7 @@ legend show
 
 
 
-% Leja points: nested quadrature points to approximate integrals like \int_a^b f(x) dx with n
+% Leja points: nested quadrature points to approximate integrals like \int_a^b f(x) 1/(b-a) dx with n
 % points. Three different kind of Leja points are available: Line Leja, sym-Line Leja, p-disk Leja (see
 % leja_points.m for more details). All Leja points are nested by construction
 
@@ -246,7 +246,7 @@ legend show
 
 %% Gauss-Hermite points: quadrature points to approximate integrals like 
 %
-% 1/sqrt(2 sig pi) \int_R f(x) e^{ -(x-mi)^2 / (2 sig^2) } dx 
+% 1/sqrt(2 sig^2 pi) \int_R f(x) e^{ -(x-mi)^2 / (2 sig^2) } dx 
 %
 % with n points
 n=9; mu=0; sig=1;
@@ -282,6 +282,19 @@ plot(x, 4 + 0*x,'xb','LineWidth',2,'MarkerFaceColor','b','MarkerSize',8,'Display
 ylim([-1.5 7])
 legend show
 
+
+%% Gauss-Laguerre points: quadrature points to approximate integrals like 
+%
+%  \int_R f(x) lambda e^{ -lambda*x } dx 
+%
+% with n points
+n=12; lambda = 1; 
+x=knots_exponential(n,lambda);
+
+figure
+plot(x,0*x,'ok','MarkerFaceColor','k','DisplayName','12 Gauss-Laguerre points')
+grid on
+legend show
 
 
 %% PART 1: INTRODUCTION - INGREDIENTS OF A SPARSE GRID. LEV2KNOTS FUNCTION.
