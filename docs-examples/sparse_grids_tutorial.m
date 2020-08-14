@@ -285,7 +285,7 @@ legend show
 
 %% Gauss-Laguerre points: quadrature points to approximate integrals like 
 %
-%  \int_R f(x) lambda e^{ -lambda*x } dx 
+%  \int_[0,+inf] f(x) lambda e^{ -lambda*x } dx 
 %
 % with n points
 n=12; lambda = 1; 

@@ -5,6 +5,9 @@
 %----------------------------------------------------------------------------------
 %
 %
+%
+% -> 2020, Aug. 3   --> added function for Gauss-Laguerre quadrature
+%
 % -> 2020, Jul. 21  --> for robustness, SMOLYAK_GRID, SMOLYAK_GRID_MULTIIDX_SET no longer accepts MAP and COEFF_WEIGHTS as inputs. The knots and weights
 %                       need to be already properly rescaled beforehand, by using the optional arguments to defind correctly the 1D families of points to be used, 
 %                       and then invoking e.g.
