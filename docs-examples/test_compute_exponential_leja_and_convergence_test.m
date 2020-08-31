@@ -134,7 +134,7 @@ for n=1:50
     
 end
 
-%% 1d convergence test: increase number of points in the quadrature rule
+%% 1d quadrature - convergence test: increase number of points in the quadrature rule
 
 clear
 
@@ -191,7 +191,7 @@ set(legend,'Location','SouthWest')
 ylim([1e-16 10])
 
 
-%% 2d convergence test
+%% 2d quadrature - convergence test
 
 clear
 
@@ -267,5 +267,4 @@ loglog(nb_pts_GLagu, err_GLagu,'-ob','LineWidth',2,'DisplayName','Gauss Laguerre
 
 legend show
 set(legend,'Location','SouthWest')
-
 
