@@ -1,6 +1,6 @@
-function [x,w]=knots_jacobi(n,alpha,beta,whichrho)
+function [x,w]=knots_beta(n,alpha,beta,whichrho)
 
-% [x,w]=KNOTS_JACOBI(n,alpha,beta) 
+% [x,w]=KNOTS_BETA(n,alpha,beta) 
 % 
 % calculates the collocation points (x) 
 % and the weights (w) for the gaussian integration 
@@ -9,12 +9,12 @@ function [x,w]=knots_jacobi(n,alpha,beta,whichrho)
 % i.e. the density of a Beta random variable with range [0,1], alpha,beta>-1.
 %
 %
-% [x,w]=KNOTS_JACOBI(n,alpha,beta,'prob')  
+% [x,w]=KNOTS_BETA(n,alpha,beta,'prob')  
 % 
-% is the same as [x,w]=KNOTS_JACOBI(n,alpha,beta) above
+% is the same as [x,w]=KNOTS_BETA(n,alpha,beta) above
 % 
 %
-% [x,w]=KNOTS_JACOBI(n,alpha,beta,'nonprob') 
+% [x,w]=KNOTS_BETA(n,alpha,beta,'nonprob') 
 %
 % calculates the collocation points (x) 
 % and the weights (w) for the gaussian integration 
