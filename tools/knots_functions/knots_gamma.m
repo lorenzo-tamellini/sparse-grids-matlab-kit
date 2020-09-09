@@ -7,7 +7,7 @@ function [x,w]=knots_gamma(n,alpha,beta)
 % w.r.t to the weight function 
 % rho(x)= beta^(alpha+1)*x^alpha*exp(-beta*x)/Gamma(alpha+1)
 % i.e. the density of a Gamma random variable 
-% with range [0,inf), alpha,beta>-1
+% with range [0,inf), alpha>-1, beta>0
 
 
 %----------------------------------------------------

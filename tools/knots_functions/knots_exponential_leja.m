@@ -1,6 +1,6 @@
 function [x,w,floc]=knots_exponential_leja(n)
 
-% [x,w] = knots_gaussian_leja(n)
+% [x,w] = knots_exponential_leja(n)
 %
 % returns the collocation points (x) and the weights (w) 
 % for the weighted Leja sequence for integration 

@@ -1,107 +1,28 @@
-
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
 % Copyright (c) 2009-2018 L. Tamellini, F. Nobile, B. Sprungk
 % See LICENSE.txt for license
 %----------------------------------------------------
 
-clc
-clear all
 
-%% Computation of Exponential Leja Nodes
+%% Some tests for Gamma-Leja Nodes
+% Standard Gamma distribution (beta=1): rho(x)=x^alpha*exp(-x) 
+
+clear
+close all
+
+%% Testing each Gamma-Leja quadrature on computation of moments of a Gamma random variable
 
 clear
 
-tic;
-% Tolerance for node computation
-tol = 1e-16;
-% Initial and refinement step size
-h0 = 1e-2;
-% Initial or coarse search grid
-x = 0:h0:300;
-% Corresponding weight function values
-w = exp(-0.5 * abs(x));
-% Initializing node vector
-X = 0;
+alpha = 5; 
 
-% number of points to be computed
-NMAX = 50; 
-disp = 0:5:NMAX; % indicating if nodes function and attained minimum is plotted
-
-% Loop over length of node vector
-for n = 2:NMAX
-    % Update weighted node function to be maximized
-    x_k = X(n-1);
-    w = abs(x-x_k) .* w; 
-    
-    % Search for maximum on coarse level
-    [~,ind] = max(w);
-
-    % Adaptively refine search grid around maximum on current grid
-    h = h0;
-    x_fine = x;
-    counter = 0; 
-    while(h > tol)
-        counter = counter+1;
-        h = h0*h; % refine step size
-        x_fine = x_fine(ind-1):h:x_fine(ind+1); % refine grid around maximum
-        w_fine = exp(-0.5 * abs(x_fine)); % compute weights on finer grid
-        % compute node function values on finer grid
-        w_fine = abs(prod(repmat(x_fine,n-1,1)-repmat(X',1,length(x_fine)),1)) .* w_fine;
-        % Search for maximum on finer grid
-        [~,ind] = max(w_fine);
-    end
-    % Update node vector 
-    X(n) = x_fine(ind);
-  
-%     % uncomment this for plots of function to be minimized    
-%     if (islogical(disp) && disp) || (isnumeric(disp) && ~isempty(find(disp==n)))
-%        figure()
-%        plot(x,w,'-',X(n),w_fine(ind),'o','LineWidth',2)
-%        grid on;
-%        title(sprintf('Node function and its maximum for n = %i',n))
-%     end
-end
-toc;
-
-%-------------------------------------------------------
-% Computation of corresponding weights
-
-tic;
-W = zeros(NMAX); % we store quadrature weights for rule with P points as P-th column
-
-
-for n = 1:NMAX
-    nodes = X(1:n);
-    [x_quad,w_quad] = knots_exponential(ceil(n/2),1);
-    nnn = 1:n;
-    for k=nnn
-        W(k,n) = dot(lagr_eval(nodes(k), nodes(nnn~=k),x_quad), w_quad);
-    end
-end
-toc;
-
-% plot(X) when X is matrix plots the columns of X, therefore
-
-figure
-semilogy(abs(W),'-') % plots weights of each quadrature rule
-
-figure
-plot(W','-') % plots trend of weights of each quadrature rule
-
-% save('exponential_leja.txt','X','W','-ascii','-double')
-
-
-%% Testing each exponential-Leja quadrature on computation of moments of an exponential random variable
-
-clear
-
-% Moments of a exponential distribution: 
-% n!/lambda^n (lambda: rate factor, here lambda=1) 
+% Moments of a Gamma distribution rho(x)=x^alpha*exp(-x): 
+% Gamma(alpha1+n)/(Gamma(alpha+1)*beta^n), here beta=1
 p_max = 50;
 mom = zeros(1,1+p_max);
 for p = 0:1:p_max
-    mom(p+1) = prod(1:p);
+    mom(p+1) = gamma(alpha+1+p)/gamma(alpha+1);
 end
 
 % Quadrature error for polynomials
@@ -112,10 +33,10 @@ errGLagu = zeros(1+p_max,imax);
 % for each formula, we test its approximation of increasing moments
 for n=1:50
     % Exponential-Leja quadrature rule using n nodes
-    [x_Lj,w_Lj]=knots_exponential_leja(n);
+    [x_Lj,w_Lj]=knots_gamma_leja(n,alpha);
         
     % Gauss-Laguerre quadrature of same accuracy
-    [x_GLagu,w_GLagu] = knots_exponential(ceil(n/2),1); % lambda = 1
+    [x_GLagu,w_GLagu] = knots_gamma(ceil(n/2),alpha,1); % beta = 1
     
     for p=0:p_max
         if p<n+5 % if the degree is "not too much" compute error
@@ -132,7 +53,7 @@ for n=1:50
     semilogy(0:p_max, err(:,n),'o',0:p_max, errGLagu(:,n),'+','LineWidth',2)
     grid on
     set(gca,'FontSize',14)
-    legend(sprintf('Exponential-Leja (n=%i)',n),sprintf('Gauss-Laguerre (n=%i)',ceil(n/2)))
+    legend(sprintf('Gamma-Leja (n=%i)',n),sprintf('Gauss-Laguerre (n=%i)',ceil(n/2)))
     set(legend,'Location','NorthWest')
     xlabel('Polynomial degree p')
     ylabel('Absolute quadrature error')
@@ -145,12 +66,14 @@ end
 
 clear
 
+alpha = 2; 
+
 imax=50;
 
 % function to be integrated
 
 % the function resembles a discontinuous (step function) the higher the factor in the argument of the exp is
-% f = @(x) 1./(1+exp(0.5*x)); 
+f = @(x) 1./(1+exp(0.5*x)); 
 
 % oscillatory function: change the period to see different speed of convergence 
 % the higher the factor the more oscillatory the function 
@@ -158,7 +81,7 @@ imax=50;
 
 % peak function: the factor in front of the norm acts on the steepness of the peak 
 % the higher the number the steeper the peak
-f = @(x) 1./(1+0.1*x.^2); 
+% f = @(x) 1./(1+0.1*x.^2); 
 
 quad_Lj = zeros(1,imax);
 quad_GLagu = zeros(1,imax);
@@ -170,15 +93,15 @@ for i=1:imax
     n = lev2knots_lin(i);
     nb_pts(i) = n;
 
-    [x_Lj,w_Lj] = knots_exponential_leja(n);   
-    [x_GLagu,w_GLagu] = knots_exponential(n,1);
+    [x_Lj,w_Lj] = knots_gamma_leja(n,alpha);   
+    [x_GLagu,w_GLagu] = knots_gamma(n,alpha,1);
     
     quad_Lj(i) = dot(f(x_Lj),w_Lj);
     quad_GLagu(i) = dot(f(x_GLagu),w_GLagu);
 end
 
 % exact integral
-[x_GLagu,w_GLagu] = knots_exponential(100,1);
+[x_GLagu,w_GLagu] = knots_gamma(100,alpha,1);
 exact = dot(f(x_GLagu),w_GLagu);
 err_Lj = abs(quad_Lj - exact);
 err_GLagu = abs(quad_GLagu - exact);
@@ -202,6 +125,8 @@ ylim([1e-16 10])
 
 clear
 
+alpha = 3; 
+
 % dimension of space
 N=2;
 
@@ -209,12 +134,12 @@ N=2;
 w_max=15;
 
 % function to be integrated
-% f = @(x) 1/(1+exp(0.1*sum(x))); 
+f = @(x) 1/(1+exp(0.1*sum(x))); 
 % f = @(x) cos(0.2*sum(x)); 
-f = @(x) 1/(1+0.1*norm(x)^2); 
+% f = @(x) 1/(1+0.1*norm(x)^2); 
 
-knots_Lj = @(n) knots_exponential_leja(n);   
-knots_GLagu = @(n) knots_exponential(n,1);
+knots_Lj = @(n) knots_gamma_leja(n,alpha);   
+knots_GLagu = @(n) knots_gamma(n,alpha,1);
 
 quad_Lj=zeros(1,w_max);
 quad_GLagu=zeros(1,w_max);
@@ -234,7 +159,7 @@ evals_GLagu_old=[];
 % the convergence loop for Leja and Gauss Laguerre
 for w=1:w_max       
     
-    disp('Exponential-Leja');
+    disp('Gamma-Leja');
     S_Lj = smolyak_grid(N,w,knots_Lj,@lev2knots_2step, @(i) sum(i-1), S_Lj_old); % using 2step rule to ramp faster to rules with high number of points
     Sr_Lj = reduce_sparse_grid(S_Lj);
     [res,evals]= quadrature_on_sparse_grid(f, S_Lj, Sr_Lj, evals_Lj_old, S_Lj_old, Sr_Lj_old);
@@ -267,11 +192,12 @@ err_Lj=abs(quad_Lj - exact);
 err_GLagu=abs(quad_GLagu - exact);
 
 figure
-loglog(nb_pts_Lj, err_Lj,'-xr','LineWidth',2,'DisplayName','Exponential Leja pts')
+loglog(nb_pts_Lj, err_Lj,'-xr','LineWidth',2,'DisplayName','Gamma-Leja pts')
 grid on
 hold on
 loglog(nb_pts_GLagu, err_GLagu,'-ob','LineWidth',2,'DisplayName','Gauss Laguerre pts')
 
 legend show
 set(legend,'Location','SouthWest')
+
 
