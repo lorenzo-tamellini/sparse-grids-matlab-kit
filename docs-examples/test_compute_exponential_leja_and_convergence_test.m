@@ -54,13 +54,13 @@ for n = 2:NMAX
     % Update node vector 
     X(n) = x_fine(ind);
   
-%     % uncomment this for plots of function to be minimized    
-%     if (islogical(disp) && disp) || (isnumeric(disp) && ~isempty(find(disp==n)))
-%        figure()
-%        plot(x,w,'-',X(n),w_fine(ind),'o','LineWidth',2)
-%        grid on;
-%        title(sprintf('Node function and its maximum for n = %i',n))
-%     end
+    % uncomment this for plots of function to be minimized    
+    if (islogical(disp) && disp) || (isnumeric(disp) && ~isempty(find(disp==n)))
+       figure()
+       plot(x,w,'-',X(n),w_fine(ind),'o','LineWidth',2)
+       grid on;
+       title(sprintf('Node function and its maximum for n = %i',n))
+    end
 end
 toc;
 
@@ -275,3 +275,78 @@ loglog(nb_pts_GLagu, err_GLagu,'-ob','LineWidth',2,'DisplayName','Gauss Laguerre
 legend show
 set(legend,'Location','SouthWest')
 
+%% interpolation error in 1D
+
+clear
+
+% function to be interpoled
+f1 = @(x) 1./(1+0.1*x.^2); 
+f2 = @(x) 1./(2+exp(x)); 
+f3 = @(x) cos(3*x+1); 
+
+ff = {f1;f2;f3}; 
+
+figure('units','normalized','outerposition',[0.05 0.05 0.9 0.9])
+
+for j=1:3
+    
+    f = ff{j}; 
+
+    % sample the function 
+    samplesize = 50;
+    sampleset = (linspace(0,2,samplesize)); 
+    F_samples = f(sampleset);
+
+    % the convergence analysis
+    imax=50;
+
+    err_Lj=zeros(1,imax);
+    err_GH=zeros(1,imax);
+
+    nb_pts =zeros(1,imax);
+
+    for i=1:imax
+
+        n = lev2knots_lin(i);
+        nb_pts(i) = n;
+        nnn = 1:n;
+
+        % here we build the lagrange interpolant for Leja and evaluate the error
+        [x_Lj,w_Lj]=knots_exponential_leja(n);       
+        interp_Lj = zeros(1,samplesize);
+        for k=nnn
+            interp_Lj =  interp_Lj + f(x_Lj(k))*lagr_eval(x_Lj(k), x_Lj(nnn~=k),sampleset);
+        end    
+        err_Lj(i) = max(abs(F_samples - interp_Lj)); 
+
+
+        % repeat for Gauss Hermite
+        [x_GLagu,w_GLagu]=knots_exponential(n,1);
+        interp_GLagu = zeros(1,samplesize);
+        for k=nnn
+            interp_GLagu =  interp_GLagu + f(x_GLagu(k))*lagr_eval(x_GLagu(k), x_GLagu(nnn~=k),sampleset);
+        end    
+        err_GLagu(i) = max(abs(F_samples - interp_GLagu)); 
+
+
+    end
+    
+    subplot(2,3,j)
+    plot(sampleset, F_samples,'-k','LineWidth',1.5,'DisplayName','f')
+    hold on 
+    plot(sampleset, interp_Lj,'*r','DisplayName','interp - Leja pts ')
+    plot(sampleset, interp_GLagu,'+b','DisplayName','interp - Gauss pts ')
+    legend show
+    set(legend,'Location','SouthWest')
+    title(strrep(char(ff{j}),'@(x)','f='))
+
+    % Plotting errors
+    subplot(2,3,3+j)
+    semilogy(nb_pts, err_Lj,'-xr','LineWidth',1.5,'DisplayName','Exp-Leja pts')
+    hold on
+    semilogy(nb_pts, err_GLagu,'-ob','LineWidth',1.5,'DisplayName','Gauss-Laguerre pts')
+    grid on
+    legend show
+    set(legend,'Location','SouthWest')
+
+end
