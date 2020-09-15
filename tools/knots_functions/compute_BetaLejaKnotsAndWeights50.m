@@ -35,7 +35,7 @@ function [X,W] = compute_BetaLejaKnotsAndWeights50(alpha,beta,whichrho)
 % See LICENSE.txt for license
 %----------------------------------------------------
 
-if nargin==3
+if nargin==2
     whichrho='prob';
 end
 
@@ -65,13 +65,20 @@ for n = 2:NMAX
 
     % Search for maximum on coarse level
     [~,ind] = max(w);
-
+    
     % Adaptively refine search grid around maximum on current grid
     h = h0;
     x_fine = x; 
-    while(h > tol) && (length(x_fine)>1)
+    while(h > tol) % && (length(x_fine)>1)
+        
         h = h0*h; % refine step size
-        x_fine = x_fine(ind-1):h:x_fine(ind+1); % refine grid around maximum
+        if ind==1 
+            x_fine = x_fine(ind):h:x_fine(ind+1); % refine grid around maximum
+        elseif ind == length(x_fine)
+            x_fine = x_fine(ind-1):h:x_fine(ind); % refine grid around maximum
+        else
+             x_fine = x_fine(ind-1):h:x_fine(ind+1); % refine grid around maximum
+        end
         w_fine = (1-x_fine).^(0.5*alpha) .* (1+x_fine).^(0.5*beta); % compute weights on finer grid
         % compute node function values on finer grid
         w_fine = abs(prod(repmat(x_fine,n-1,1)-repmat(X',1,length(x_fine)),1)) .* w_fine;
@@ -82,13 +89,13 @@ for n = 2:NMAX
     % Update node vector 
     X(n) = x_fine(ind);
 
-    % uncomment this for plots of function to be minimized    
-    if (islogical(disp) && disp) || (isnumeric(disp) && ~isempty(find(disp==n)))
-       figure()
-       plot(x,w,'-',X(n),w_fine(ind),'o','LineWidth',2)
-       grid on;
-       title(sprintf('Node function and its maximum for n = %i',n))
-    end
+%     % uncomment this for plots of function to be minimized    
+%     if (islogical(disp) && disp) || (isnumeric(disp) && ~isempty(find(disp==n)))
+%        figure()
+%        plot(x,w,'-',X(n),w_fine(ind),'o','LineWidth',2)
+%        grid on;
+%        title(sprintf('Node function and its maximum for n = %i',n))
+%     end
 
 end
 
