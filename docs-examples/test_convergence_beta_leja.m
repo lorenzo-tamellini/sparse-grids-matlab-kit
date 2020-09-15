@@ -4,18 +4,19 @@
 % See LICENSE.txt for license
 %----------------------------------------------------
 
-
-%% Some tests for Gamma-Leja Nodes
-% Standard Gamma distribution (beta=1): rho(x)=x^alpha*exp(-x) 
+%% Some tests for Beta-Leja Nodes
+% Beta distribution (beta=1): rho(x)=x^alpha*(1-x)^beta 
 
 clear
 close all
 
-%% Plot the weights of each Gamma-Leja quadrature rule 
+%% Plot the weights of each Beta-Leja quadrature rule 
+clear
 
-alpha = -0.3; 
- 
-[X,W]=compute_GammaLejaKnotsAndWeights50(alpha);
+alpha = 0.3; 
+beta = -0.2; 
+
+[X,W]=compute_BetaLejaKnotsAndWeights50(alpha,beta);
 
 % plot(X) when X is matrix plots the columns of X, therefore
 
@@ -26,54 +27,56 @@ figure
 plot(W','-') % plots trend of weights of each quadrature rule
 
 
-%% Testing each Gamma-Leja quadrature on computation of moments of a Gamma random variable
+%% Testing each Beta-Leja quadrature on computation of moments of a Beta random variable
 
 clear
 
-alpha = -0.3; 
+alpha = 5; 
+beta = -0.5;
 
-% Moments of a Gamma distribution rho(x)=x^alpha*exp(-x): 
-% Gamma(alpha1+n)/(Gamma(alpha+1)*beta^n), here beta=1
+% Moments of a Beta distribution rho(x)=x^alpha*(1-x)^beta: 
+% gamma(alpha+1+p)*gamma(alpha+beta+2)/(gamma(alpha+1)*gamma(alpha+beta+p+2))
 p_max = 50;
 mom = zeros(1,1+p_max);
 for p = 0:1:p_max
-    mom(p+1) = gamma(alpha+1+p)/gamma(alpha+1);
+    mom(p+1) = gamma(alpha+1+p)*gamma(alpha+beta+2)/(gamma(alpha+1)*gamma(alpha+beta+p+2));
 end
 
 % Quadrature error for polynomials
 imax = 50;
 err = zeros(1+p_max,imax);
-errGLagu = zeros(1+p_max,imax);
+errGJac = zeros(1+p_max,imax);
 
-% Leja knots 
-[X,W]=compute_GammaLejaKnotsAndWeights50(alpha);
+% Beta-Leja knots and weights
+[X,W] = compute_BetaLejaKnotsAndWeights50(alpha,beta); 
+
 
 % for each formula, we test its approximation of increasing moments
 for n=1:50
-    % Gamma-Leja quadrature rule using n nodes
-    % select the first n knots and the corresponding weights from X,W compute above
-    
-    [x_Lj,w_Lj]=select_weighted_leja(n,X,W); 
+    % Beta-Leja quadrature rule using n nodes
+    % select the first n knots and the corresponding weights from X,W
+    % compute above
+    [x_Lj,w_Lj]=select_weighted_leja(n,X,W);
         
     % Gauss-Laguerre quadrature of same accuracy
-    [x_GLagu,w_GLagu] = knots_gamma(ceil(n/2),alpha,1); % beta = 1
+    [x_GJac,w_GJac] = knots_beta(ceil(n/2),alpha,beta); 
     
     for p=0:p_max
         if p<n+5 % if the degree is "not too much" compute error
             err(1+p,n) = abs(mom(1+p) - dot(x_Lj.^p,w_Lj) );
-            errGLagu(1+p,n) = abs(mom(1+p) - dot(x_GLagu.^p,w_GLagu) );
+            errGJac(1+p,n) = abs(mom(1+p) - dot(x_GJac.^p,w_GJac) );
         else % otherwise,  error is just too much,  we  set it to NaN
             err(1+p,n) = NaN;
-            errGLagu(1+p,n) = NaN;    
+            errGJac(1+p,n) = NaN;    
         end
     end
     
     % Plotting errors
     figure
-    semilogy(0:p_max, err(:,n),'o',0:p_max, errGLagu(:,n),'+','LineWidth',2)
+    semilogy(0:p_max, err(:,n),'o',0:p_max, errGJac(:,n),'+','LineWidth',2)
     grid on
     set(gca,'FontSize',14)
-    legend(sprintf('Gamma-Leja (n=%i)',n),sprintf('Gauss-Laguerre (n=%i)',ceil(n/2)))
+    legend(sprintf('Beta-Leja (n=%i)',n),sprintf('Gauss-Jacobi (n=%i)',ceil(n/2)))
     set(legend,'Location','NorthWest')
     xlabel('Polynomial degree p')
     ylabel('Absolute quadrature error')
@@ -87,6 +90,7 @@ end
 clear
 
 alpha = 1; 
+beta = 3; 
 
 imax=50;
 
@@ -104,11 +108,11 @@ f = @(x) 1./(1+exp(0.5*x));
 % f = @(x) 1./(1+0.1*x.^2); 
 
 quad_Lj = zeros(1,imax);
-quad_GLagu = zeros(1,imax);
+quad_GJac = zeros(1,imax);
 nb_pts =zeros(1,imax);
 
 % Leja knots 
-[X,W]=compute_GammaLejaKnotsAndWeights50(alpha);
+[X,W]=compute_BetaLejaKnotsAndWeights50(alpha,beta);
 
 % refining quad rule
 for i=1:imax
@@ -117,17 +121,17 @@ for i=1:imax
     nb_pts(i) = n;
 
     [x_Lj,w_Lj] = select_weighted_leja(n,X,W);   
-    [x_GLagu,w_GLagu] = knots_gamma(n,alpha,1);
+    [x_GJac,w_GJac] = knots_beta(n,alpha,beta);
     
     quad_Lj(i) = dot(f(x_Lj),w_Lj);
-    quad_GLagu(i) = dot(f(x_GLagu),w_GLagu);
+    quad_GJac(i) = dot(f(x_GJac),w_GJac);
 end
 
 % exact integral
-[x_GLagu,w_GLagu] = knots_gamma(100,alpha,1);
-exact = dot(f(x_GLagu),w_GLagu);
+[x_GJac,w_GJac] = knots_beta(100,alpha,beta);
+exact = dot(f(x_GJac),w_GJac);
 err_Lj = abs(quad_Lj - exact);
-err_GLagu = abs(quad_GLagu - exact);
+err_GJac = abs(quad_GJac - exact);
 
 
 % Plotting errors
@@ -135,7 +139,7 @@ figure
 semilogy(nb_pts, err_Lj,'-xr','LineWidth',2,'DisplayName','Exponential-Leja pts')
 grid on
 hold on
-semilogy(nb_pts, err_GLagu,'-ob','LineWidth',2,'DisplayName','Gauss-Laguerre pts')
+semilogy(nb_pts, err_GJac,'-ob','LineWidth',2,'DisplayName','Gauss-Laguerre pts')
 
 legend show
 set(legend,'Location','SouthWest')
@@ -148,7 +152,8 @@ ylim([1e-16 10])
 
 clear
 
-alpha = 3; 
+alpha = 3;
+beta = 1;
 
 % dimension of space
 N=2;
@@ -162,30 +167,30 @@ f = @(x) 1/(1+exp(0.1*sum(x)));
 % f = @(x) 1/(1+0.1*norm(x)^2); 
 
 % Leja knots 
-[X,W]=compute_GammaLejaKnotsAndWeights50(alpha);
+[X,W]=compute_BetaLejaKnotsAndWeights50(alpha,beta);
 
 knots_Lj = @(n) select_weighted_leja(n,X,W);   
-knots_GLagu = @(n) knots_gamma(n,alpha,1);
+knots_GJac = @(n) knots_beta(n,alpha,beta);
 
 quad_Lj=zeros(1,w_max);
-quad_GLagu=zeros(1,w_max);
+quad_GJac=zeros(1,w_max);
 
 nb_pts_Lj =zeros(1,w_max);
-nb_pts_GLagu =zeros(1,w_max);
+nb_pts_GJac =zeros(1,w_max);
 
 % we introduce auxiliary containers to recycle previous evaluations and speed up the computation
 S_Lj_old=[];
 Sr_Lj_old=[];
 evals_Lj_old=[];
 
-S_GLagu_old=[];
-Sr_GLagu_old=[];
-evals_GLagu_old=[];
+S_GJac_old=[];
+Sr_GJac_old=[];
+evals_GJac_old=[];
 
 % the convergence loop for Leja and Gauss Laguerre
 for w=1:w_max       
     
-    disp('Gamma-Leja');
+    disp('Beta-Leja');
     S_Lj = smolyak_grid(N,w,knots_Lj,@lev2knots_2step, @(i) sum(i-1), S_Lj_old); % using 2step rule to ramp faster to rules with high number of points
     Sr_Lj = reduce_sparse_grid(S_Lj);
     [res,evals]= quadrature_on_sparse_grid(f, S_Lj, Sr_Lj, evals_Lj_old, S_Lj_old, Sr_Lj_old);
@@ -195,33 +200,33 @@ for w=1:w_max
     Sr_Lj_old = Sr_Lj;
     nb_pts_Lj(w) = Sr_Lj.size;
 
-    disp('Gauss-Laguerre');
-    S_GLagu = smolyak_grid(N,w,knots_GLagu,@lev2knots_lin, @(i) sum(i-1), S_GLagu_old);
-    Sr_GLagu = reduce_sparse_grid(S_GLagu);    
-    [res, evals]  = quadrature_on_sparse_grid(f, S_GLagu, Sr_GLagu, evals_GLagu_old, S_GLagu_old, Sr_GLagu_old);
-    quad_GLagu(w) = res;
-    evals_GLagu_old = evals;
-    S_GLagu_old = S_GLagu;
-    Sr_GLagu_old = Sr_GLagu;    
-    nb_pts_GLagu(w) = Sr_GLagu.size;
+    disp('Gauss-Jacobi');
+    S_GJac = smolyak_grid(N,w,knots_GJac,@lev2knots_lin, @(i) sum(i-1), S_GJac_old);
+    Sr_GJac = reduce_sparse_grid(S_GJac);    
+    [res, evals]  = quadrature_on_sparse_grid(f, S_GJac, Sr_GJac, evals_GJac_old, S_GJac_old, Sr_GJac_old);
+    quad_GJac(w) = res;
+    evals_GJac_old = evals;
+    S_GJac_old = S_GJac;
+    Sr_GJac_old = Sr_GJac;    
+    nb_pts_GJac(w) = Sr_GJac.size;
 end
 
 
 % exact integral
 disp('computing reference solution');
-S_GLagu = smolyak_grid(N,w_max+4,knots_GLagu,@lev2knots_lin, @(i) sum(i-1), S_GLagu_old);
-Sr_GLagu = reduce_sparse_grid(S_GLagu);
-exact = quadrature_on_sparse_grid(f,S_GLagu,Sr_GLagu,evals_GLagu_old,S_GLagu_old,Sr_GLagu_old);
+S_GJac = smolyak_grid(N,w_max+4,knots_GJac,@lev2knots_lin, @(i) sum(i-1), S_GJac_old);
+Sr_GJac = reduce_sparse_grid(S_GJac);
+exact = quadrature_on_sparse_grid(f,S_GJac,Sr_GJac,evals_GLagu_old,S_GJac_old,Sr_GJac_old);
 
 % errors
 err_Lj=abs(quad_Lj - exact);
-err_GLagu=abs(quad_GLagu - exact);
+err_GJac=abs(quad_GJac - exact);
 
 figure
-loglog(nb_pts_Lj, err_Lj,'-xr','LineWidth',2,'DisplayName','Gamma-Leja pts')
+loglog(nb_pts_Lj, err_Lj,'-xr','LineWidth',2,'DisplayName','Beta-Leja pts')
 grid on
 hold on
-loglog(nb_pts_GLagu, err_GLagu,'-ob','LineWidth',2,'DisplayName','Gauss Laguerre pts')
+loglog(nb_pts_GJac, err_GJac,'-ob','LineWidth',2,'DisplayName','Gauss Laguerre pts')
 
 legend show
 set(legend,'Location','SouthWest')
@@ -231,9 +236,10 @@ set(legend,'Location','SouthWest')
 clear
 
 alpha = -0.2; 
+beta = -0.8; 
 
 % Leja knots 
-[X,W]=compute_GammaLejaKnotsAndWeights50(alpha);
+[X,W]=compute_BetaLejaKnotsAndWeights50(alpha,beta);
 
 % function to be interpoled
 f1 = @(x) 1./(1+0.1*x.^2); 
@@ -250,7 +256,7 @@ for j=1:3
 
     % sample the function 
     samplesize = 50;
-    sampleset = (linspace(0,2,samplesize)); 
+    sampleset = (linspace(0,1,samplesize)); 
     F_samples = f(sampleset);
 
     % the convergence analysis
@@ -275,14 +281,13 @@ for j=1:3
         end    
         err_Lj(i) = max(abs(F_samples - interp_Lj)); 
 
-
         % repeat for Gauss Hermite
-        [x_GLagu,w_GLagu]=knots_gamma(n,alpha,1);
-        interp_GLagu = zeros(1,samplesize);
+        [x_GJac,w_GJac]=knots_beta(n,alpha,beta);
+        interp_GJac= zeros(1,samplesize);
         for k=nnn
-            interp_GLagu =  interp_GLagu + f(x_GLagu(k))*lagr_eval(x_GLagu(k), x_GLagu(nnn~=k),sampleset);
+            interp_GJac =  interp_GJac + f(x_GJac(k))*lagr_eval(x_GJac(k), x_GJac(nnn~=k),sampleset);
         end    
-        err_GLagu(i) = max(abs(F_samples - interp_GLagu)); 
+        err_GJac(i) = max(abs(F_samples - interp_GJac)); 
 
 
     end
@@ -291,7 +296,7 @@ for j=1:3
     plot(sampleset, F_samples,'-k','LineWidth',1.5,'DisplayName','f')
     hold on 
     plot(sampleset, interp_Lj,'*r','DisplayName','interp - Leja pts ')
-    plot(sampleset, interp_GLagu,'+b','DisplayName','interp - Gauss pts ')
+    plot(sampleset, interp_GJac,'+b','DisplayName','interp - Gauss pts ')
     legend show
     set(legend,'Location','SouthWest')
     title(strrep(char(ff{j}),'@(x)','f='))
@@ -300,10 +305,9 @@ for j=1:3
     subplot(2,3,3+j)
     semilogy(nb_pts, err_Lj,'-xr','LineWidth',1.5,'DisplayName','Gamma-Leja pts')
     hold on
-    semilogy(nb_pts, err_GLagu,'-ob','LineWidth',1.5,'DisplayName','Gauss-Laguerre pts')
+    semilogy(nb_pts, err_GJac,'-ob','LineWidth',1.5,'DisplayName','Gauss-Laguerre pts')
     grid on
     legend show
     set(legend,'Location','SouthWest')
 
 end
-
