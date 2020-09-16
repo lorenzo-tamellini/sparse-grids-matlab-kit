@@ -4,9 +4,30 @@
 % See LICENSE.txt for license
 %----------------------------------------------------------------------------------
 %
+% 
+% -> 2020, Sep. 16  --> added function KNOTS_EXPONENTIAL_LEJA, i.e., weighted Leja for quadrature with respect to the
+%                       exponential weight function. Added example file where exponential Leja are computed
+%                       and then quadrature and interpolation convergence tests for different univariate 
+%                       knots for exponential random variables are compared, TEST_COMPUTE_EXPONENTIAL_LEJA_AND_CONVERGENGE_TEST.m
+%                   
+%                   --> added function COMPUTE_BETALEJAKNOTSANDWEIGHTS50, to generate the first 50 weighted Leja knots and weights for quadrature 
+%                       with respect to the Beta weight function with parameters alpha,beta>-1. If the optional parameter 'nonprob'
+%                       is specified, knots w.r.t. the Jacobi weight function are computed. 
+%                       The first n knots and weights are then selected by using the function SELECT_WEIGHTED_LEJA. 
+%                       Added example file where Beta/Jacobi Leja are computed
+%                       and then quadrature and interpolation convergence tests for different univariate 
+%                       knots for Beta/Jacobi random variables are compared, TEST_CONVERGENCE_BETA_LEJA.m
 %
-%
-% -> 2020, Aug. 3   --> added function for Gauss-Laguerre quadrature
+%                   --> added function COMPUTE_GAMMALEJAKNOTSANDWEIGHTS50, to generate the first 50 weighted Leja knots and weights for quadrature 
+%                       with respect to the Gamma weight function with parameters alpha>-1. 
+%                       The first n knots and weights are then selected by using the function SELECT_WEIGHTED_LEJA. 
+%                       Added example file where Gamma Leja are computed
+%                       and then quadrature and interpolation convergence tests for different univariate 
+%                       knots for Gamma random variables are compared, TEST_CONVERGENCE_GAMMA_LEJA.m
+% 
+% -> 2020, Aug. 3   --> added function KNOTS_EXPONENTIAL to generate
+%                       Gauss-Laguerre knots and weights for integration
+%                       w.r.t. exponential distributions
 %
 % -> 2020, Jul. 21  --> for robustness, SMOLYAK_GRID, SMOLYAK_GRID_MULTIIDX_SET no longer accepts MAP and COEFF_WEIGHTS as inputs. The knots and weights
 %                       need to be already properly rescaled beforehand, by using the optional arguments to defind correctly the 1D families of points to be used, 
