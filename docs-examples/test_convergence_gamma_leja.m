@@ -1,23 +1,19 @@
-%----------------------------------------------------
+%-------------------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2018 L. Tamellini, F. Nobile, B. Sprungk
+% Copyright (c) 2009-2018 L. Tamellini, F. Nobile, C. Piazzola
 % See LICENSE.txt for license
-%----------------------------------------------------
+%-------------------------------------------------------------
 
-
-%% Some tests for Gamma-Leja Nodes
-% Standard Gamma distribution (beta=1): rho(x)=x^alpha*exp(-x) 
-
-clear
 close all
 
 %% Plot the weights of each Gamma-Leja quadrature rule 
+% Standard Gamma distribution (beta=1): rho(x)=x^alpha*exp(-x),alpha>-1 
+
+clear
 
 alpha = -0.3; 
  
-[X,W]=compute_GammaLejaKnotsAndWeights50(alpha);
-
-% plot(X) when X is matrix plots the columns of X, therefore
+[~,W]=compute_gamma_leja_knots_and_weights_50(alpha);
 
 figure
 semilogy(abs(W),'-') % plots weights of each quadrature rule
@@ -46,14 +42,14 @@ err = zeros(1+p_max,imax);
 errGLagu = zeros(1+p_max,imax);
 
 % Leja knots 
-[X,W]=compute_GammaLejaKnotsAndWeights50(alpha);
+[X,W]=compute_gamma_leja_knots_and_weights_50(alpha);
 
 % for each formula, we test its approximation of increasing moments
 for n=1:50
     % Gamma-Leja quadrature rule using n nodes
     % select the first n knots and the corresponding weights from X,W compute above
     
-    [x_Lj,w_Lj]=select_weighted_leja(n,X,W); 
+    [x_Lj,w_Lj]=knots_general_weighted_leja(n,X,W); 
         
     % Gauss-Laguerre quadrature of same accuracy
     [x_GLagu,w_GLagu] = knots_gamma(ceil(n/2),alpha,1); % beta = 1
@@ -108,7 +104,7 @@ quad_GLagu = zeros(1,imax);
 nb_pts =zeros(1,imax);
 
 % Leja knots 
-[X,W]=compute_GammaLejaKnotsAndWeights50(alpha);
+[X,W]=compute_gamma_leja_knots_and_weights_50(alpha);
 
 % refining quad rule
 for i=1:imax
@@ -116,7 +112,7 @@ for i=1:imax
     n = lev2knots_lin(i);
     nb_pts(i) = n;
 
-    [x_Lj,w_Lj] = select_weighted_leja(n,X,W);   
+    [x_Lj,w_Lj] = knots_general_weighted_leja(n,X,W);   
     [x_GLagu,w_GLagu] = knots_gamma(n,alpha,1);
     
     quad_Lj(i) = dot(f(x_Lj),w_Lj);
@@ -162,9 +158,9 @@ f = @(x) 1/(1+exp(0.1*sum(x)));
 % f = @(x) 1/(1+0.1*norm(x)^2); 
 
 % Leja knots 
-[X,W]=compute_GammaLejaKnotsAndWeights50(alpha);
+[X,W]=compute_gamma_leja_knots_and_weights_50(alpha);
 
-knots_Lj = @(n) select_weighted_leja(n,X,W);   
+knots_Lj = @(n) knots_general_weighted_leja(n,X,W);   
 knots_GLagu = @(n) knots_gamma(n,alpha,1);
 
 quad_Lj=zeros(1,w_max);
@@ -233,7 +229,7 @@ clear
 alpha = -0.2; 
 
 % Leja knots 
-[X,W]=compute_GammaLejaKnotsAndWeights50(alpha);
+[X,W]=compute_gamma_leja_knots_and_weights_50(alpha);
 
 % function to be interpoled
 f1 = @(x) 1./(1+0.1*x.^2); 
@@ -268,7 +264,7 @@ for j=1:3
         nnn = 1:n;
 
         % here we build the lagrange interpolant for Leja and evaluate the error
-        [x_Lj,w_Lj] = select_weighted_leja(n,X,W);       
+        [x_Lj,w_Lj] = knots_general_weighted_leja(n,X,W);       
         interp_Lj = zeros(1,samplesize);
         for k=nnn
             interp_Lj =  interp_Lj + f(x_Lj(k))*lagr_eval(x_Lj(k), x_Lj(nnn~=k),sampleset);
