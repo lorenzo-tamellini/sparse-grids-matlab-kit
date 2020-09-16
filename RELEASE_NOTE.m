@@ -10,23 +10,26 @@
 %                       and then quadrature and interpolation convergence tests for different univariate 
 %                       knots for exponential random variables are compared, TEST_COMPUTE_EXPONENTIAL_LEJA_AND_CONVERGENGE_TEST.m
 %                   
-%                   --> added function COMPUTE_BETALEJAKNOTSANDWEIGHTS50, to generate the first 50 weighted Leja knots and weights for quadrature 
-%                       with respect to the Beta weight function with parameters alpha,beta>-1. If the optional parameter 'nonprob'
-%                       is specified, knots w.r.t. the Jacobi weight function are computed. 
-%                       The first n knots and weights are then selected by using the function SELECT_WEIGHTED_LEJA. 
-%                       Added example file where Beta/Jacobi Leja are computed
-%                       and then quadrature and interpolation convergence tests for different univariate 
+%                   --> added function COMPUTE_BETA_LEJA_KNOTS_AND_WEIGHTS_50, to generate the first 50 weighted Leja knots and weights 
+%                       for quadrature with respect to the Beta weight function with parameters alpha,beta>-1. 
+%                       If the optional parameter 'jacobi' is specified, knots w.r.t. the Jacobi weight function are computed. 
+%                       The first n knots and weights are then selected by using the function KNOTS_GENERAL_WEIGHTED_LEJA. 
+%                       Added example file where quadrature and interpolation convergence tests for different univariate 
 %                       knots for Beta/Jacobi random variables are compared, TEST_CONVERGENCE_BETA_LEJA.m
 %
-%                   --> added function COMPUTE_GAMMALEJAKNOTSANDWEIGHTS50, to generate the first 50 weighted Leja knots and weights for quadrature 
-%                       with respect to the Gamma weight function with parameters alpha>-1. 
-%                       The first n knots and weights are then selected by using the function SELECT_WEIGHTED_LEJA. 
-%                       Added example file where Gamma Leja are computed
-%                       and then quadrature and interpolation convergence tests for different univariate 
+%                   --> added function COMPUTE_GAMMA_LEJA_KNOTS_AND_WEIGHTS_50, to generate the first 50 weighted Leja knots and weights
+%                       for quadrature with respect to the Gamma weight function with parameter alpha>-1, beta=1. 
+%                       The first n knots and weights are then selected by using the function KNOTS_GENERAL_WEIGHTED_LEJA. 
+%                       Added example file where Gamma Leja quadrature and interpolation convergence tests for different univariate 
 %                       knots for Gamma random variables are compared, TEST_CONVERGENCE_GAMMA_LEJA.m
+%
+%                   --> added function KNOTS_BETA to generate Gauss-Jacobi knots and weights for integration
+%                       w.r.t. Beta distributions or Jacobi polynomials
+%                   
+%                   --> added function KNOTS_GAMMA to generate Gauss-generalized Laguerre knots and weights for integration
+%                       w.r.t. Gamma distributions
 % 
-% -> 2020, Aug. 3   --> added function KNOTS_EXPONENTIAL to generate
-%                       Gauss-Laguerre knots and weights for integration
+% -> 2020, Aug. 3   --> added function KNOTS_EXPONENTIAL to generate Gauss-Laguerre knots and weights for integration
 %                       w.r.t. exponential distributions
 %
 % -> 2020, Jul. 21  --> for robustness, SMOLYAK_GRID, SMOLYAK_GRID_MULTIIDX_SET no longer accepts MAP and COEFF_WEIGHTS as inputs. The knots and weights
