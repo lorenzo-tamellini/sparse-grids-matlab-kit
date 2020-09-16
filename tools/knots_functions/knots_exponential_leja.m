@@ -14,17 +14,18 @@ function [x,w,floc]=knots_exponential_leja(n)
 % Knots and weights have been precomputed (up to 50) following the work
 % 
 % A. Narayan, J. Jakeman, "Adaptive Leja sparse grid constructions for stochastic collocation and high-dimensional approximation"
-% SIAM Journal on Scientific Computing,  Vol. 36, No. 6, pp. A2952–A2983, 2014
+% SIAM Journal on Scientific Computing,  Vol. 36, No. 6, pp. A2952--A2983, 2014
 %
 % an error is raised if more than 50 points are requested.
 %
-% knots are sorted increasingly before returning (weights are returned in the corresponding order)
+% Knots are sorted increasingly before returning (weights are returned in
+% the corresponding order).
 
-%----------------------------------------------------
+%-------------------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2018 L. Tamellini, F. Nobile
+% Copyright (c) 2009-2018 L. Tamellini, F. Nobile, C. Piazzola
 % See LICENSE.txt for license
-%----------------------------------------------------
+%-------------------------------------------------------------
 
 floc = localfunctions;
 

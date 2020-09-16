@@ -2,7 +2,7 @@ function [x,w]=knots_exponential(n,lambda)
 
 % [x,w]=KNOTS_EXPONENTIAL(n,lambda) 
 % 
-% calculates the collocation points (x) 
+% returns the collocation points (x) 
 % and the weights (w) for the gaussian integration 
 % w.r.t to the weight function 
 % rho(x)=lambda*exp( -lambda*x ) 
@@ -10,12 +10,11 @@ function [x,w]=knots_exponential(n,lambda)
 % with rate parameter lambda
 
 
-%----------------------------------------------------
+%-------------------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2018 L. Tamellini, F. Nobile
+% Copyright (c) 2009-2018 L. Tamellini, F. Nobile, C. Piazzola
 % See LICENSE.txt for license
-%----------------------------------------------------
-
+%-------------------------------------------------------------
 
 
 if (n==1) 
