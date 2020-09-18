@@ -1,7 +1,7 @@
 
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2018 L. Tamellini, F. Nobile, B. Sprungk
+% Copyright (c) 2009-2018 L. Tamellini, F. Nobile, C. Piazzola
 % See LICENSE.txt for license
 %----------------------------------------------------
 
@@ -21,7 +21,7 @@ h0 = 1e-2;
 x = 0:h0:300;
 % Corresponding weight function values
 w = exp(-0.5 * abs(x));
-% Initializing node vector
+% Initializing node vector - arbitrary choice
 X = 0;
 
 % number of points to be computed
@@ -44,7 +44,11 @@ for n = 2:NMAX
     while(h > tol)
         counter = counter+1;
         h = h0*h; % refine step size
-        x_fine = x_fine(ind-1):h:x_fine(ind+1); % refine grid around maximum
+        if ind == 1
+            x_fine = x_fine(ind):h:x_fine(ind+1);
+        else
+            x_fine = x_fine(ind-1):h:x_fine(ind+1); % refine grid around maximum
+        end
         w_fine = exp(-0.5 * abs(x_fine)); % compute weights on finer grid
         % compute node function values on finer grid
         w_fine = abs(prod(repmat(x_fine,n-1,1)-repmat(X',1,length(x_fine)),1)) .* w_fine;
@@ -61,6 +65,7 @@ for n = 2:NMAX
        grid on;
        title(sprintf('Node function and its maximum for n = %i',n))
     end
+    
 end
 toc;
 
@@ -91,7 +96,6 @@ plot(W','-') % plots trend of weights of each quadrature rule
 
 % save('exponential_leja.txt','X','W','-ascii','-double')
 
-
 %% Testing each exponential-Leja quadrature on computation of moments of an exponential random variable
 
 clear
@@ -112,7 +116,7 @@ errGLagu = zeros(1+p_max,imax);
 % for each formula, we test its approximation of increasing moments
 for n=1:50
     % Exponential-Leja quadrature rule using n nodes
-    [x_Lj,w_Lj]=knots_exponential_leja(n);
+    [x_Lj,w_Lj]=knots_exponential_leja(n,1);
         
     % Gauss-Laguerre quadrature of same accuracy
     [x_GLagu,w_GLagu] = knots_exponential(ceil(n/2),1); % lambda = 1
@@ -170,7 +174,7 @@ for i=1:imax
     n = lev2knots_lin(i);
     nb_pts(i) = n;
 
-    [x_Lj,w_Lj] = knots_exponential_leja(n);   
+    [x_Lj,w_Lj] = knots_exponential_leja(n,1);   
     [x_GLagu,w_GLagu] = knots_exponential(n,1);
     
     quad_Lj(i) = dot(f(x_Lj),w_Lj);
@@ -193,8 +197,6 @@ semilogy(nb_pts, err_GLagu,'-ob','LineWidth',2,'DisplayName','Gauss-Laguerre pts
 
 legend show
 set(legend,'Location','SouthWest')
-
-
 ylim([1e-16 10])
 
 
@@ -213,7 +215,7 @@ w_max=15;
 % f = @(x) cos(0.2*sum(x)); 
 f = @(x) 1/(1+0.1*norm(x)^2); 
 
-knots_Lj = @(n) knots_exponential_leja(n);   
+knots_Lj = @(n) knots_exponential_leja(n,1);   
 knots_GLagu = @(n) knots_exponential(n,1);
 
 quad_Lj=zeros(1,w_max);
@@ -273,7 +275,8 @@ hold on
 loglog(nb_pts_GLagu, err_GLagu,'-ob','LineWidth',2,'DisplayName','Gauss Laguerre pts')
 
 legend show
-set(legend,'Location','SouthWest')
+set(legend,'Location','NorthEast')
+
 
 %% interpolation error in 1D
 
@@ -312,7 +315,7 @@ for j=1:3
         nnn = 1:n;
 
         % here we build the lagrange interpolant for Leja and evaluate the error
-        [x_Lj,w_Lj]=knots_exponential_leja(n);       
+        [x_Lj,w_Lj]=knots_exponential_leja(n,1);       
         interp_Lj = zeros(1,samplesize);
         for k=nnn
             interp_Lj =  interp_Lj + f(x_Lj(k))*lagr_eval(x_Lj(k), x_Lj(nnn~=k),sampleset);
@@ -327,7 +330,6 @@ for j=1:3
             interp_GLagu =  interp_GLagu + f(x_GLagu(k))*lagr_eval(x_GLagu(k), x_GLagu(nnn~=k),sampleset);
         end    
         err_GLagu(i) = max(abs(F_samples - interp_GLagu)); 
-
 
     end
     
