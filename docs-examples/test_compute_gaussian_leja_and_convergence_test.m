@@ -6,7 +6,10 @@
 
 
 
-%% Computation of Normal Leja Nodes
+%% Computation of Normal Leja Nodes and weights
+% for the weighted Leja sequence for integration 
+% w.r.t to the standard gaussian weight function 
+% rho(x)=1/sqrt(pi)*exp(-x^2/2) 
 
 clear
 
@@ -94,7 +97,6 @@ plot(W','-') % plots trend of weights of each quadrature rule
 
 %% Testing each Normal-Leja quadrature on computation of moments of a gaussian random variable
 
-
 clear
 
 % Moments of standard normal distribution
@@ -112,7 +114,7 @@ errGH = zeros(1+p_max,imax);
 % for each formula, we test its approximation of increasing moments
 for n=1:50
     % Normal-Leja quadrature rule using n nodes
-    [x_Lj,w_Lj]=knots_gaussian_leja(n);
+    [x_Lj,w_Lj]=knots_gaussian_leja(n,0,1);
     
     % Gauss-Hermite quadrature of same accuracy
     [x_GH,w_GH] = knots_gaussian(ceil(n/2),0,1);
@@ -168,7 +170,7 @@ for i=1:imax
     n = lev2knots_lin(i);
     nb_pts(i) = n;
 
-    [x_Lj,w_Lj]=knots_gaussian_leja(n);   
+    [x_Lj,w_Lj]=knots_gaussian_leja(n,0,1);   
     [x_GH,w_GH] = knots_gaussian(n,0,1);
     
     quad_Lj(i) = dot(f(x_Lj),w_Lj);
@@ -231,7 +233,7 @@ w_max=15;
 f=@(x) 1./(2+exp(0.2*sum(x))); 
 %f=@(x) 1./(2+exp(sum(x))); 
 
-knots_Lj = @(n) knots_gaussian_leja(n);   
+knots_Lj = @(n) knots_gaussian_leja(n,0,1);   
 knots_GH = @(n) knots_gaussian(n,0,1);
 
 quad_Lj=zeros(1,w_max);
@@ -359,7 +361,7 @@ for i=1:imax
     nnn = 1:n;
         
     % here we build the lagrange interpolant for Leja and evaluate the error
-    [x_Lj,w_Lj]=knots_gaussian_leja(n);       
+    [x_Lj,w_Lj]=knots_gaussian_leja(n,0,1);       
     interp_Lj = zeros(1,samplesize);
     for k=nnn
         interp_Lj =  interp_Lj + f(x_Lj(k))*lagr_eval(x_Lj(k), x_Lj(nnn~=k),sampleset);
@@ -434,7 +436,7 @@ w_max=55;
 
 
 % the convergence loop, with auxiliary containers to recycle evaluations between iterations
-knots_Lj = @(n) knots_gaussian_leja(n);   
+knots_Lj = @(n) knots_gaussian_leja(n,0,1);   
 knots_GH = @(n) knots_gaussian(n,0,1);
 
 err_Lj=zeros(1,w_max);

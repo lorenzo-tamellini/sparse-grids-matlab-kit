@@ -5,7 +5,11 @@
 %----------------------------------------------------------------------------------
 %
 % 
-% -> 2020, Sep. 16  --> added function KNOTS_EXPONENTIAL_LEJA, i.e., weighted Leja for quadrature with respect to the
+% -> 2020, Sep. 16  --> KNOTS_GAUSSIAN_LEJA returns now Leja points and weights for integration 
+%                       w.r.t. general Gaussian densities with mean mi and standard deviation sigma. 
+%                       The function KNOTS_GAUSSIAN_LEJA requires now three inputs: n, mi, and sigma, with n the number of points required.  
+%
+%                   --> added function KNOTS_EXPONENTIAL_LEJA, i.e., weighted Leja for quadrature with respect to the
 %                       exponential weight function. Added example file where exponential Leja are computed
 %                       and then quadrature and interpolation convergence tests for different univariate 
 %                       knots for exponential random variables are compared, TEST_COMPUTE_EXPONENTIAL_LEJA_AND_CONVERGENGE_TEST.m
