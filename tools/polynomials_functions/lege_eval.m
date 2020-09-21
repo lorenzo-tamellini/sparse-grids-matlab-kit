@@ -22,7 +22,7 @@ function L = lege_eval(x,k,a,b)
 
 t = ( 2*x - a - b ) / (b - a ) ;
 
-% calculate the standard legendre polynomials in t
+% calculate the standard Legendre polynomials in t
 
 L = standard_lege_eval(t,k);
 
