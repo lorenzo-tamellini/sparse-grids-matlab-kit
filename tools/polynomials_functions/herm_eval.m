@@ -41,7 +41,7 @@ end
 
 function H = standard_herm_eval(x,k)
 
-% H = standard_herm_eval(x) 
+% H = standard_herm_eval(x,k) 
 %
 % returns the values of the k-th standard Hermite "probabilistic" polynomial (i.e. orthoGONAL w.r.t. rho=1/sqrt(2 pi) * e^(-x^2/2) ), in the points x
 % ( x can be a vector as well)

@@ -47,7 +47,7 @@ L = sqrt(2) * L / st_lege_norm;
 
 function L = standard_lege_eval(x,k)
 
-% L = standard_lege_eval(x) 
+% L = standard_lege_eval(x,k) 
 %
 % returns the values of the k-th standard Legendre polynomial (i.e. polynomials orthogonal and not orthonormal 
 % in -1,1 w.r.t to rho=1 !! ) in the points x ( x can be a vector as well)
