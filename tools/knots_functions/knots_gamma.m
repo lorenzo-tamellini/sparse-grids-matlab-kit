@@ -5,10 +5,9 @@ function [x,w]=knots_gamma(n,alpha,beta)
 % returns the collocation points (x) 
 % and the weights (w) for the gaussian integration 
 % w.r.t to the weight function 
-% rho(x)= beta^(alpha+1)*x^alpha*exp(-beta*x)/Gamma(alpha+1)
+% rho(x)= beta^(alpha+1)/Gamma(alpha+1)*x^alpha*exp(-beta*x)
 % i.e. the density of a Gamma random variable 
 % with range [0,inf), alpha>-1, beta>0
-
 
 %-------------------------------------------------------------
 % Sparse Grid Matlab Kit

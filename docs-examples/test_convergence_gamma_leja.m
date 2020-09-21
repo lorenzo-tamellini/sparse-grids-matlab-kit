@@ -7,13 +7,13 @@
 close all
 
 %% Plot the weights of each Gamma-Leja quadrature rule 
-% Standard Gamma distribution (beta=1): rho(x)=x^alpha*exp(-x),alpha>-1 
 
 clear
 
-alpha = -0.3; 
+alpha = 0.5; 
+beta = 3; 
  
-[~,W]=compute_gamma_leja_knots_and_weights_50(alpha);
+[~,W]=compute_gamma_leja_knots_and_weights_50(alpha,beta);
 
 figure
 semilogy(abs(W),'-') % plots weights of each quadrature rule
@@ -27,13 +27,14 @@ plot(W','-') % plots trend of weights of each quadrature rule
 clear
 
 alpha = -0.3; 
+beta = 2; 
 
-% Moments of a Gamma distribution rho(x)=x^alpha*exp(-x): 
-% Gamma(alpha1+n)/(Gamma(alpha+1)*beta^n), here beta=1
+% Moments of a Gamma distribution rho(x)=beta^(alpha+1)/Gamma(alpha+1)*x^alpha*exp(-x): 
+% Gamma(alpha+1+p)/(Gamma(alpha+1)*beta^p), 
 p_max = 50;
 mom = zeros(1,1+p_max);
 for p = 0:1:p_max
-    mom(p+1) = gamma(alpha+1+p)/gamma(alpha+1);
+    mom(p+1) = gamma(alpha+1+p)/(gamma(alpha+1)*beta^p);
 end
 
 % Quadrature error for polynomials
@@ -42,7 +43,7 @@ err = zeros(1+p_max,imax);
 errGLagu = zeros(1+p_max,imax);
 
 % Leja knots 
-[X,W]=compute_gamma_leja_knots_and_weights_50(alpha);
+[X,W]=compute_gamma_leja_knots_and_weights_50(alpha,beta);
 
 % for each formula, we test its approximation of increasing moments
 for n=1:50
@@ -52,12 +53,12 @@ for n=1:50
     [x_Lj,w_Lj]=knots_general_weighted_leja(n,X,W); 
         
     % Gauss-Laguerre quadrature of same accuracy
-    [x_GLagu,w_GLagu] = knots_gamma(ceil(n/2),alpha,1); % beta = 1
+    [x_GLagu,w_GLagu] = knots_gamma(ceil(n/2),alpha,beta); 
     
     for p=0:p_max
         if p<n+5 % if the degree is "not too much" compute error
             err(1+p,n) = abs(mom(1+p) - dot(x_Lj.^p,w_Lj) );
-            errGLagu(1+p,n) = abs(mom(1+p) - dot(x_GLagu.^p,w_GLagu) );
+            errGLagu(1+p,n) = abs( mom(1+p) - dot(x_GLagu.^p,w_GLagu) );
         else % otherwise,  error is just too much,  we  set it to NaN
             err(1+p,n) = NaN;
             errGLagu(1+p,n) = NaN;    
@@ -82,7 +83,8 @@ end
 
 clear
 
-alpha = 1; 
+alpha = 3; 
+beta = 2; 
 
 imax=50;
 
@@ -104,7 +106,7 @@ quad_GLagu = zeros(1,imax);
 nb_pts =zeros(1,imax);
 
 % Leja knots 
-[X,W]=compute_gamma_leja_knots_and_weights_50(alpha);
+[X,W]=compute_gamma_leja_knots_and_weights_50(alpha,beta);
 
 % refining quad rule
 for i=1:imax
@@ -113,14 +115,14 @@ for i=1:imax
     nb_pts(i) = n;
 
     [x_Lj,w_Lj] = knots_general_weighted_leja(n,X,W);   
-    [x_GLagu,w_GLagu] = knots_gamma(n,alpha,1);
+    [x_GLagu,w_GLagu] = knots_gamma(n,alpha,beta);
     
     quad_Lj(i) = dot(f(x_Lj),w_Lj);
     quad_GLagu(i) = dot(f(x_GLagu),w_GLagu);
 end
 
 % exact integral
-[x_GLagu,w_GLagu] = knots_gamma(100,alpha,1);
+[x_GLagu,w_GLagu] = knots_gamma(100,alpha,beta);
 exact = dot(f(x_GLagu),w_GLagu);
 err_Lj = abs(quad_Lj - exact);
 err_GLagu = abs(quad_GLagu - exact);
@@ -145,6 +147,7 @@ ylim([1e-16 10])
 clear
 
 alpha = 3; 
+beta = 2; 
 
 % dimension of space
 N=2;
@@ -158,10 +161,10 @@ f = @(x) 1/(1+exp(0.1*sum(x)));
 % f = @(x) 1/(1+0.1*norm(x)^2); 
 
 % Leja knots 
-[X,W]=compute_gamma_leja_knots_and_weights_50(alpha);
+[X,W]=compute_gamma_leja_knots_and_weights_50(alpha,beta);
 
 knots_Lj = @(n) knots_general_weighted_leja(n,X,W);   
-knots_GLagu = @(n) knots_gamma(n,alpha,1);
+knots_GLagu = @(n) knots_gamma(n,alpha,beta);
 
 quad_Lj=zeros(1,w_max);
 quad_GLagu=zeros(1,w_max);
@@ -222,14 +225,16 @@ loglog(nb_pts_GLagu, err_GLagu,'-ob','LineWidth',2,'DisplayName','Gauss Laguerre
 legend show
 set(legend,'Location','SouthWest')
 
+
 %% interpolation error in 1D
 
 clear
 
 alpha = -0.2; 
+beta = 2; 
 
 % Leja knots 
-[X,W]=compute_gamma_leja_knots_and_weights_50(alpha);
+[X,W]=compute_gamma_leja_knots_and_weights_50(alpha,beta);
 
 % function to be interpoled
 f1 = @(x) 1./(1+0.1*x.^2); 
@@ -273,7 +278,7 @@ for j=1:3
 
 
         % repeat for Gauss Hermite
-        [x_GLagu,w_GLagu]=knots_gamma(n,alpha,1);
+        [x_GLagu,w_GLagu]=knots_gamma(n,alpha,beta);
         interp_GLagu = zeros(1,samplesize);
         for k=nnn
             interp_GLagu =  interp_GLagu + f(x_GLagu(k))*lagr_eval(x_GLagu(k), x_GLagu(nnn~=k),sampleset);

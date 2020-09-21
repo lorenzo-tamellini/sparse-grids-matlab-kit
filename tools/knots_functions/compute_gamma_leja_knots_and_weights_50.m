@@ -1,6 +1,6 @@
-function [X,W] = compute_gamma_leja_knots_and_weights_50(alpha)
+function [X,W] = compute_gamma_leja_knots_and_weights_50(alpha,beta)
 %
-% [X,W] = compute_gamma_leja_knots_and_weights_50(alpha)
+% [X,W] = compute_gamma_leja_knots_and_weights_50(alpha,beta)
 %
 % returns 50 collocation points, stored in the vector X of length 50,
 % and the corresponding weights, stored in the matrix W of dim. 50x50,
@@ -8,10 +8,10 @@ function [X,W] = compute_gamma_leja_knots_and_weights_50(alpha)
 % for the weighted Leja sequence for integration 
 % w.r.t to the weight function 
 %
-% rho(x)=x^alpha*exp(-x) 
+% rho(x)=beta^(alpha+1)/Gamma(alpha+1)*x^alpha*exp(-beta*x) 
 %
 % i.e. the density of a standard Gamma random variable 
-% with range [0,+inf), alpha>-1 and beta = 1.
+% with range [0,+inf), alpha>-1, beta>0.
 %
 % Knots and weights are computed following the work
 % 
@@ -45,7 +45,7 @@ x = 0:h0:300;
 % Corresponding weight function values
 w = x.^(0.5*alpha) .* exp(-0.5 * x);
 % Initializing node vector
-X = 0;
+X = (alpha+1)/beta; % 0;
 
 % number of points to be computed
 NMAX = 50; 
@@ -65,10 +65,14 @@ for n = 2:NMAX
     h = h0;
     x_fine = x; 
     
-     while(h > tol) 
+     while(h > tol) && length(x_fine>1) 
        
         h = h0*h; % refine step size
+        if ind == 1
+            x_fine = x_fine(ind):h:x_fine(ind+1);
+        else
         x_fine = x_fine(ind-1):h:x_fine(ind+1); % refine grid around maximum
+        end
         w_fine = x_fine.^(0.5*alpha) .* exp(-0.5 * x_fine); % compute weights on finer grid
         % compute node function values on finer grid
         w_fine = abs(prod(repmat(x_fine,n-1,1)-repmat(X',1,length(x_fine)),1)) .* w_fine;
@@ -80,7 +84,7 @@ for n = 2:NMAX
 
     % Update node vector 
     X(n) = x_fine(ind);
-
+ 
 %     % uncomment this for plots of function to be minimized    
 %     if (islogical(disp) && disp) || (isnumeric(disp) && ~isempty(find(disp==n)))
 %        figure()
@@ -106,6 +110,9 @@ for n = 1:NMAX
     end
 end
 toc;
+
+% modifies points according to beta (the weigths are unaffected)
+X=X/beta;
 
 end
 
