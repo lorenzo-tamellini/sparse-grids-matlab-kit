@@ -65,7 +65,7 @@ for n = 2:NMAX
     h = h0;
     x_fine = x; 
     
-     while(h > tol) && length(x_fine>1) 
+     while(h > tol) && (length(x_fine)>1) 
        
         h = h0*h; % refine step size
         if ind == 1
