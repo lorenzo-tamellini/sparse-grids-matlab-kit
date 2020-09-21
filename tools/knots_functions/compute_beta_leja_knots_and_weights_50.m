@@ -33,7 +33,7 @@ x = -1:h0:1;
 % Corresponding weight function values
 w = (1-x).^(0.5*alpha) .* (1+x).^(0.5*beta);
 % Initializing node vector
-X = 0; % (alpha+1)/(alpha+beta+2);% 0;
+X = (alpha+1)/(alpha+beta+2);
 
 % number of points to be computed
 NMAX = 50; 
