@@ -1,26 +1,14 @@
-function [X,W] = compute_beta_leja_knots_and_weights_50(alpha,beta,whichrho)
+function [X,W] = compute_beta_leja_knots_and_weights_50(alpha,beta,x_a,x_b)
 %
-% [X,W] = compute_beta_leja_knots_and_weights_50(alpha,beta)
+% [X,W] = compute_beta_leja_knots_and_weights_50(alpha,beta,x_a,x_b)
 % returns 50 collocation points, stored in the vector X of length 50,
 % and the corresponding weights, stored in the matrix W of dim. 50x50
 % (the weights for rule with P points are stored as P-th column of W),
 % for the weighted Leja sequence for integration 
 % w.r.t to the weight function 
 %
-% rho(x)=x^alpha*(1-x)^beta
-% i.e. the density of a Beta random variable with range [0,1], alpha,beta>-1.
-%
-%
-% [X,W] = compute_beta_leja_knots_and_weights_50(alpha,beta,'beta') 
-% is the same as [X,W] = compute_Beta_Leja_Knots_And_Weights_50(alpha,beta) above. 
-% 
-% [X,W] = compute_beta_leja_knots_and_weights_50(alpha,beta,'jacobi') 
-% returns the collocation points and the weights 
-% for the weighted Leja sequence for integration 
-% w.r.t to the weight function 
-%
-% rho(x)=(1-x)^alpha*(1+x)^beta
-% i.e. the Jacobi polynomial with range [-1,1], alpha,beta>-1.
+% rho(x)=Gamma(alpha+beta+2)/ (Gamma(alpha+1)*Gamma(beta+1)*(x_b-x_a)^(alpha+beta+1)) * (x-x_a)^alpha * (x_b-x)^beta
+% i.e. the density of a Beta random variable with range [x_a,x_b], alpha,beta>-1.
 %
 % Knots and weights are computed following the work
 % 
@@ -32,10 +20,6 @@ function [X,W] = compute_beta_leja_knots_and_weights_50(alpha,beta,whichrho)
 % Copyright (c) 2009-2018 L. Tamellini, F. Nobile, C. Piazzola
 % See LICENSE.txt for license
 %-------------------------------------------------------------
-
-if nargin==2
-    whichrho='beta';
-end
 
 %-------------------------------------------------------
 % Computation of the nodes
@@ -49,7 +33,7 @@ x = -1:h0:1;
 % Corresponding weight function values
 w = (1-x).^(0.5*alpha) .* (1+x).^(0.5*beta);
 % Initializing node vector
-X = 0;
+X = 0; % (alpha+1)/(alpha+beta+2);% 0;
 
 % number of points to be computed
 NMAX = 50; 
@@ -75,7 +59,7 @@ for n = 2:NMAX
         elseif ind == length(x_fine)
             x_fine = x_fine(ind-1):h:x_fine(ind); % refine grid around maximum
         else
-             x_fine = x_fine(ind-1):h:x_fine(ind+1); % refine grid around maximum
+            x_fine = x_fine(ind-1):h:x_fine(ind+1); % refine grid around maximum
         end
         w_fine = (1-x_fine).^(0.5*alpha) .* (1+x_fine).^(0.5*beta); % compute weights on finer grid
         % compute node function values on finer grid
@@ -97,13 +81,8 @@ for n = 2:NMAX
 
 end
 
-if strcmp(whichrho,'beta') 
-    
-    % modifies points (the weigths are unaffected)
-    X = (1-X)/2; % modification to integrate w.r.t. Beta density
-    
-end
-
+% modifies points according to x_a and x_b (the weigths are unaffected)
+X = ((x_a+x_b) - (x_b-x_a)*X) / 2;
 
 %-------------------------------------------------------
 % Computation of corresponding weights
@@ -113,7 +92,7 @@ W = zeros(NMAX); % we store quadrature weights for rule with P points as P-th co
 
 for n= 1:NMAX
     nodes = X(1:n);
-    [x_quad,w_quad] = knots_beta(ceil(n/2),alpha,beta);
+    [x_quad,w_quad] = knots_beta(ceil(n/2),alpha,beta,x_a,x_b);
     nnn = 1:n;
     for k=nnn
         W(k,n) = dot(lagr_eval(nodes(k), nodes(nnn~=k),x_quad), w_quad);

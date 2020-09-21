@@ -7,14 +7,17 @@
 close all
 
 %% Plot the weights of each Beta-Leja quadrature rule 
-% Beta distribution (beta=1): rho(x)=x^alpha*(1-x)^beta 
 
 clear
 
-alpha = 0.3; 
-beta = -0.2; 
+alpha = -0.3; 
+beta = 2; 
+x_a = 0; x_b = 1; 
 
-[~,W]=compute_beta_leja_knots_and_weights_50(alpha,beta);
+[X,W]=compute_beta_leja_knots_and_weights_50(alpha,beta,x_a,x_b);
+
+figure
+plot(sort(X),'*')
 
 figure
 semilogy(abs(W),'-') % plots weights of each quadrature rule
@@ -44,7 +47,7 @@ err = zeros(1+p_max,imax);
 errGJac = zeros(1+p_max,imax);
 
 % Beta-Leja knots and weights
-[X,W] = compute_beta_leja_knots_and_weights_50(alpha,beta); 
+[X,W] = compute_beta_leja_knots_and_weights_50(alpha,beta,0,1); 
 
 
 % for each formula, we test its approximation of increasing moments
@@ -55,7 +58,7 @@ for n=1:50
     [x_Lj,w_Lj]=knots_general_weighted_leja(n,X,W);
         
     % Gauss-Jacobi quadrature of same accuracy
-    [x_GJac,w_GJac] = knots_beta(ceil(n/2),alpha,beta); 
+    [x_GJac,w_GJac] = knots_beta(ceil(n/2),alpha,beta,0,1); 
     
     for p=0:p_max
         if p<n+5 % if the degree is "not too much" compute error
@@ -87,6 +90,7 @@ clear
 
 alpha = 1; 
 beta = 3; 
+x_a = -2; x_b = 3; 
 
 imax=50;
 
@@ -108,7 +112,7 @@ quad_GJac = zeros(1,imax);
 nb_pts =zeros(1,imax);
 
 % Leja knots 
-[X,W]=compute_beta_leja_knots_and_weights_50(alpha,beta);
+[X,W]=compute_beta_leja_knots_and_weights_50(alpha,beta,x_a,x_b);
 
 % refining quad rule
 for i=1:imax
@@ -117,14 +121,14 @@ for i=1:imax
     nb_pts(i) = n;
 
     [x_Lj,w_Lj] = knots_general_weighted_leja(n,X,W);   
-    [x_GJac,w_GJac] = knots_beta(n,alpha,beta);
+    [x_GJac,w_GJac] = knots_beta(n,alpha,beta,x_a,x_b);
     
     quad_Lj(i) = dot(f(x_Lj),w_Lj);
     quad_GJac(i) = dot(f(x_GJac),w_GJac);
 end
 
 % exact integral
-[x_GJac,w_GJac] = knots_beta(100,alpha,beta);
+[x_GJac,w_GJac] = knots_beta(100,alpha,beta,x_a,x_b);
 exact = dot(f(x_GJac),w_GJac);
 err_Lj = abs(quad_Lj - exact);
 err_GJac = abs(quad_GJac - exact);
@@ -138,9 +142,7 @@ hold on
 semilogy(nb_pts, err_GJac,'-ob','LineWidth',2,'DisplayName','Gauss-Jacobi pts')
 
 legend show
-set(legend,'Location','SouthWest')
-
-
+set(legend,'Location','NorthEast')
 ylim([1e-16 10])
 
 
@@ -150,6 +152,7 @@ clear
 
 alpha = 3;
 beta = 1;
+x_a = 2; x_b = 4; 
 
 % dimension of space
 N=2;
@@ -163,10 +166,10 @@ f = @(x) 1/(1+exp(0.1*sum(x)));
 % f = @(x) 1/(1+0.1*norm(x)^2); 
 
 % Leja knots 
-[X,W]=compute_beta_leja_knots_and_weights_50(alpha,beta);
+[X,W]=compute_beta_leja_knots_and_weights_50(alpha,beta,x_a,x_b);
 
 knots_Lj = @(n) knots_general_weighted_leja(n,X,W);   
-knots_GJac = @(n) knots_beta(n,alpha,beta);
+knots_GJac = @(n) knots_beta(n,alpha,beta,x_a,x_b);
 
 quad_Lj=zeros(1,w_max);
 quad_GJac=zeros(1,w_max);
@@ -233,9 +236,10 @@ clear
 
 alpha = -0.2; 
 beta = -0.8; 
+x_a = 0; x_b = 4; 
 
 % Leja knots 
-[X,W]=compute_beta_leja_knots_and_weights_50(alpha,beta);
+[X,W]=compute_beta_leja_knots_and_weights_50(alpha,beta,x_a,x_b);
 
 % function to be interpoled
 f1 = @(x) 1./(1+0.1*x.^2); 
@@ -252,7 +256,7 @@ for j=1:3
 
     % sample the function 
     samplesize = 50;
-    sampleset = (linspace(0,1,samplesize)); 
+    sampleset = (linspace(x_a,x_b,samplesize)); 
     F_samples = f(sampleset);
 
     % the convergence analysis
@@ -278,7 +282,7 @@ for j=1:3
         err_Lj(i) = max(abs(F_samples - interp_Lj)); 
 
         % repeat for Gauss Hermite
-        [x_GJac,w_GJac]=knots_beta(n,alpha,beta);
+        [x_GJac,w_GJac]=knots_beta(n,alpha,beta,x_a,x_b);
         interp_GJac= zeros(1,samplesize);
         for k=nnn
             interp_GJac =  interp_GJac + f(x_GJac(k))*lagr_eval(x_GJac(k), x_GJac(nnn~=k),sampleset);

@@ -1,40 +1,22 @@
-function [x,w]=knots_beta(n,alpha,beta,whichrho)
+function [x,w]=knots_beta(n,alpha,beta,x_a,x_b)
 
-% [x,w]=KNOTS_BETA(n,alpha,beta) 
+% [x,w]=KNOTS_BETA(n,alpha,beta,x_a,x_b) 
 % 
 % calculates the collocation points (x) 
 % and the weights (w) for the gaussian integration 
 % w.r.t to the weight function 
-% rho(x)=Gamma(alpha+beta+2)/(Gamma(alpha+1)*Gamma(beta+1)) x^alpha*(1-x)^beta
-% i.e. the density of a Beta random variable with range [0,1], alpha,beta>-1.
+% rho(x)=Gamma(alpha+beta+2)/(Gamma(alpha+1)*Gamma(beta+1)*(x_b-x_a)^(alpha+beta+1)) (x-x_a)^alpha*(x_b-x)^beta
+% i.e. the density of a Beta random variable with range [x_a,x_b], alpha,beta>-1.
 %
-%
-% [x,w]=KNOTS_BETA(n,alpha,beta,'beta')  
-% 
-% is the same as [x,w]=KNOTS_BETA(n,alpha,beta) above
-% 
-%
-% [x,w]=KNOTS_BETA(n,alpha,beta,'jacobi') 
-%
-% calculates the collocation points (x) 
-% and the weights (w) for the gaussian integration 
-% w.r.t to the Jacobi weight function 
-% rho(x)= (1-x)^alpha*(1+x)^beta 
- 
-
 %-------------------------------------------------------------
 % Sparse Grid Matlab Kit
 % Copyright (c) 2009-2018 L. Tamellini, F. Nobile, C. Piazzola
 % See LICENSE.txt for license
 %-------------------------------------------------------------
 
-if nargin==3
-    whichrho='beta';
-end
-
 if (n==1) 
       % standard node: t = (beta-alpha)/(alpha+beta+2)
-      x=(beta-alpha)/(alpha+beta+2);
+      x =(beta-alpha)/(alpha+beta+2);
       % the weight is 1:
       w=1;
 else
@@ -54,12 +36,8 @@ else
 
 end
 
-if strcmp(whichrho,'beta') 
-    
-    % modifies points (the weigths are unaffected)
-    x=(1-x)/2;
-    
-end
+% modifies points according to x_a and x_b (the weigths are unaffected)
+x = ((x_a+x_b) - (x_b-x_a)*x) / 2;
 
 
 %----------------------------------------------------------------------
