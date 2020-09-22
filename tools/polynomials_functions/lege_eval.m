@@ -5,7 +5,7 @@ function L = lege_eval(x,k,a,b)
 % returns the values of the k-th Legendre polynomial orthoNORMAL in a,b w.r.t to rho=1/(b-a) in the points x
 % ( x can be a matrix as well)
 %
-% N.B. the polynomials start from k=0: L_0(x) = 1, L_1(x) = x
+% N.B. the polynomials start from k=0: L_0(x) = 1, L_1(x) = (2*x-a-b)/(b-a)
 
 
 %----------------------------------------------------
