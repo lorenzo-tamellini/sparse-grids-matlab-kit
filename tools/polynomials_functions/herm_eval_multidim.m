@@ -2,8 +2,8 @@ function H = herm_eval_multidim(X,k,mu,sig)
 
 % H = HERM_EVAL_MULTIDIM(X,k,mu,sig)
 %
-% evaluates the multidim Hermite polynomial order k (multi-index) orthonormal on [-inf,+inf]^N 
-% with respect to rho=prod_i 1/sqrt(2 pi sigma_i) * e^( -(x-mi_i)^2/(2*sigma_i^2) ) 
+% evaluates the multidim Hermite polynomial of order k (multi-index) orthonormal on [-inf,+inf]^N 
+% with respect to rho=prod_i 1/sqrt(2 pi sigma_i^2) * e^( -(x-mi_i)^2/(2*sigma_i^2) ) 
 % on the list of points X (each column is a point in R^N)
 % MU, SIGMA, can be scalar values
 

@@ -2,7 +2,7 @@ function L = lege_eval_multidim(X,k,a,b)
 
 % L = LEGE_EVAL_MULTIDIM(X,k,a,b)
 %
-% evaluates the multidim Legendre polynomial order k (multi-index) orthonormal on [a,b]^N 
+% evaluates the multidim Legendre polynomial of order k (multi-index) orthonormal on [a,b]^N 
 % on the list of points X (each column is a point in R^N). a,b are scalar values
 %
 % a,b may differ in each direction, so that actually the domain is not [a,b]^N, but

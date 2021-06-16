@@ -2,7 +2,7 @@ function H = herm_eval(x,k,mi,sigma)
 
 % H = herm_eval(x,k,mi,sigma)
 %
-% returns the values of the k-th Hermite polynomial orthoNORMAL in (-inf,+inf) w.r.t to rho=1/sqrt(2 pi sigma) * e^( -(x-mi)^2/(2*sigma^2) ) 
+% returns the values of the k-th Hermite polynomial orthoNORMAL in (-inf,+inf) w.r.t to rho=1/sqrt(2 pi sigma^2) * e^( -(x-mi)^2/(2*sigma^2) ) 
 % in the points x ( x can be a matrix as well)
 %
 % N.B. the polynomials start from k=0: H_0(x) = 1, H_1(x) = (x - mi)/sigma

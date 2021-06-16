@@ -114,7 +114,7 @@ errGH = zeros(1+p_max,imax);
 % for each formula, we test its approximation of increasing moments
 for n=1:50
     % Normal-Leja quadrature rule using n nodes
-    [x_Lj,w_Lj]=knots_gaussian_leja(n,0,1);
+    [x_Lj,w_Lj] = knots_gaussian_leja(n,0,1);
     
     % Gauss-Hermite quadrature of same accuracy
     [x_GH,w_GH] = knots_gaussian(ceil(n/2),0,1);
@@ -124,7 +124,7 @@ for n=1:50
             err(1+p,n) = abs(mom(1+p) - dot(x_Lj.^p,w_Lj) );
             errGH(1+p,n) = abs(mom(1+p) - dot(x_GH.^p,w_GH) );
         else % otherwise,  error is just too much,  we  set it to NaN
-            err(1+p,n) =NaN;
+            err(1+p,n) = NaN;
             errGH(1+p,n) = NaN;    
         end
     end
