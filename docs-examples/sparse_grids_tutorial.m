@@ -369,7 +369,7 @@ set(legend,'Location','SouthOutside')
 
 % there are two ways of specifying the set of multindices to be used. 
 %
-% 1) The first one is to use the parameters "level" and "idxset" of the function SMOLYAK. 
+% 1) The first one is to use the parameters "level" and "idxset" of the function SMOLYAK_GRID. 
 % In this case, the multiindex set will include all the multiindices that satisfy the inequality
 %
 % idxset(ii)<= level
@@ -405,7 +405,7 @@ figure
 plot_sparse_grid(S_HC,[],'color','k','marker','o','MarkerFaceColor','k');
 legend('HC-grid')
 
-% 2) The second one is to use the function SMOLYAK_MULTIINDICES, where one specifies exactly
+% 2) The second one is to use the function SMOLYAK_GRID_MULTIIDX_SET, where one specifies exactly
 % the set of multiindex that one wishes to use. Again, the set has to satisfy
 % the ``admissibility condition'', and the rows have to be in lexicographic order. 
 
@@ -446,7 +446,7 @@ axis([-0.5 4 -0.5 4])
 legend show
 
 
-% b) MULTIIDX_BOX_GEN generates the set of all indices ii such that rule(ii)<=w, where rule is a function that takes as input a row vector
+% b) MULTIIDX_GEN generates the set of all indices ii such that rule(ii)<=w, where rule is a function that takes as input a row vector
 % (or a matrix where each multiidx is stored as a row) and returns a scalar value (or a column vector with the result of the operation applied
 % to each row of the input index vector). Again, the minimum index can be 0 or 1:
 
