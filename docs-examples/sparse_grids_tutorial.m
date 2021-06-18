@@ -30,7 +30,8 @@
 %   - use parallel feature
 %
 %
-% PART 3: integration - basics
+% PART 3: integration on sparse grids - basics
+%   - integration on tensor grids 
 %   - use other quadrature knots
 %   - modify quadrature domain
 %   - compute moments of random variables
@@ -40,8 +41,9 @@
 %
 %
 % PART 4: interpolation on a sparse grid - basics
-%   -  interpolation error on sparse grid points
-%   -  plot sparse grid interpolant
+%   - interpolation on a tensor grid
+%   - interpolation error on sparse grid points
+%   - plot sparse grid interpolant
 %
 %
 % PART 5: compute the g-pce of a function given its sparse grid approximation
@@ -800,7 +802,7 @@ end
 % see test_evaluate_on_sparse_grids.m for more examples 
 
 
-%% PART 3: INTEGRATION - BASICS
+%% PART 3: INTEGRATION ON SPARSE GRIDS - BASICS
 
 % In this part we show how to use the Kit to perform high-dimensional quadrature. We consider the
 % following function, for which we know the analytic expression of the integral
@@ -853,6 +855,30 @@ I2-I3
 many_f = [f_vals; f_vals; f_vals; f_vals; f_vals];
 quadrature_on_sparse_grid(many_f,Sr)
 
+
+%% PART 3: INTEGRATION ON TENSOR GRIDS 
+
+% integration on tensor grids 
+
+clc
+clear
+f = @(x,b) prod(1./sqrt(x+b));
+b = 3;
+N = 2;
+I_1d = (2*sqrt(1+b)-2*sqrt(-1+b));
+I_ex = I_1d^N;
+
+knots=@(n) knots_CC(n,-1,1,'nonprob');
+idx = [6,5]; % index that dictates the number of points in the tensor grid 
+S = tensor_to_sparse(N,knots,@lev2knots_doubling,idx);
+Sr = reduce_sparse_grid(S);
+
+I=quadrature_on_sparse_grid(@(x)f(x,b) , Sr); % Sr must be reduced here
+
+% compare with exact value
+disp('----------')
+disp('quad error')
+abs(I-I_ex)
 
 %% PART 3: INTEGRATION - USE OTHER QUADRATURE KNOTS
 
@@ -1050,7 +1076,7 @@ abs(I-I_ex)
 
 
 
-%% PART 4: INTERPOLATION ON A SPARSE GRID. BASICS
+%% PART 4: INTERPOLATION ON A SPARSE GRID - BASICS
 
 % the sparse grid also provides an interpolant / surrogate model for the original function. The
 % interpolant can be evaluated in non-grid points. 
@@ -1078,6 +1104,31 @@ f_values = interpolate_on_sparse_grid(S,Sr,function_on_grid,non_grid_points);
 disp('----------')
 disp('Interpolation error')
 max( abs( f_values-f(non_grid_points,b) ) )
+
+%% PART 4: INTERPOLATION ON A TENSOR GRID 
+
+% clc
+clear
+f = @(x,b) prod(1./sqrt(x+b)); 
+b=3; N = 2; 
+
+idx = [10 8];
+knots=@(n) knots_uniform(n,-1,1,'nonprob');
+[S] = tensor_to_sparse(N,knots,@lev2knots_lin,idx); 
+
+Sr=reduce_sparse_grid(S);
+
+%non_grid_points=rand(N,100); 
+non_grid_points=[0.5*ones(N,1), zeros(N,1)];
+
+function_on_grid=f(Sr.knots,b);
+
+f_values = interpolate_on_sparse_grid(S,Sr,function_on_grid,non_grid_points);
+
+disp('----------')
+disp('Interpolation error')
+max( abs( f_values-f(non_grid_points,b) ) )
+
 
 
 %% PART 4: INTERPOLATION ON A SPARSE GRID -  INTERPOLATION ERROR ON SPARSE GRID POINTS
