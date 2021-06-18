@@ -4,8 +4,18 @@
 % See LICENSE.txt for license
 %----------------------------------------------------------------------------------
 %
-% 
-%                     
+%                   --> added UNIVARIATE_INTERPOLANT to compute the 1d Lagrangian interpolant of a scalar-valued function
+%                   
+%                   --> added TENSOR_TO_SPARSE that creates a tensor grid structure, which contains all the fields of a 
+%                       sparse grids. This is useful when computing quadrature and interpolation on tensor grids using 
+%                       the functions quadrature/interpolation_on_sparse_grid. 
+%                 
+%                   --> compatibility with GNU Octave have been partially tested.  
+%                   
+%                   --> extend CONVERT_TO_MODAL and COMPUTE_MODAL_TENSOR to Laguerre, generalized Laguerre and Jacobi polynomials. 
+%                       Note that the input DOMAIN for the case of polynomials of "mixed" type is now a cell array, 
+%                       each cell containing the domain for the corresponding polynomial. 
+%                       Corresponding tests have been added to TEST_CONVERT_TO MODAL.                     
 %
 %                   --> added function COMPUTE_SYM_BETA_LEJA_KNOTS_AND_WEIGHTS_50, to generate the first 50 symmetric weighted Leja knots and weights 
 %                       for quadrature with respect to the Beta weight function with parameters alpha,beta>-1. 
