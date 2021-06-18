@@ -43,13 +43,17 @@ b=[2 1];
 
 
 % sparse grid
-N=2; w=5; knots=@(n) knots_uniform(n,-1,1,'nonprob'); lev2knots=@lev2knots_lin; idxset=@(i) sum(i-1);
-[S,C]=smolyak_grid(N,w,knots,lev2knots,idxset,get_interval_map(a,b,'uniform'));
+N=2; w=5; 
+
+knots1=@(n) knots_uniform(n,a(1),b(1),'nonprob'); 
+knots2=@(n) knots_uniform(n,a(2),b(2),'nonprob'); 
+lev2knots=@lev2knots_lin; 
+idxset=@(i) sum(i-1);
+
+[S,C]=smolyak_grid(N,w,{knots1,knots2},lev2knots,idxset);
 Sr=reduce_sparse_grid(S);
 
-
-
-% evaluate a linear comb of Legendre polynomials on the grid: it should be recovered exactly by the
+% evaluate a linear combination of Legendre polynomials on the grid: it should be recovered exactly by the
 % procedure (with a sufficient number of points in the grid)
 X=Sr.knots;
 
@@ -72,20 +76,18 @@ mu=[1 -1];
 % standard deviations
 sig=[2 3];
 
-
-
 % The sparse grid. Note that here I don't really care what points I have used to build the nodal
 % interpolant. They could even be evenly spaced points! It's just a bunch of evaluations of a function.
 % of course bad points make the matrix ill conditioned
 N=2; w=5; 
-knots=@(n) knots_gaussian(n,0,1); 
+
+knots1=@(n) knots_gaussian(n,mu(1),sig(1));
+knots2=@(n) knots_gaussian(n,mu(2),sig(2));
 lev2knots=@lev2knots_lin; 
 idxset=@(i) sum(i-1);
-S=smolyak_grid(N,w,knots,lev2knots,idxset,get_interval_map(mu,sig,'gaussian'));
+
+S=smolyak_grid(N,w,{knots1,knots2},lev2knots,idxset);
 Sr=reduce_sparse_grid(S);
-
-
-
 
 % Same procedure as before, now with a linear comb of Hermite polynomials
 
@@ -100,7 +102,6 @@ domain=[mu;sig];
 [K,modal_coeffs]
 
 
-
 %% chebyshev case
 
 clear
@@ -112,11 +113,14 @@ b=[2 1];
 
 
 % sparse grid
-N=2; w=5; knots=@(n) knots_uniform(n,-1,1,'nonprob'); lev2knots=@lev2knots_lin; idxset=@(i) sum(i-1);
-[S,C]=smolyak_grid(N,w,knots,lev2knots,idxset,get_interval_map(a,b,'uniform'));
+N=2; 
+w=5; 
+knots1=@(n) knots_uniform(n,a(1),b(1),'nonprob'); 
+knots2=@(n) knots_uniform(n,a(2),b(2),'nonprob');
+lev2knots=@lev2knots_lin; idxset=@(i) sum(i-1);
+
+[S,C]=smolyak_grid(N,w,{knots1,knots2},lev2knots,idxset);
 Sr=reduce_sparse_grid(S);
-
-
 
 % evaluate a linear comb of Chebyshev polynomials on the grid: it should be recovered exactly by the
 % procedure (with a sufficient number of points in the grid)
@@ -130,9 +134,94 @@ domain=[a;b];
 
 [K,modal_coeffs]
 
+%% laguerre case
+
+clear
+
+% parameter
+lambda = [1,2]; 
+
+% sparse grid
+N=2; 
+w=5; 
+knots1=@(n) knots_exponential(n,lambda(1)); 
+knots2=@(n) knots_exponential(n,lambda(2));
+lev2knots=@lev2knots_lin; idxset=@(i) sum(i-1);
+
+[S,C]=smolyak_grid(N,w,{knots1,knots2},lev2knots,idxset);
+Sr=reduce_sparse_grid(S);
+
+% evaluate a linear comb of Chebyshev polynomials on the grid: it should be recovered exactly by the
+% procedure (with a sufficient number of points in the grid)
+X=Sr.knots;
+
+nodal_values = 6-3*lagu_eval_multidim(X,[3 2],lambda)+ 7*lagu_eval_multidim(X,[2 1],lambda);
 
 
+domain=lambda;
+[modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,'laguerre');
 
+[K,modal_coeffs]
+
+
+%% generalized laguerre case
+
+clear
+
+% parameter
+alpha = [1 2]; 
+beta = [3 4]; 
+
+% sparse grid
+N=2; 
+w=5; 
+knots1=@(n) knots_gamma(n,alpha(1),beta(1)); 
+knots2=@(n) knots_gamma(n,alpha(2),beta(2));
+lev2knots=@lev2knots_lin; idxset=@(i) sum(i-1);
+
+[S,C]=smolyak_grid(N,w,{knots1,knots2},lev2knots,idxset);
+Sr=reduce_sparse_grid(S);
+
+% evaluate a linear comb of Chebyshev polynomials on the grid: it should be recovered exactly by the
+% procedure (with a sufficient number of points in the grid)
+X=Sr.knots;
+
+nodal_values = 6-3*generalized_lagu_eval_multidim(X,[3 2],alpha,beta)+ 7*generalized_lagu_eval_multidim(X,[4 1],alpha,beta);
+
+domain=[alpha;beta];
+[modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,'generalized laguerre');
+
+[K,modal_coeffs]
+
+%% Jacobi case
+clear
+
+% parameter
+alpha = [1 1]; 
+beta = [3 4]; 
+a = [-1 -1]; 
+b = [1 1];
+
+% sparse grid
+N=2; 
+w=5; 
+knots1=@(n) knots_beta(n,alpha(1),beta(1),a(1),b(1)); 
+knots2=@(n) knots_beta(n,alpha(2),beta(2),a(2),b(2));
+lev2knots=@lev2knots_lin; idxset=@(i) sum(i-1);
+
+[S,C]=smolyak_grid(N,w,{knots1,knots2},lev2knots,idxset);
+Sr=reduce_sparse_grid(S);
+
+% evaluate a linear comb of Chebyshev polynomials on the grid: it should be recovered exactly by the
+% procedure (with a sufficient number of points in the grid)
+X=Sr.knots;
+
+nodal_values = 6-3*jacobi_eval_multidim(X,[3 2],alpha,beta,a,b)+ 7*jacobi_eval_multidim(X,[4 1],alpha,beta,a,b);
+
+domain=[alpha;beta;a;b];
+[modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,'jacobi');
+
+[K,modal_coeffs]
 
 %% test using different polynomials in different directions
 
@@ -145,13 +234,11 @@ mu = 1;
 sig = 0.2;
 a2=1.4;
 b2=3.2;
-mu2 = 0.2;
-sig2 = 0.05;
-
+lambda=1.5;  
 
 N=4; w=7; 
 knots={ @(n) knots_uniform(n,a,b,'prob'), @(n) knots_gaussian(n,mu,sig),...
-        @(n) knots_uniform(n,a2,b2,'prob'), @(n) knots_gaussian(n,mu2,sig2)};
+        @(n) knots_uniform(n,a2,b2,'prob'), @(n) knots_exponential(n,lambda)};
 lev2knots={@lev2knots_lin, @lev2knots_lin, @lev2knots_lin, @lev2knots_lin}; 
 idxset=@(i) sum(i-1);
 [S,C]=smolyak_grid(N,w,knots,lev2knots,idxset);
@@ -168,17 +255,16 @@ nodal_values = 6 ...
                 -3*(lege_eval(X(1,:),ll1(1),a,b).*...
                     herm_eval(X(2,:),ll1(2),mu,sig).*...
                     cheb_eval(X(3,:),ll1(3),a2,b2).*...
-                    herm_eval(X(4,:),ll1(4),mu2,sig2))...
+                    lagu_eval(X(4,:),ll1(4),lambda))...
                 +1*(lege_eval(X(1,:),ll2(1),a,b).*...
                     herm_eval(X(2,:),ll2(2),mu,sig).*...
                     cheb_eval(X(3,:),ll2(3),a2,b2).*...
-                    herm_eval(X(4,:),ll2(4),mu2,sig2));
+                    lagu_eval(X(4,:),ll2(4),lambda));
 
 
+domain={[a;b], [mu;sig], [a2;b2], lambda};
 
-domain=[a mu a2 mu2; b sig b2 sig2];
-
-[modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,{'legendre','hermite','chebyshev','hermite'});
+[modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,{'legendre','hermite','chebyshev','laguerre','generalized laguerre','jacobi'});
 
 sel = abs(modal_coeffs)>1e-12;
 [K(sel,:),modal_coeffs(sel,:)]
@@ -201,10 +287,11 @@ sig=[2 3];
 % interpolant. They could even be evenly spaced points! It's just a bunch of evaluations of a function.
 % of course bad points make the matrix ill conditioned
 N=2; w=5; 
-knots=@(n) knots_gaussian(n,0,1); 
+knots1=@(n) knots_gaussian(n,mu(1),sig(1)); 
+knots2=@(n) knots_gaussian(n,mu(2),sig(2)); 
 lev2knots=@lev2knots_lin; 
 idxset=@(i) sum(i-1);
-S=smolyak_grid(N,w,knots,lev2knots,idxset,get_interval_map(mu,sig,'gaussian'));
+S=smolyak_grid(N,w,{knots1,knots2},lev2knots,idxset);
 Sr=reduce_sparse_grid(S);
 
 
