@@ -19,8 +19,28 @@ function U = compute_modal_tensor(S,S_values,domain,flags)
 %       such that the first variable has normal distribution with mean mu1 and std sigma1
 %       and so on.
 %
+% U=COMPUTE_MODAL_TENSOR(S,S_values,domain,'laguerre') works as the previous call, using 
+%       Laguerre polynomials. Here DOMAIN is a 1XN matrix = [lambda1, lambda2, lambda3, ...]
+%       such that the first variable has exponential distribution with parameter lambda1 and so on.
+%
+% U=COMPUTE_MODAL_TENSOR(S,S_values,domain,'generalized laguerre') works as the previous call, using 
+%       generalized Laguerre polynomials. Here DOMAIN is a 2XN matrix = [alpha1, alpha2, alpha3, ...; beta1, beta2, beta3, ...]
+%       such that the first variable has Gamma distribution with parameters alpha1 and beta1 and so on.
+%
+% U=COMPUTE_MODAL_TENSOR(S,S_values,domain,'jacobi') works as the previous call, using 
+%       Jacobi polynomials. Here DOMAIN is a 4XN matrix = [alpha1, alpha2, alpha3, ...; beta1, beta2, beta3, ...; a1, a2, a3, ...; b1, b2, b3, ...]
+%       such that the first variable has Beta distribution with parameters alpha1 and beta1 on the interval [a1,b1] and so on.
+%
 % U=COMPUTE_MODAL_TENSOR(S,S_values,domain,{<family1>,<family2>,<family3>,...}) works as the previous call, using 
-%       polynomials of type <family-n> in direction n. Here DOMAIN is a 2XN matrix where each column gives
+%       polynomials of type <family-n> in direction n. Here DOMAIN is a cell array of lenght N 
+%       where each cell contains the matrix giving the parameters of the n-th family of polynomials. 
+%       For example:
+%
+%       COMPUTE_MODAL_TENSOR(S,S_VALUES,DOMAIN,{'legendre','hermite','laguerre','jacobi','legendre'})
+%       with 
+%       DOMAIN = {[a1;b1], [mu1;sigma1], lambda, [alpha2;beta2;a2;b2], [a3;b3]}
+% 
+%       --------OLD: 2XN matrix where each column gives
 %       the parameters of the n-th family of polynomials (a,b for legendre, mu,sig for hermite...)
 
 
@@ -32,7 +52,7 @@ function U = compute_modal_tensor(S,S_values,domain,flags)
 
 
 
-if any(~ismember(flags,{'legendre','chebyshev','hermite'}));
+if any(~ismember(flags,{'legendre','chebyshev','hermite','laguerre','generalized laguerre','jacobi'}));
     error('SparseGKit:WrongInput',['Input argument FLAG unrecognized. '...
         ' Please note that COMPUTE_MODAL_TENSOR does not accept INTERVAL_MAP '...
         'input argument any longer. '...
@@ -40,6 +60,14 @@ if any(~ismember(flags,{'legendre','chebyshev','hermite'}));
         'This error message will not be shown in future releases of SPARSE-GRID-MATLAB-KIT']);
 end
 
+if iscell(flags) && ~iscell(domain) 
+    errmsg = ['Input argument DOMAIN must be a cell array. ' ... 
+            'Please note that CONVERT_TO_MODAL has been changed after release 18.10. ' ...
+            'The domain for the case of polynomials of "mixed" type is now a cell array, each cell containing the domain for the corresponding polynomial. ' ...
+            'Type help convert_to_modal for help. '...
+            'This message will disappear from future relesases of SPARSE-GRID-MATLAB-KIT.'];
+    error('SparseGKit:WrongInput',strcat(errmsg));
+end
 
 % I will need the knots in each dimension separately. 
 % As the number of knots is different in each direction, I use a cell array
@@ -95,6 +123,12 @@ if length(flags)==1 || ischar(flags) % the second condition for when the functio
                 vc = herm_eval_multidim(S.knots,k,domain(1,:),domain(2,:));
             case 'chebyshev'
                 vc = cheb_eval_multidim(S.knots,k,domain(1,:),domain(2,:));
+            case 'laguerre'
+                vc = lagu_eval_multidim(S.knots,k,domain);
+            case 'generalized laguerre'
+                vc = generalized_lagu_eval_multidim(S.knots,k,domain(1,:),domain(2,:));
+            case 'jacobi'
+                vc = jacobi_eval_multidim(S.knots,k,domain(1,:),domain(2,:),domain(3,:),domain(4,:));
             otherwise
                 error('SparseGKit:WrongInput','unknown family of polynomials')
         end
@@ -107,11 +141,20 @@ else
         for n=1:nb_dim
             switch flags{n}
                 case 'legendre'
-                    vc = vc.*lege_eval(S.knots(n,:),k(n),domain(1,n),domain(2,n));
+                    % vc = vc.*lege_eval(S.knots(n,:),k(n),domain(1,n),domain(2,n));
+                    vc = vc.*lege_eval(S.knots(n,:),k(n),domain{n}(1),domain{n}(2));
                 case 'hermite'
-                    vc = vc.*herm_eval(S.knots(n,:),k(n),domain(1,n),domain(2,n));
+                    % vc = vc.*herm_eval(S.knots(n,:),k(n),domain(1,n),domain(2,n));
+                    vc = vc.*herm_eval(S.knots(n,:),k(n),domain{n}(1),domain{n}(2));
                 case 'chebyshev'
-                    vc = vc.*cheb_eval(S.knots(n,:),k(n),domain(1,n),domain(2,n));
+                    % vc = vc.*cheb_eval(S.knots(n,:),k(n),domain(1,n),domain(2,n));
+                    vc = vc.*cheb_eval(S.knots(n,:),k(n),domain{n}(1),domain{n}(2));
+                case 'laguerre'
+                    vc = vc.*lagu_eval_multidim(S.knots(n,:),k(n),domain{n});
+                case 'generalized laguerre'
+                    vc = vc.*generalized_lagu_eval_multidim(S.knots(n,:),k(n),domain{n}(1),domain{n}(2));
+                case 'jacobi'
+                    vc = jacobi_eval_multidim(S.knots(n,:),k(n),domain{n}(1),domain{n}(2),domain{n}(3),domain{n}(4));
                 otherwise
                     error('SparseGKit:WrongInput','unknown family of polynomials')
             end

@@ -3,7 +3,6 @@ function [modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,flags,~)
 % CONVERT_TO_MODAL recasts a sparse grid interpolant as a sum of orthogonal polynomials
 % i.e. computes the spectral expansion of the interpolant.
 %
-% 
 % [MODAL_COEFFS,K] = CONVERT_TO_MODAL(S,SR,NODAL_VALUES,DOMAIN,'legendre') returns the Legendre expansion
 %       of the sparse grid interpolant. S is a sparse grid, SR is its reduced counterpart, NODAL_VALUES
 %       are the values of the target function (say F) evaluated on the reduced sparse grid, and has the same
@@ -20,29 +19,38 @@ function [modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,flags,~)
 %       the rows of MODAL_COEFF have V components (V columns), i.e. they are the "function coefficient" of the expansion
 %       of F: R^N -> R^V. K is a matrix containing the associated multi-indices, one per row.
 %
-%       
-%       
-%
 % [MODAL_COEFFS,K] = CONVERT_TO_MODAL(S,SR,NODAL_VALUES,DOMAIN,'chebyshev') returns the Chebyshev expansion
 %        of the sparse grid interpolant. See above for inputs and outputs.
-%
 %
 % [MODAL_COEFFS,K] = CONVERT_TO_MODAL(S,SR,NODAL_VALUES,DOMAIN,'hermite') returns the Hermite expansion
 %       of the sparse grid interpolant. Here, DOMAIN is a 2XN matrix = [mu1, mu2, mu3, ...; sigma1, sigma2, sigma3,...]
 %       i.e. the n-th variable of the sparse grid space has normal distribution with mean mu_n and std sigma_n
 %
+% [MODAL_COEFFS,K] = CONVERT_TO_MODAL(S,SR,NODAL_VALUES,DOMAIN,'laguerre') returns the Laguerre expansion
+%       of the sparse grid interpolant. Here, DOMAIN is a 1XN matrix = [lambda1, lambda2, lambda3, ...]
+%       i.e. the n-th variable of the sparse grid space has exponential distribution with parameter lambda_n 
 %
+% [MODAL_COEFFS,K] = CONVERT_TO_MODAL(S,SR,NODAL_VALUES,DOMAIN,'generalized laguerre') returns the generalized Laguerre expansion
+%       of the sparse grid interpolant. Here, DOMAIN is a 2XN matrix = [alpha1, alpha2, alpha3, ...; beta1, beta2, beta3, ...]
+%       i.e. the n-th variable of the sparse grid space has Gamma distribution with parameters alpha_n and beta_n
+%
+% [MODAL_COEFFS,K] = CONVERT_TO_MODAL(S,SR,NODAL_VALUES,DOMAIN,'jacobi') returns the Jacobi expansion
+%       of the sparse grid interpolant. Here, DOMAIN is a 4XN matrix = [alpha1, alpha2, alpha3, ...; beta1, beta2, beta3, ...; a1, a2, a3, ...; b1, b2, b3, ...]
+%       i.e. the n-th variable of the sparse grid space has Beta distribution with parameters alpha_n and beta_n on the interval [a_n,b_n]
+%      
 % [MODAL_COEFFS,K] = CONVERT_TO_MODAL(S,SR,NODAL_VALUES,DOMAIN,{<family1>,<family2>,<family3>,...}) returns the expansion
 %       of the sparse grid interpolant over polynomial of "mixed" type, according to the families specified in
 %       the last argument. For example:
 %
-%       CONVERT_TO_MODAL(S,SR,NODAL_VALUES,DOMAIN,{'legendre','hermite','legendre','hermite'})
+%       CONVERT_TO_MODAL(S,SR,NODAL_VALUES,DOMAIN,{'legendre','hermite','laguerre','jacobi','legendre'})
 %
 %       converts the sparse grid interpolant in a sum of multi-variate polynomials that are products of
-%       univariate Legendre polynomials (directions 1 and 3) and Hermite. Here DOMAIN is a 2XN matrix 
-%       containing the parameters for each directions as column vectors. E.g. in the case above
+%       univariate Legendre polynomials (directions 1 and 5), Hermite (direction 2), Lagurre (direction 3) and Jacobi (direction 4). 
+%       Here DOMAIN is a cell array of lenght N where each cell contains the vector of the parameters (or a scalar value for the case 'laguerre')
+%       of the n-th family of polynomials. 
+%       E.g. in the case above
 %
-%       DOMAIN = [a1, mu1, a2, mu2; b1, sigma1, b2 sigma2]
+%       DOMAIN = {[a1;b1], [mu1;sigma1], lambda, [alpha2;beta2;a2;b2], [a3;b3]}
 
 
 %----------------------------------------------------
@@ -62,8 +70,17 @@ if nargin==4
     error('SparseGKit:WrongInput',strcat('not enough input arguments.',errmsg))
 end
 
-if any(~ismember(flags,{'legendre','chebyshev','hermite'}));
+if any(~ismember(flags,{'legendre','chebyshev','hermite','laguerre','generalized laguerre','jacobi'}))
     error('SparseGKit:WrongInput',strcat('One or more strings in FLAGS unrecognized. ',errmsg));
+end
+
+if iscell(flags) && ~iscell(domain) 
+    errmsg = ['Input argument DOMAIN must be a cell array. ' ... 
+            'Please note that CONVERT_TO_MODAL has been changed after release 18.10. ' ...
+            'The domain for the case of polynomials of "mixed" type is now a cell array, each cell containing the domain for the corresponding polynomial. ' ...
+            'Type help convert_to_modal for help. '...
+            'This message will disappear from future relesases of SPARSE-GRID-MATLAB-KIT.'];
+    error('SparseGKit:WrongInput',strcat(errmsg));
 end
 
 % N is be the number of random variables
