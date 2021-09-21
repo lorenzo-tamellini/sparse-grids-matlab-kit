@@ -19,20 +19,20 @@ function [x,w] = knots_leja(n,x_a,x_b,type,whichrho)
 % [X,W] = KNOTS_LEJA(N,A,B,'line') given X(1)=B, X(2)=A, X(3)=(A+B)/2 recursively
 %   defines the n-th point by 
 %
-%   X_n= argmax_[A B] prod_{k=1}^{n-1} (X-X_k)
+%   X_n= argmax_[A B] prod_{k=1}^{n-1} abs(X-X_k)
 %
 %
 % [X,W] = KNOTS_LEJA(N,A,B,'sym_line') given X(1)=(A+B)/2, X(2)=B, X(3)=A recursively
 %   defines the n-th and (n+1)-th point by 
 %
-%   X_n= argmax_[A B] prod_{k=1}^{n-1} (X-X_k)
+%   X_n= argmax_[A B] prod_{k=1}^{n-1} abs(X-X_k)
 %   X_(n+1) = symmetric point of X_n with respect to (A+B)/2
 %
 %
 %  [X,W] = KNOTS_LEJA(N,A,B,'p_disk') given  i=sqrt(-1) (imaginary unit), y(1)=1, y(2)=-1, y(3)=i, y(4)=-i,
 %   recursively defines the m-th and (m+1)-th point by
 %
-%   X_m= argmax_[complex unit ball] prod_{k=1}^{m-1} (y-y_k)
+%   X_m= argmax_[complex unit ball] prod_{k=1}^{m-1} abs(y-y_k)
 %
 %   and X is obtained by projecting the y sequence on the real interval [-1,1], collecting the first n unique
 %   points and translating them to the interval [A,B].
