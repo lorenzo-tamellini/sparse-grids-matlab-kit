@@ -39,10 +39,6 @@ function U = compute_modal_tensor(S,S_values,domain,flags)
 %       COMPUTE_MODAL_TENSOR(S,S_VALUES,DOMAIN,{'legendre','hermite','laguerre','jacobi','legendre'})
 %       with 
 %       DOMAIN = {[a1;b1], [mu1;sigma1], lambda, [alpha2;beta2;a2;b2], [a3;b3]}
-% 
-%       --------OLD: 2XN matrix where each column gives
-%       the parameters of the n-th family of polynomials (a,b for legendre, mu,sig for hermite...)
-
 
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
@@ -52,9 +48,9 @@ function U = compute_modal_tensor(S,S_values,domain,flags)
 
 
 
-if any(~ismember(flags,{'legendre','chebyshev','hermite','laguerre','generalized laguerre','jacobi'}));
+if any(~ismember(flags,{'legendre','chebyshev','hermite','laguerre','generalized laguerre','jacobi'}))
     error('SparseGKit:WrongInput',['Input argument FLAG unrecognized. '...
-        ' Please note that COMPUTE_MODAL_TENSOR does not accept INTERVAL_MAP '...
+        'Please note that COMPUTE_MODAL_TENSOR does not accept INTERVAL_MAP '...
         'input argument any longer. '...
         'Type help convert_to_modal for help. '...
         'This error message will not be shown in future releases of SPARSE-GRID-MATLAB-KIT']);
@@ -167,6 +163,3 @@ end
 % now solve the system
 
 U.modal_coeffs = V \ S_values;
-
-
-
