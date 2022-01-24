@@ -4,33 +4,24 @@
 % See LICENSE.txt for license
 %----------------------------------------------------------------------------------
 %
-%                   --> added UNIVARIATE_INTERPOLANT to compute the 1d Lagrangian interpolant of a scalar-valued function
+%                   --> KNOTS_GK returns now GK points and weights for integration 
+%                       w.r.t. general Gaussian densities with mean mi and standard deviation sigma.
+%
+%                   --> added UNIVARIATE_INTERPOLANT to compute the one-dimensional Lagrangian interpolant of a scalar-valued function.
 %                   
 %                   --> added TENSOR_TO_SPARSE that creates a tensor grid structure, which contains all the fields of a 
 %                       sparse grids. This is useful when computing quadrature and interpolation on tensor grids using 
 %                       the functions quadrature/interpolation_on_sparse_grid. 
 %                 
-%                   --> compatibility with GNU Octave have been partially tested.  
-%                   
-%                   --> extend CONVERT_TO_MODAL and COMPUTE_MODAL_TENSOR to Laguerre, generalized Laguerre and Jacobi polynomials. 
-%                       Note that the input DOMAIN for the case of polynomials of "mixed" type is now a cell array, 
-%                       each cell containing the domain for the corresponding polynomial. 
-%                       Corresponding tests have been added to TEST_CONVERT_TO MODAL.                     
+%                   --> compatibility with GNU Octave have been partially tested. 
 %
-%                   --> added function COMPUTE_SYM_BETA_LEJA_KNOTS_AND_WEIGHTS_50, to generate the first 50 symmetric weighted Leja knots and weights 
-%                       for quadrature with respect to the Beta weight function with parameters alpha,beta>-1. 
-%                       The first n knots and weights are then selected by using the function KNOTS_GENERAL_WEIGHTED_LEJA. 
-%                                          
-%                   --> added function COMPUTE_BETA_LEJA_KNOTS_AND_WEIGHTS_50, to generate the first 50 weighted Leja knots and weights 
-%                       for quadrature with respect to the Beta weight function with parameters alpha,beta>-1. 
-%                       If the optional parameter 'jacobi' is specified, knots w.r.t. the Jacobi weight function are computed. 
-%                       The first n knots and weights are then selected by using the function KNOTS_GENERAL_WEIGHTED_LEJA. 
-%                       Added example file where quadrature and interpolation convergence tests for different univariate 
-%                       knots for Beta/Jacobi random variables are compared, TEST_CONVERGENCE_BETA_LEJA.m
+%                   --> added function KNOTS_BETA_LEJA, i.e. weighted Leja points for quadrature with respect to the 
+%                       Beta weight function with range [x_a,x_b], and parameters alpha,beta>-1. 
+%                       Added example file where Beta Leja quadrature and interpolation convergence tests for different univariate 
+%                       knots for Beta random variables are compared, TEST_CONVERGENCE_BETA_LEJA.m
 %
-%                   --> added function COMPUTE_GAMMA_LEJA_KNOTS_AND_WEIGHTS_50, to generate the first 50 weighted Leja knots and weights
-%                       for quadrature with respect to the Gamma weight function with parameter alpha>-1, beta=1. 
-%                       The first n knots and weights are then selected by using the function KNOTS_GENERAL_WEIGHTED_LEJA. 
+%                   --> added function KNOTS_GAMMA_LEJA, i.e. weighted Leja points for quadrature with respect to the 
+%                       Gamma weight function with parameter alpha>-1, beta=1. 
 %                       Added example file where Gamma Leja quadrature and interpolation convergence tests for different univariate 
 %                       knots for Gamma random variables are compared, TEST_CONVERGENCE_GAMMA_LEJA.m
 %
@@ -38,24 +29,28 @@
 %                       exponential weight function. Added example file where exponential Leja are computed
 %                       and then quadrature and interpolation convergence tests for different univariate 
 %                       knots for exponential random variables are compared, TEST_COMPUTE_EXPONENTIAL_LEJA_AND_CONVERGENGE_TEST.m
-% 
-%                   --> added function KNOTS_SYM_GAUSSIAN_LEJA that provides the first 150 symmetric weighted Leja points and
-%                       weights for quadrature with respect to the Gaussian weight function.               
+%
+%                   --> extend CONVERT_TO_MODAL and COMPUTE_MODAL_TENSOR to Laguerre, generalized Laguerre and Jacobi polynomials. 
+%                       Note that the input DOMAIN for the case of polynomials of "mixed" type is now a cell array, 
+%                       each cell containing the domain for the corresponding polynomial. 
+%                       Corresponding tests have been added to TEST_CONVERT_TO MODAL.   
 %
 %                   --> added function LAGU_EVAL and LAGU_EVAL_MULTIDIM to generate one-dimensional and multi-dimensional Laguerre polynomials 
 % 
 %                   --> added function GENERALIZED_LAGU_EVAL and GENERALIZED_LAGU_EVAL_MULTIDIM to generate one-dimensional and multi-dimensional generalized Laguerre polynomials
 %
 %                   --> added function JACOBI_EVAL and JACOBI_EVAL_MULTIDIM to generate one-dimensional and multi-dimensional Jacobi polynomials
+%                   --> added function KNOTS_BETA to generate Gauss-Jacobi knots and weights for integration
+%                       w.r.t. Beta distributions or Jacobi polynomials.
 %
 %                   --> added function KNOTS_BETA to generate Gauss-Jacobi knots and weights for integration
-%                       w.r.t. Beta distributions or Jacobi polynomials
+%                       w.r.t. Beta distributions.
 %                   
 %                   --> added function KNOTS_GAMMA to generate Gauss-generalized Laguerre knots and weights for integration
-%                       w.r.t. Gamma distributions
+%                       w.r.t. Gamma distributions.
 % 
 %                   --> added function KNOTS_EXPONENTIAL to generate Gauss-Laguerre knots and weights for integration
-%                       w.r.t. exponential distributions
+%                       w.r.t. exponential distributions.
 %
 % -> 2020, Sep. 16  --> KNOTS_GAUSSIAN_LEJA returns now Leja points and weights for integration 
 %                       w.r.t. general Gaussian densities with mean mi and standard deviation sigma. 
