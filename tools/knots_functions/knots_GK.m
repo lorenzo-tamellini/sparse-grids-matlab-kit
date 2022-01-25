@@ -1,15 +1,15 @@
-function [x,w] = knots_GK(n)
+function [x,w] = knots_GK(n,mi,sigma)
 
-% [x,w] = knots_GK(n)
+% [x,w] = knots_GK(n,mi,sigma)
 %
 % returns the collocation points (x) and the weights (w) 
 % of the Genz-Keister quadrature formula (also known as Kronrod-Patterson-Normal)
 % for approximation of integrals w.r.t to the weight function 
 %
-% rho(x)=1/sqrt(2*pi)*exp(-x^2/2) 
+% rho(x)=1/sqrt(2*pi*sigma^2) *exp( -(x-mi)^2 / (2*sigma^2) ) 
 %
 % i.e. the density of a gaussian random variable 
-% with mean 0 and standard deviation 1.
+% with mean mi and standard deviation sigma.
 %
 % Knots and weights have been precomputed (up to 35). 
 % An error is raised if the number of points requested is not available
@@ -49,6 +49,7 @@ else
     w = redistribute_weights(w_t);
 end
 
+x = mi + sigma*x;
 % sort knots increasingly and weights accordingly
 [x,sorter]=sort(x);
 w=w(sorter);
