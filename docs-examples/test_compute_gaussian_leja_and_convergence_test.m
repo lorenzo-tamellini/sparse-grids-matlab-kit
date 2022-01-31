@@ -9,7 +9,7 @@
 %% Computation of Normal Leja Nodes and weights
 % for the weighted Leja sequence for integration 
 % w.r.t to the standard gaussian weight function 
-% rho(x)=1/sqrt(pi)*exp(-x^2/2) 
+% rho(x)=1/sqrt(2*pi)*exp(-x^2/2) 
 
 clear
 
