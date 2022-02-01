@@ -15,7 +15,7 @@
 %                 
 %                   --> compatibility with GNU Octave have been partially tested. 
 %
-%                   --> added function KNOTS_BETA_LEJA, i.e. weighted Leja points for quadrature with respect to the 
+%                   --> added function KNOTS_BETA_LEJA, i.e. weighted Leja points (and their symmetric version) for quadrature with respect to the 
 %                       Beta weight function with range [x_a,x_b], and parameters alpha,beta>-1. 
 %                       Added example file where Beta Leja quadrature and interpolation convergence tests for different univariate 
 %                       knots for Beta random variables are compared, TEST_CONVERGENCE_BETA_LEJA.m
@@ -40,9 +40,7 @@
 %                   --> added function GENERALIZED_LAGU_EVAL and GENERALIZED_LAGU_EVAL_MULTIDIM to generate one-dimensional and multi-dimensional generalized Laguerre polynomials
 %
 %                   --> added function JACOBI_EVAL and JACOBI_EVAL_MULTIDIM to generate one-dimensional and multi-dimensional Jacobi polynomials
-%                   --> added function KNOTS_BETA to generate Gauss-Jacobi knots and weights for integration
-%                       w.r.t. Beta distributions or Jacobi polynomials.
-%
+%                   
 %                   --> added function KNOTS_BETA to generate Gauss-Jacobi knots and weights for integration
 %                       w.r.t. Beta distributions.
 %                   
@@ -52,7 +50,7 @@
 %                   --> added function KNOTS_EXPONENTIAL to generate Gauss-Laguerre knots and weights for integration
 %                       w.r.t. exponential distributions.
 %
-% -> 2020, Sep. 16  --> KNOTS_GAUSSIAN_LEJA returns now Leja points and weights for integration 
+%                   --> KNOTS_GAUSSIAN_LEJA returns now standard and symmetric Leja points and weights for integration 
 %                       w.r.t. general Gaussian densities with mean mi and standard deviation sigma. 
 %                       The function KNOTS_GAUSSIAN_LEJA requires now three inputs: n, mi, and sigma, with n the number of points required.
 %
