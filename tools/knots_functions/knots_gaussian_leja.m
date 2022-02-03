@@ -1,28 +1,24 @@
-function [x,w,floc]=knots_gaussian_leja(n,mi,sigma)
+function [x,w,floc]=knots_gaussian_leja(n)
 
-% [x,w] = knots_gaussian_leja(n,mi,sigma)
+% [x,w] = knots_gaussian_leja(n)
 %
 % returns the collocation points (x) and the weights (w) 
 % for the weighted Leja sequence for integration 
 % w.r.t to the weight function 
-% 
-% rho(x)=1/sqrt( 2*pi*sigma^2) * exp( -(x-mi)^2 / (2*sigma^2) ) 
+%
+% rho(x)=1/sqrt(2*pi)*exp(-x^2/2) 
 %
 % i.e. the density of a gaussian random variable 
-% with mean mi and standard deviation sigma.
+% with mean 0 and standard deviation 1.
 %
-% Knots and weights have been precomputed (up to 150)
-% for the case mi=0 and sigma=1 following the work
+% Knots and weights have been precomputed (up to 150) following the work
 % 
 % A. Narayan, J. Jakeman, "Adaptive Leja sparse grid constructions for stochastic collocation and high-dimensional approximation"
-% SIAM Journal on Scientific Computing,  Vol. 36, No. 6, pp. A2952--A2983, 2014
-% 
-% If mi~=0 and sigma~=1 the precomputed knots are modified as follows: 
-% x = mi + sigma*x. The weights are unaffected. 
+% SIAM Journal on Scientific Computing,  Vol. 36, No. 6, pp. A2952–A2983, 2014
 %
-% An error is raised if more than 150 points are requested.
+% an error is raised if more than 150 points are requested.
 %
-% Knots are sorted increasingly before returning (weights are returned in the corresponding order).
+% knots are sorted increasingly before returning (weights are returned in the corresponding order)
 
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
@@ -30,17 +26,13 @@ function [x,w,floc]=knots_gaussian_leja(n,mi,sigma)
 % See LICENSE.txt for license
 %----------------------------------------------------
 
-floc = localfunctions;
+warning(['This function has been replaced by knots_normal_leja in release 22.2, '...
+    'which takes as input also the mean and the standard deviation of the normal (gaussian) weight. '  ...
+    'This allows for integration w.r.t. general normal densities (and not only w.r.t. the standard Gaussian). '...
+    'The function knots_gaussial_leja is kept for compatibility but will not be included '... 
+    'in future releases of the sparse-grid-matlab-kit.'])
 
-if nargin==1 
-        errmsg = ['KNOTS_GAUSSIAN_LEJA does not accept ',num2str(nargin),' input. ' ... 
-            'Observe that KNOTS_GAUSSIAN _LEJA has been changed after release 18.10 and ' ...
-            'now takes as input also the mean and the standard deviation of the gaussian weight. '  ...
-            'This allows for integration w.r.t. general gaussian densities (and not only w.r.t. the standard Gaussian). '...
-            'See KNOTS_GAUSSIAN _LEJA for more information. '...
-            'This message will disappear from future relesases of the Sparse Grid Matlab Kit.'];
-        error('SparseGKit:WrongInput',errmsg)
-end
+floc = localfunctions;
 
 if n>150
    error('SparseGKit:OutOfTable',strcat('this number of points is not available:',num2str(n)))
@@ -57,9 +49,7 @@ else
     x = X(1:n);
     w = W(1:n,n);
     
-    % modifies points according to mi, sigma (the weigths are unaffected)
-    x = mi + sigma*x;
-
+    
     % sort knots increasingly and weights accordingly. Weights need to be row vectors
     [x,sorter]=sort(x);
     w=w(sorter)';

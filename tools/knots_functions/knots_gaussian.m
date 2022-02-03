@@ -16,7 +16,9 @@ function [x,w]=knots_gaussian(n,mi,sigma)
 % See LICENSE.txt for license
 %----------------------------------------------------
 
-
+warning(['This function has been replaced by knots_normal in release 22.2.'...
+    ' This function is kept for compatibility but will not be included'... 
+    ' in future releases of the sparse-grid-matlab-kit.'])
 
 if (n==1) 
       % the point (traslated if needed) 
