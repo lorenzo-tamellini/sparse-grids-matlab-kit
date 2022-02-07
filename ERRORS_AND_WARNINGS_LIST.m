@@ -21,4 +21,4 @@
 'SparseGKit:double'
 'SparseGKit:GKNonTab'
 'SparseGKit:IgnoredInput' %#ok<*NOPTS>
-
+'SparseGKit:InconsistentInput'
