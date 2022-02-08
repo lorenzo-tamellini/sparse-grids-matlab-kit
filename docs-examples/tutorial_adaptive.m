@@ -81,7 +81,7 @@ clear
 f=@(x) 1./(2+exp(x(1)) + exp(x(2))); 
 N=2;
 
-knots=@(n) knots_GK(n);
+knots=@(n) knots_GK(n,0,1);
 lev2knots=@lev2knots_GK;
 controls.paral=NaN;
 controls.max_pts=150;
@@ -95,7 +95,7 @@ adapt1 = adapt_sparse_grid(f,N,knots,lev2knots,prev_adapt,controls);
 plot_idx_status(adapt1.private.G,adapt1.private.I,adapt1.private.idx_bin,adapt1.private.idx)
 
 
-knots=@(n) knots_gaussian(n,0,1);
+knots=@(n) knots_normal(n,0,1);
 lev2knots=@lev2knots_lin;
 controls.nested=false; % changing to nested false for gaussian
 % here's the adapt non-nested. You will see some message like:
@@ -132,7 +132,7 @@ clear
 
 f=@(x) 1./(2+exp(x(1)) + exp(x(2))) 
 N=2;
-knots=@(n) knots_GK(n);
+knots=@(n) knots_GK(n,0,1);
 lev2knots=@lev2knots_GK;
 
 controls.paral=NaN; 
@@ -159,7 +159,7 @@ clear
 
 f=@(x) 1./(2+exp(x(1)) + exp(x(2))) 
 N=2;
-knots=@(n) knots_GK(n);
+knots=@(n) knots_GK(n,0,1);
 lev2knots=@lev2knots_GK;
 
 controls.paral=NaN;

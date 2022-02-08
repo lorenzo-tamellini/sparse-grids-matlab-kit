@@ -252,7 +252,7 @@ legend show
 %
 % with n points
 n=9; mu=0; sig=1;
-x=knots_gaussian(n,mu,sig);
+x=knots_normal(n,mu,sig);
 
 figure
 plot(x,0*x,'ok','MarkerFaceColor','k','DisplayName','9 GH points')
@@ -262,24 +262,24 @@ grid on
 
 hold on
 n=3; 
-x=knots_GK(n);
+x=knots_GK(n,0,1);
 plot(x,1 + 0*x,'or','MarkerFaceColor','r','DisplayName','3 GK points')
 
 n=9; 
-x=knots_GK(n);
+x=knots_GK(n,0,1);
 plot(x, 2 + 0*x,'ob','MarkerFaceColor','b','DisplayName','9 GK points')
 
 
-% Gaussian-Leja : nested quadrature points to approximate integrals as the previous
+% Normal-Leja : nested quadrature points to approximate integrals as the previous
 
 hold on
 n=3; 
-x=knots_gaussian_leja(n,mu,sig);
-plot(x,3 + 0*x,'xr','LineWidth',2,'MarkerFaceColor','r','MarkerSize',8,'DisplayName','3 Gaussian-Leja points')
+x=knots_normal_leja(n,mu,sig);
+plot(x,3 + 0*x,'xr','LineWidth',2,'MarkerFaceColor','r','MarkerSize',8,'DisplayName','3 Normal-Leja points')
 
 n=9; 
-x=knots_gaussian_leja(n, mu,sig);
-plot(x, 4 + 0*x,'xb','LineWidth',2,'MarkerFaceColor','b','MarkerSize',8,'DisplayName','9 Gaussian-Leja points')
+x=knots_normal_leja(n, mu,sig);
+plot(x, 4 + 0*x,'xb','LineWidth',2,'MarkerFaceColor','b','MarkerSize',8,'DisplayName','9 Normal-Leja points')
 
 ylim([-1.5 7])
 legend show
@@ -482,7 +482,7 @@ plot_multiidx_set(G(:,[1 3]))
 clc
 clear
 
-knots=@(n) knots_gaussian(n,0,1);
+knots=@(n) knots_normal(n,0,1);
 lev2knots=@lev2knots_lin;
 
 N=20;
@@ -527,7 +527,7 @@ toc
 clear
 clc
 
-knots=@(n) knots_gaussian(n,0,1);
+knots=@(n) knots_normal(n,0,1);
 lev2knots=@lev2knots_lin;
 ibox= [3 4 2 4 2];
 [~,C] = multiidx_box_set(ibox,1);

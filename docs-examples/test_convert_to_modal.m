@@ -81,8 +81,8 @@ sig=[2 3];
 % of course bad points make the matrix ill conditioned
 N=2; w=5; 
 
-knots1=@(n) knots_gaussian(n,mu(1),sig(1));
-knots2=@(n) knots_gaussian(n,mu(2),sig(2));
+knots1=@(n) knots_normal(n,mu(1),sig(1));
+knots2=@(n) knots_normal(n,mu(2),sig(2));
 lev2knots=@lev2knots_lin; 
 idxset=@(i) sum(i-1);
 
@@ -237,7 +237,7 @@ b2=3.2;
 lambda=1.5;  
 
 N=4; w=7; 
-knots={ @(n) knots_uniform(n,a,b,'prob'), @(n) knots_gaussian(n,mu,sig),...
+knots={ @(n) knots_uniform(n,a,b,'prob'), @(n) knots_normal(n,mu,sig),...
         @(n) knots_uniform(n,a2,b2,'prob'), @(n) knots_exponential(n,lambda)};
 lev2knots={@lev2knots_lin, @lev2knots_lin, @lev2knots_lin, @lev2knots_lin}; 
 idxset=@(i) sum(i-1);
@@ -287,8 +287,8 @@ sig=[2 3];
 % interpolant. They could even be evenly spaced points! It's just a bunch of evaluations of a function.
 % of course bad points make the matrix ill conditioned
 N=2; w=5; 
-knots1=@(n) knots_gaussian(n,mu(1),sig(1)); 
-knots2=@(n) knots_gaussian(n,mu(2),sig(2)); 
+knots1=@(n) knots_normal(n,mu(1),sig(1)); 
+knots2=@(n) knots_normal(n,mu(2),sig(2)); 
 lev2knots=@lev2knots_lin; 
 idxset=@(i) sum(i-1);
 S=smolyak_grid(N,w,{knots1,knots2},lev2knots,idxset);
