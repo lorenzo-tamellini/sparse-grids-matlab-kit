@@ -9,7 +9,9 @@ function [S,I,coeff] = smolyak_grid_add_multiidx(new_idx,S_in,I_in,coeff_in,knot
 %       --> the index set I_IN that was used to create S_IN, either implicitly (by defining the rule in SMOLYAK_GRID)
 %           or explicitely (by using SMOLYAK_GRID_MULTIIDX). Note that this cannot be produced as the union of the indices S_IN.idx,
 %           because S_IN contains only tensors whose coefficient in the combination technique is non-zero, while here we need them all.
-%       --> COEFF_IN is the vector of coefficients of the combination technique obtained on I_IN
+%       --> COEFF_IN is the vector of coefficients of the combination technique obtained on I_IN. Note that this
+%           vector of coefficients *MUST* include also zeros if a row of I_IN has coeff zero in the combination technique.
+%           Therefore, COEFF_IN cannot be taken as [S_in.coeff]. Instead, use COEFF_IN = COMBINATION_TECHNIQUE(I_IN)           
 %       --> KNOTS, LEV2KNOTS are the usual arguments to specify knots and lev2knots (see e.g. SMOLYAK_GRID)
 %
 %       The function outputs:
@@ -148,7 +150,7 @@ for j=1:length(coeff)
 end
 
     
-% now store the coeff value. It has to be stored after the first loop, becuase tensor_grid returns a grid
+% now store the coeff value. It has to be stored after the first loop, because tensor_grid returns a grid
 % WITHOUT coeff field, and Matlab would throw an error (Subscripted assignment between dissimilar structures)
 
 for ss=1:nb_grids
