@@ -868,10 +868,19 @@ N = 2;
 I_1d = (2*sqrt(1+b)-2*sqrt(-1+b));
 I_ex = I_1d^N;
 
+% let's build a tensor grid with the following choices
 knots=@(n) knots_CC(n,-1,1,'nonprob');
-idx = [6,5]; % index that dictates the number of points in the tensor grid 
-S = tensor_to_sparse(N,knots,@lev2knots_doubling,idx);
+ii = [6,5]; 
+lev2knots = @lev2knots_doubling;
+
+% create the tensor grid, convert it to sparse
+T = tensor_grid(N,lev2knots(ii),knots);  
+S = tensor_to_sparse(T);
+% with the call above, S.idx is automatically set to the number of points in each dir, 
+% which implies S.idx = lev2knots(ii). If you want S.idx = ii, use the following call
+% S = tensor_to_sparse(T,ii);
 Sr = reduce_sparse_grid(S);
+issmolyak(S)
 
 I=quadrature_on_sparse_grid(@(x)f(x,b) , Sr); % Sr must be reduced here
 
@@ -1112,11 +1121,17 @@ clear
 f = @(x,b) prod(1./sqrt(x+b)); 
 b=3; N = 2; 
 
+% let's build a tensor grid with the following choices
 idx = [10 8];
 knots=@(n) knots_uniform(n,-1,1,'nonprob');
-[S] = tensor_to_sparse(N,knots,@lev2knots_lin,idx); 
+lev2knots = @lev2knots_lin;
 
-Sr=reduce_sparse_grid(S);
+
+% create the tensor grid, convert it to sparse
+T = tensor_grid(N,lev2knots(idx),knots);  
+S = tensor_to_sparse(T);
+Sr = reduce_sparse_grid(S);
+
 
 %non_grid_points=rand(N,100); 
 non_grid_points=[0.5*ones(N,1), zeros(N,1)];
