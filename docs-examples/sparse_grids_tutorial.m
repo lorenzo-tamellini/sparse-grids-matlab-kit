@@ -1145,6 +1145,45 @@ disp('Interpolation error')
 max( abs( f_values-f(non_grid_points,b) ) )
 
 
+%% PART 4: INTERPOLATION IN 1D
+
+% for 1D interpolation, a dedicated function exists. It's called univariate_interpolant and can operate on
+% vector-valued function, like here below, where we interpolate a function with two components, i.e., F: R -> R^2
+
+clear
+ 
+% the two components of f
+f1 = @(x) x.^3; 
+f2 = @(x) sin(2*x); 
+
+% interpolation points and values
+x_interp = linspace(-1,2,4);
+F_interp = [f1(x_interp);
+            f2(x_interp)];
+
+
+% evaluate the interpolant on a much finer grid
+x_eval = -1:0.01:2;
+F_eval_interp = univariate_interpolant(x_interp,F_interp,x_eval);  
+
+% plot
+subplot(1,2,1)
+plot(x_eval,F_eval_interp(1,:),'DisplayName','interpolant')
+hold on
+plot(x_interp,F_interp(1,:),'o','DisplayName','interpolation points')
+plot(x_eval,f1(x_eval),'DisplayName','true fun')
+legend show
+
+subplot(1,2,2)
+plot(x_eval,F_eval_interp(2,:),'DisplayName','interpolant')
+hold on
+plot(x_interp,F_interp(2,:),'o','DisplayName','interpolation points')
+plot(x_eval,f2(x_eval),'DisplayName','true fun')
+%legend show
+
+
+
+
 
 %% PART 4: INTERPOLATION ON A SPARSE GRID -  INTERPOLATION ERROR ON SPARSE GRID POINTS
 
