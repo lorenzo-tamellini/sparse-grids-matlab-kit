@@ -28,17 +28,17 @@ function [x,w]=knots_normal_leja(n,mi,sigma,type)
 %
 % -----------------------------------------------------------
 %
-% [X,W] = KNOTS_NORMAL_LEJA(N,mi,sigma,'line') given X(1)=0 recursively
+% [X,W] = KNOTS_NORMAL_LEJA(N,0,1,'line') given X(1)=0 recursively
 %   defines the n-th point by 
 %
-%   X_n= argmax prod_{k=1}^{n-1} abs(X-X_k)
+%   X_n= argmax sqrt(rho(X)) prod_{k=1}^{n-1} abs(X-X_k)
 % 
 % This is the default choice.
 %
-% [X,W] = KNOTS_NORMAL_LEJA(N,mi,sigma,'sym_line') given X(1)=0 recursively
+% [X,W] = KNOTS_NORMAL_LEJA(N,0,1,'sym_line') given X(1)=0 recursively
 %   defines the n-th and (n+1)-th point by 
 %
-%   X_n= argmax prod_{k=1}^{n-1} abs(X-X_k)
+%   X_n= argmax sqrt(rho(X)) prod_{k=1}^{n-1} abs(X-X_k)
 %   X_(n+1) = symmetric point of X_n with respect to 0
 
 %----------------------------------------------------
