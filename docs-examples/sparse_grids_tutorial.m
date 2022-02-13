@@ -1288,21 +1288,39 @@ a=-1; b=1;
 domain = [-1 -1; 1 1];
 
 N= 2; 
-w= 3;
-knots = @(n) knots_trap(n,a,b,'nonprob');
+w= 6;
 lev2knots = @lev2knots_doubling;
 
-S = smolyak_grid(N,w,knots,lev2knots);
-Sr = reduce_sparse_grid(S);
+% a bad choice: equispaced points, we get them by trap-rule. Build a grid with them
+knots_bad = @(n) knots_trap(n,a,b,'nonprob');
+S_bad = smolyak_grid(N,w,knots_bad,lev2knots);
+Sr_bad = reduce_sparse_grid(S_bad);
+f_values_bad = evaluate_on_sparse_grid(f,Sr_bad);
 
-f_values = evaluate_on_sparse_grid(f,Sr);
+% a good choice: CC points. Build another grid with them, to compare. Note that the two grids will have the same
+% number of points
+knots_ok = @(n) knots_CC(n,a,b,'nonprob');
+S_ok = smolyak_grid(N,w,knots_ok,lev2knots);
+Sr_ok = reduce_sparse_grid(S_ok);
+f_values_ok = evaluate_on_sparse_grid(f,Sr_ok);
 
+
+% a subplot figure where we compare the two grids and the two interpolants
 figure
-plot_sparse_grid(Sr,[],'o','MarkerSize',20,'LineWidth',4)
 
-figure
-plot_sparse_grids_interpolant(S,Sr,domain,f_values,'with_f_values','nb_plot_pts',40);
+subplot(2,2,1)
+plot_sparse_grid(Sr_bad,[],'o','MarkerSize',4,'LineWidth',2)
+axis square
 
+subplot(2,2,2)
+plot_sparse_grids_interpolant(S_bad,Sr_bad,domain,f_values_bad,'with_f_values','nb_plot_pts',40);
+
+subplot(2,2,3)
+plot_sparse_grid(Sr_ok,[],'o','MarkerSize',4,'LineWidth',2)
+axis square
+
+subplot(2,2,4)
+plot_sparse_grids_interpolant(S_ok,Sr_ok,domain,f_values_ok,'with_f_values','nb_plot_pts',40);
 
 
 %% case N=3
