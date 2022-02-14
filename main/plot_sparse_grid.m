@@ -7,7 +7,7 @@ function h= plot_sparse_grid(S,dims,varargin)
 %
 % PLOT_SPARSE_GRID(S,[d1 d2]) plots the d1 and d2 components of the points in S if S is more than 2D
 %
-% PLOT_SPARSE_GRID(S,[d1,d2],varargin) defines the style of the plot, e.g.
+% PLOT_SPARSE_GRID(S,[d1,d2],varargin) defines the style of the plot. If you don't need to specify [d1,d2], use []. E.g.:
 %
 % plot_sparse_grid(S,[],'color','g','marker','o')
 %

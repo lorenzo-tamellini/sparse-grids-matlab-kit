@@ -1354,9 +1354,27 @@ plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid);
 figure
 plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid,'with_f_values','nb_plot_pts',10,'nb_contourfs',10,'nb_contourf_lines',40);
 
+% we have two ways of plotting the sparse grid:
+
+% way 1): 3d-plot
 figure
+plot3_sparse_grid(Sr,[],'o','MarkerSize',8,'MarkerFaceColor','r')
+axis square
+
+
+% way 2): two-dimensional projections (they will look identical in this case)
+figure
+subplot(1,3,1)
+plot_sparse_grid(Sr,[1 2])
+axis square
+subplot(1,3,2)
+plot_sparse_grid(Sr,[2 3])
+axis square
+subplot(1,3,3)
 plot_sparse_grid(Sr,[1 3])
 axis square
+
+
 
 
 
@@ -1392,8 +1410,22 @@ plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid,'with_f_values');
 
 % specify cuts. Again, because we are specifying cuts, a new figure per cut is generated.  The code below generates two figures 
 % (the first one is empty)
-figure
 plot_sparse_grids_interpolant(S,Sr,domain,values_on_grid,'two_dim_cuts',[1 4 2 7]);
+
+
+
+% we have two ways of plotting the sparse grid:
+
+% way 1): 3d-plot projections, e.g.
+figure
+plot3_sparse_grid(Sr,[1 2 4],'o','MarkerSize',8,'MarkerFaceColor','r')
+axis square
+
+
+% way 2): two-dimensional projections 
+figure
+plot_sparse_grid(Sr,[1 2])
+axis square
 
 
 
