@@ -213,9 +213,6 @@ legend show
 % which should of course be used sparingly as they are not suitable for high-order 
 % interpolation (runge phenomenon)
 
-% trap nodes are nested if n points are added to a n-1 rule (e.g. m(i)=2^i+1 points at level k, or if they follow the doubling rule), 
-% while midpoint are nested if they are multiplied by three
-
 figure
 
 n=5; a=1; b=4;
@@ -302,7 +299,7 @@ legend show
 %% PART 1: INTRODUCTION - INGREDIENTS OF A SPARSE GRID. LEV2KNOTS FUNCTION.
 
 % in view of building sparse grids, it is useful to order quadrature/interpolation rules in sequences, i.e. to
-% introduce levels for the rules. The Sparse Grid Matlab Kit provides 3 functions to this end:
+% introduce levels for the rules. The Sparse Grid Matlab Kit provides 5 functions to this end:
 
 % -> lev2knots_lin     
 %
@@ -326,6 +323,15 @@ lev2knots_2step([1 2 3 4 5])
 % "doubles" the number of points from one level to the next: consecutive rules have 1,3,5,9,17... points
 
 lev2knots_doubling([1 2 3 4 5])
+
+
+% -> lev2knots_tripling 
+%
+% triples the number of points from one level to the next: consecutive rules have 1,3,9,27... points.
+
+
+lev2knots_tripling([1 2 3 4 5])
+
 
 
 % -> lev2knots_GK
