@@ -1,4 +1,4 @@
-function S = smolyak_grid_multiidx_set(C,knots,lev2knots,S2)
+function S = smolyak_grid_multiidx_set(C,knots,lev2knots,S2,arg5) %#ok<INUSD>
 
 % SMOLYAK_GRID_MULTIIDX_SET produces a sparse grid starting from a multiindex-set rather than
 % from a rule IDXSET(I) <= W.

@@ -1,4 +1,4 @@
-function [S,C] = smolyak_grid(N,w,knots,lev2knots,idxset,S2)
+function [S,C] = smolyak_grid(N,w,knots,lev2knots,idxset,S2,arg7) %#ok<INUSD>
 
 
 %  SMOLYAK_GRID generates a Smolyak sparse grid (and corresponding quadrature weights)
@@ -101,6 +101,13 @@ if isa(lev2knots,'function_handle')
     end
 end
 
+
+% throw an error if called in the old way
+% [S,C] = SMOLYAK_GRID(N,W,KNOTS,LEV2KNOTS,IDXSET,MAP,WEIGHTS_COEFF) 
+
+if nargin > 5 && isa(S2,'function_handle')
+   error('SparseGKit:WrongInput','Since release 22.2, SMOLYAK_GRID no longer accepts MAP and WEIGHTS_COEFF as inputs') 
+end
 
 
 if w==0
