@@ -100,7 +100,6 @@ knots=@(n) knots_CC(n,-1,1,'nonprob'); % knots
 w = 3; %level
 S = smolyak_grid(N,w,knots,@lev2knots_doubling); % grid
 
-
 % visualization
 
 % plot the grid itself
@@ -635,6 +634,19 @@ axis square
 legend('reduced grid')
 set(legend,'Location','SouthOutside')
 
+%% The Kit provdies a short-hand to create and reduce a "vanilla sparse grid", i.e. 
+%  - Clenshaw--Curtis points in [-1,1] 
+%  - lev2knots_doubling 
+%  - multi-index set: sum(ii-1) \leq w 
+%
+%  (cf define_functions_for_rule('SM') )
+
+
+clear 
+clc
+N = 2;
+w = 3;
+[S,Sr] = smolyak_grid_quick_preset(N,w);
 
 
 %% PART 2: EVALUATE A FUNCTION ON A SPARSE GRID - BASICS
