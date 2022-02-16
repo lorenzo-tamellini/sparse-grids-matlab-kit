@@ -1508,12 +1508,20 @@ axis square
 
 % the kit provides a function to compute the generalized Polynomial Cahos Expansion (g-PCE) of a function
 % of several variables, i.e. the expansion of f in terms of a sum of orthonormal polynomials.
-% The coefficients of this expansion are defined as suitable integrals over the space of parameters, and
+%
+% Supported random variables - orthonormal polynomials are
+% uniform       | Legendre, Chebyshev
+% normal        | Hermite
+% exponential   | Laguerre
+% gamma         | Generalized Laguerre
+% beta          | Jacobi
+% 
+% The coefficients of these expansions are defined as suitable integrals over the space of parameters, and
 % could thus be approximated with sparse grid quadrature. However, a more efficient technique can be
 % applied, and it actually implemented in the Kit. It consists in rearranging the sparse grid
-% interpolant, which is a linear combination of Lagrange polynomials, as a summation of Legendre
+% interpolant, which is a linear combination of Lagrange polynomials, as a summation of orthonormal
 % polynomials (i.e. performing a change of base to express the same polynomial). Given the relations
-% between sparse grids and orthogonal expansion, it is alway possible to tune the sparse grid so to
+% between sparse grids and orthogonal expansion, it is always possible to tune the sparse grid so to
 % obtain the gPCE in a precise polynomial space. 
 %
 % See e.g. Back Nobile Tamellini Tempone, `Stochastic Spectral Galerkin and Collocation...a  numerical
@@ -1521,7 +1529,7 @@ axis square
 % thesis, chap.6 or MOX report 13/2012 by Formaggia Guadagnini Imperiali Lever Porta Riva Scotti Tamellini
 % for details on the conversions
 %
-% more examples can be found in test_convert_to_modal.m
+% more examples with different kinds of random variables / orthogonal polynomials can be found in test_convert_to_modal.m
 
 clc
 clear
@@ -1596,7 +1604,7 @@ disp([Sob_i1 Sob_i2 Sob_i3 Sob_i4])
 disp('Total Sobol indices')
 disp([Tot_Sob_i1 Tot_Sob_i2 Tot_Sob_i3 Tot_Sob_i4])
 
-%% PART 6: SPARSE-GRIDS-BASED SENSITIVITY ANALYSIS - COMPUTE GRADIENTS OF A SPARSE GRID INTERPOLANT
+%% PART 6: SPARSE-GRIDS-BASED SENSITIVITY ANALYSIS - COMPUTE GRADIENTS OF A SPARSE GRID INTERPOLANT (by finite differences)
 
 clear
 
@@ -1652,11 +1660,6 @@ plot(Grads(2,:),'-o','DisplayName','Finite Diff');
 plot(df2(eval_points),'-','DisplayName','true val')
 legend show
 grid on
-
-
-
-
-
 
 
 
@@ -1722,6 +1725,9 @@ grid on
 clc
 max(abs((Grads_def(1,:) - df1(eval_points))./df1(eval_points)))
 max(abs((Grads_man(1,:) - df1(eval_points))./df1(eval_points)))
+
+
+%% a function to compute Hessians of a function (by finite differences) is also available, see hessian_sparse_grid
 
 
 %% PART 7: SAVE SPARSE GRID ON FILE
