@@ -6,7 +6,8 @@
 %----------------------------------------------------
 
 
-%%
+%% test 1, exact solution available
+
 clear
 
 % function to be integrate, in (-1,1)^N. input column points, out row vector
@@ -67,4 +68,70 @@ legend show
 figure
 loglog(work,q_error,'-or','DisplayName','Numerical Error, w.r.t. #points');
 legend show
+
+%% test 2, no exact solution available. Also, we take this chance and show an example with exponential random variables
+
+
+clear
+
+% dimension of space
+N=2;
+
+% we use a simple TD rule, up to this level 
+w_max=15;
+
+% function to be integrated
+
+% the function resembles a discontinuous (step) function the higher the factor in the argument of the exp is
+f = @(x) 1/(1+exp(0.7*sum(x))); 
+
+% oscillatory function: change the factor to see different speed of convergence 
+% the higher the factor the more oscillatory the function (and slower the
+% convergence)
+% f = @(x) cos(0.2*sum(x)); 
+
+% peak function: the factor in front of the norm acts on the steepness of the peak 
+% the higher the number the steeper the peak (and slower the convergence)
+% f = @(x) 1/(1+0.1*norm(x)^2); 
+
+lambda = 1; 
+points = @(n) knots_exponential(n,lambda);
+
+quad = zeros(1,w_max);
+nb_pts = zeros(1,w_max);
+
+% we introduce auxiliary containers to recycle previous evaluations and speed up the computation
+S_old=[];
+Sr_old=[];
+evals_old=[];
+
+% convergence loop
+for w=1:w_max       
+    
+    S = smolyak_grid(N,w,points,@lev2knots_lin, @(i) sum(i-1), S_old);
+    Sr = reduce_sparse_grid(S);    
+    [res, evals]  = quadrature_on_sparse_grid(f, S, Sr, evals_old, S_old, Sr_old);
+    quad(w) = res;
+    evals_old = evals;
+    S_old = S;
+    Sr_old = Sr;    
+    nb_pts(w) = Sr.size;
+    
+end
+
+% exact integral
+S = smolyak_grid(N,w_max+4,points,@lev2knots_lin,@(i) sum(i-1),S_old);
+Sr = reduce_sparse_grid(S);
+exact = quadrature_on_sparse_grid(f,S,Sr,evals_old,S_old,Sr_old);
+
+% errors
+err = abs(quad - exact);
+
+figure
+loglog(nb_pts, err,'-ob','LineWidth',2)
+xlabel('nb. of quadrature points')
+ylabel('error')
+grid on
+
+
 

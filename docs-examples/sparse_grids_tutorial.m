@@ -242,11 +242,13 @@ ylim([-0.5 4.5])
 legend show
 
 
-%% Gauss-Hermite points: quadrature points to approximate integrals like 
+%% quadrature points to approximate integrals with normal pdf, like 
 %
 % 1/sqrt(2 sig^2 pi) \int_R f(x) e^{ -(x-mi)^2 / (2 sig^2) } dx 
-%
-% with n points
+
+
+
+% Gauss-Hermite points 
 n=9; mu=0; sig=1;
 x=knots_normal(n,mu,sig);
 
@@ -281,18 +283,67 @@ ylim([-1.5 7])
 legend show
 
 
-%% Gauss-Laguerre points: quadrature points to approximate integrals like 
+%% quadrature points to approximate integrals with exponential pdf, like 
 %
 %  \int_[0,+inf] f(x) lambda e^{ -lambda*x } dx 
-%
-% with n points
-n=12; lambda = 1; 
+
+
+% Gauss-Laguerre points
+n=12; 
+lambda = 1; 
+
 x=knots_exponential(n,lambda);
 
 figure
 plot(x,0*x,'ok','MarkerFaceColor','k','DisplayName','12 Gauss-Laguerre points')
 grid on
 legend show
+
+% and their Leja Counter part
+% TBC
+
+
+%% quadrature points to approximate integrals with gamma pdf, like 
+%
+%  \int_[0,+inf] f(x) beta^(alpha+1)/Gamma(alpha+1)*x^alpha*exp(-beta*x) dx 
+
+
+%  Gauss-Generalized Laguerre points:  with n points
+n=12; 
+alpha = 1; beta =2;
+
+x=knots_gamma(n,alpha,beta);
+
+figure
+plot(x,0*x,'ok','MarkerFaceColor','k','DisplayName','12 Generalized Gauss-Laguerre points')
+grid on
+legend show
+
+% and their Leja Counter part
+
+
+
+%% quadrature points to approximate integrals with beta pdf, like 
+%
+%  \int_[x_a, x_b] f(x) Gamma(alpha+beta+2)/(Gamma(alpha+1)*Gamma(beta+1)*(x_b-x_a)^(alpha+beta+1))*(x-x_a)^alpha*(x_b-x)^beta dx 
+
+
+%  Gauss-Jacobi points: with n points
+n=12; 
+x_a = 1; x_b = 3;
+alpha = -0.5; beta = 0.5; 
+
+x=knots_beta(n,alpha,beta,x_a,x_b);
+
+figure
+plot(x,0*x,'ok','MarkerFaceColor','k','DisplayName','12 Gauss-Jacobi points')
+grid on
+legend show
+
+% and their Leja Counter part
+
+
+
 
 
 %% PART 1: INTRODUCTION - INGREDIENTS OF A SPARSE GRID. LEV2KNOTS FUNCTION.
