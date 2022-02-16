@@ -31,7 +31,12 @@ if isempty(MATLAB_SPARSE_KIT_VERBOSE)
     MATLAB_SPARSE_KIT_VERBOSE=1;
 end
 
+% throw an error if called in the old way
+% [S,C] = SMOLYAK_GRID_MULTIIDX_SET(C,KNOTS,LEV2KNOTS,MAP,WEIGHTS_COEFF) 
 
+if nargin > 3 && isa(S2,'function_handle') % check the 4th input only, that's enough
+   error('SparseGKit:WrongInput','Since release 22.2, SMOLYAK_GRID_MULTIIDX_SET no longer accepts MAP and WEIGHTS_COEFF as inputs') 
+end
 
 % first a check on C being sorted. Observe that the function sortrows used is very efficient
 % so the cost of this preliminary analysis is negligible (e.g. it takes 0.02 sec to verify

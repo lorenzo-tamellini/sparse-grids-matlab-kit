@@ -634,7 +634,7 @@ axis square
 legend('reduced grid')
 set(legend,'Location','SouthOutside')
 
-%% The Kit provdies a short-hand to create and reduce a "vanilla sparse grid", i.e. 
+%% The Kit provides a short-hand to create and reduce a "vanilla sparse grid", i.e. 
 %  - Clenshaw--Curtis points in [-1,1] 
 %  - lev2knots_doubling 
 %  - multi-index set: sum(ii-1) \leq w 
