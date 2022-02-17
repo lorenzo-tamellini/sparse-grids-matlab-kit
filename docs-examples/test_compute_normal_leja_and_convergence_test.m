@@ -114,7 +114,7 @@ errGH = zeros(1+p_max,imax);
 % for each formula, we test its approximation of increasing moments
 for n=1:50
     % Normal-Leja quadrature rule using n nodes
-    [x_Lj,w_Lj] = knots_normal_leja(n,0,1);
+    [x_Lj,w_Lj] = knots_normal_leja(n,0,1,'line');
     
     % Gauss-Hermite quadrature of same accuracy
     [x_GH,w_GH] = knots_normal(ceil(n/2),0,1);
@@ -152,12 +152,12 @@ end
 
 clear
 
-imax=150;
+imax=38;
 
 % function to be integrated 
 
-f=@(x) 1./(1+1.0*x.^2); 
-%f=@(x) 1./(2+exp(x)); 
+%f=@(x) 1./(1+0.1*x.^2); 
+f=@(x) 1./(2+exp(0.2*x)); 
 %f=@(x) cos(3*x+1); 
 
 quad_Lj=zeros(1,imax);
@@ -170,7 +170,7 @@ for i=1:imax
     n = lev2knots_lin(i);
     nb_pts(i) = n;
 
-    [x_Lj,w_Lj]=knots_normal_leja(n,0,1);   
+    [x_Lj,w_Lj]=knots_normal_leja(n,0,1,'line');   
     [x_GH,w_GH] = knots_normal(n,0,1);
     
     quad_Lj(i) = dot(f(x_Lj),w_Lj);
@@ -233,7 +233,7 @@ w_max=15;
 f=@(x) 1./(2+exp(0.2*sum(x))); 
 %f=@(x) 1./(2+exp(sum(x))); 
 
-knots_Lj = @(n) knots_normal_leja(n,0,1);   
+knots_Lj = @(n) knots_normal_leja(n,0,1,'line');   
 knots_GH = @(n) knots_normal(n,0,1);
 
 quad_Lj=zeros(1,w_max);
@@ -363,7 +363,7 @@ for i=1:imax
     nnn = 1:n;
         
     % here we build the lagrange interpolant for Leja and evaluate the error
-    [x_Lj,w_Lj]=knots_normal_leja(n,0,1);       
+    [x_Lj,w_Lj]=knots_normal_leja(n,0,1,'line');       
     interp_Lj = zeros(1,samplesize);
     for k=nnn
         interp_Lj =  interp_Lj + f(x_Lj(k))*lagr_eval(x_Lj(k), x_Lj(nnn~=k),sampleset);
@@ -426,7 +426,7 @@ clear
 N=2;
 
 %f=@(x) 1./(1+0.1*sum(x.^2)); 
-f=@(x) 1./(2+exp(0.25*sum(x))); 
+f=@(x) 1./(2+exp(0.2*sum(x))); 
 
 % we evaluate the function over a sample set
 samplesize = 1000;
@@ -434,11 +434,11 @@ sampleset = randn(N,samplesize);
 f_sampled = f(sampleset);
 
 % as before, we use simple TD sparse grids, up to this level
-w_max=55;
+w_max=15;
 
 
 % the convergence loop, with auxiliary containers to recycle evaluations between iterations
-knots_Lj = @(n) knots_normal_leja(n,0,1);   
+knots_Lj = @(n) knots_normal_leja(n,0,1,'line');   
 knots_GH = @(n) knots_normal(n,0,1);
 
 err_Lj=zeros(1,w_max);
