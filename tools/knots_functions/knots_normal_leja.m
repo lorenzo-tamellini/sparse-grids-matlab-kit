@@ -33,7 +33,6 @@ function [x,w]=knots_normal_leja(n,mi,sigma,type)
 %
 %   X_n= argmax sqrt(rho(X)) prod_{k=1}^{n-1} abs(X-X_k)
 % 
-% This is the default choice.
 %
 % [X,W] = KNOTS_NORMAL_LEJA(N,0,1,'sym_line') given X(1)=0 recursively
 %   defines the n-th and (n+1)-th point by 
@@ -47,9 +46,6 @@ function [x,w]=knots_normal_leja(n,mi,sigma,type)
 % See LICENSE.txt for license
 %----------------------------------------------------
 
-if nargin==3
-    type = 'line';
-end
 
 if n>150
    error('SparseGKit:OutOfTable',strcat('this number of points is not available:',num2str(n)))
