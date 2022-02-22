@@ -124,7 +124,7 @@ if length(flags)==1 || ischar(flags) % the second condition for when the functio
             case 'generalized laguerre'
                 vc = generalized_lagu_eval_multidim(S.knots,k,domain(1,:),domain(2,:));
             case 'jacobi'
-                vc = jacobi_eval_multidim(S.knots,k,domain(1,:),domain(2,:),domain(3,:),domain(4,:));
+                vc = jacobi_prob_eval_multidim(S.knots,k,domain(1,:),domain(2,:),domain(3,:),domain(4,:));
             otherwise
                 error('SparseGKit:WrongInput','unknown family of polynomials')
         end
@@ -150,7 +150,7 @@ else
                 case 'generalized laguerre'
                     vc = vc.*generalized_lagu_eval_multidim(S.knots(n,:),k(n),domain{n}(1),domain{n}(2));
                 case 'jacobi'
-                    vc = jacobi_eval_multidim(S.knots(n,:),k(n),domain{n}(1),domain{n}(2),domain{n}(3),domain{n}(4));
+                    vc = jacobi_prob_eval_multidim(S.knots(n,:),k(n),domain{n}(1),domain{n}(2),domain{n}(3),domain{n}(4));
                 otherwise
                     error('SparseGKit:WrongInput','unknown family of polynomials')
             end
