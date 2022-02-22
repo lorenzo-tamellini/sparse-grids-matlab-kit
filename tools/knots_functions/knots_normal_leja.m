@@ -46,6 +46,10 @@ function [x,w]=knots_normal_leja(n,mi,sigma,type)
 % See LICENSE.txt for license
 %----------------------------------------------------
 
+if nargin < 4
+    error('SparseGKit:WrongInput',['knots_normal_leja takes as input 4 arguments: n, mi, sigma, and the type of knots, (line/sym_line) .',...
+        ' This message will disappear in future releases of the sparse-grid-matlab-kit.'])    
+end
 
 if n>150
    error('SparseGKit:OutOfTable',strcat('this number of points is not available:',num2str(n)))
