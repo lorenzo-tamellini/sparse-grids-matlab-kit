@@ -2,6 +2,8 @@ function nb_knots = lev2knots_kpn(I)
 
 % nb_knots = lev2knots_kpn(I)
 %
+% DEPRECATED!! This function has been renamed LEV2KNOTS_GK in release 22.2 and will disappear in future releases
+%
 % returns the number of knots corresponding to the i-level i, 
 % via the i2l map tabulated as in kpn_lev_table
 

@@ -1,6 +1,9 @@
-function [x,w,floc]=knots_gaussian_leja(n)
+function [x,w]=knots_gaussian_leja(n)
 
 % [x,w] = knots_gaussian_leja(n)
+%
+% DEPRECATED!! This function has been replaced by KNOTS_NORMAL_LEJA in release 22.2 and will disappear in future releases
+%
 %
 % returns the collocation points (x) and the weights (w) 
 % for the weighted Leja sequence for integration 
@@ -30,8 +33,6 @@ error('SparseGKit:RenamedFunction',['knots_gaussian_leja has been replaced by kn
     'which takes as input also the mean and the standard deviation of the normal (Gaussian) pdf '  ...
     'to allow for integration w.r.t. general normal densities (and not only w.r.t. the standard Gaussian). '...
     'This message will disappear in future releases of the sparse-grid-matlab-kit.'])
-
-floc = localfunctions;
 
 if n>150
    error('SparseGKit:OutOfTable',strcat('this number of points is not available:',num2str(n)))

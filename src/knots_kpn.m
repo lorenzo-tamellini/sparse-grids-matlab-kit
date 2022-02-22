@@ -2,6 +2,8 @@ function [x,w] = knots_kpn(n)
 
 % [x,w] = knots_kpn(n)
 %
+% DEPRECATED!! This function has been replaced by KNOTS_GK in release 22.2 and will disappear in future releases
+%
 % returns the collocation points (x) and the weights (w) 
 % of the KPN quadrature formula (Kronrod-Patterson-Normal)
 % for approximation of integrals w.r.t to the weight function 
