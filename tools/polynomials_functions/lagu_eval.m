@@ -55,7 +55,7 @@ elseif k==1
 else
       % recursive step
       for ric=2:k
-            L = ( - x + 2*(ric-1) + 1) .* L_1 - (ric-1)^2 * L_2;
+            L = (- x + 2*(ric-1) + 1)/ric .* L_1 - (ric-1)/ric * L_2;
             L_2=L_1;
             L_1=L;
       end

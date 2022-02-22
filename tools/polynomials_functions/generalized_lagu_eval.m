@@ -26,7 +26,7 @@ z = x * beta ;
 % calculate the standard Legendre polynomials in t
 L = standard_generalized_lagu_eval(z,k,alpha);
 % modify L to take into account normalizations. 
-if k>1
+if k>=1
     L = L / sqrt ( gamma(k+alpha+1)/(gamma(alpha+1)*factorial(k)) );
 end
 
@@ -43,7 +43,7 @@ function L = standard_generalized_lagu_eval(x,k,alpha)
 % returns the values of the k-th standard generalized Laguerre "probabilistic" polynomial (i.e. orthoGONAL w.r.t. 
 % rho=x^alpha*exp(-x)/Gamma(alpha+1) in the points x (x can be a vector as well)
 %
-% N.B. the polynomials start from k=0: L_0(x) = 1, L_1(x) = x-alpha-1
+% N.B. the polynomials start from k=0: L_0(x) = 1, L_1(x) = -x+alpha+1
 
 % base steps
 
@@ -62,7 +62,7 @@ elseif k==1
 else
       % recursive step
       for ric=2:k
-            L = (- x + 2*(ric-1) + alpha + 1).* L_1 - (ric-1)*(ric-1+alpha)*L_2;
+            L = (- x + 2*(ric-1) + alpha + 1)/ric .* L_1 - (ric-1+alpha)/ric *L_2;
             L_2=L_1;
             L_1=L;
       end
