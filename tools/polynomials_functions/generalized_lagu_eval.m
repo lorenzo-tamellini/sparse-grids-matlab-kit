@@ -23,7 +23,7 @@ function L = generalized_lagu_eval(x,k,alpha,beta)
 
 z = x * beta ;
 
-% calculate the standard Legendre polynomials in t
+% calculate the standard generalized Laguerre polynomials in z
 L = standard_generalized_lagu_eval(z,k,alpha);
 % modify L to take into account normalizations. 
 if k>=1

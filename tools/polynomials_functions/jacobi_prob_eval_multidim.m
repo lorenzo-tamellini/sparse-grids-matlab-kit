@@ -1,8 +1,8 @@
-function L = jacobi_eval_multidim(X,k,alpha,beta,a,b)
+function L = jacobi_prob_eval_multidim(X,k,alpha,beta,a,b)
 
-% L = JACOBI_EVAL_MULTIDIM(X,k,alpha,beta,a,b)
+% L = JACOBI_PROB_EVAL_MULTIDIM(X,k,alpha,beta,a,b)
 %
-% evaluates the multidim. Jacobi polynomial of order k
+% evaluates the multidim. probabilistic Jacobi polynomial of order k
 % (multi-index) orthonormal on [a1,b1] x [a2,b2] x [a3,b3] x ... [aN,bN] 
 % with respect to 
 % rho=prod_i Gamma(alpha_i+beta_i+2)/(Gamma(alpha_i+1)*Gamma(beta_i+1)*(b-a)^(alpha_i+beta_i+1))*(x-a)^alpha_i*(b-x)^beta_i,
@@ -42,7 +42,7 @@ else
     j=0;
     for n=nonzero_n
         j=j+1;
-        M(j,:) = jacobi_eval(X(n,:),k(n),alpha(n),beta(n),a(n),b(n));
+        M(j,:) = jacobi_prob_eval(X(n,:),k(n),alpha(n),beta(n),a(n),b(n));
     end
     L = prod(M,1);
 end
