@@ -272,11 +272,11 @@ plot(x, 2 + 0*x,'ob','MarkerFaceColor','b','DisplayName','9 GK points')
 
 hold on
 n=3; 
-x=knots_normal_leja(n,mu,sig);
+x=knots_normal_leja(n,mu,sig,'line'); % another option here is 'sym_line'
 plot(x,3 + 0*x,'xr','LineWidth',2,'MarkerFaceColor','r','MarkerSize',8,'DisplayName','3 Normal-Leja points')
 
 n=9; 
-x=knots_normal_leja(n, mu,sig);
+x=knots_normal_leja(n, mu,sig,'line');
 plot(x, 4 + 0*x,'xb','LineWidth',2,'MarkerFaceColor','b','MarkerSize',8,'DisplayName','9 Normal-Leja points')
 
 ylim([-1.5 7])

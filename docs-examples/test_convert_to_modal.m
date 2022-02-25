@@ -216,7 +216,7 @@ Sr=reduce_sparse_grid(S);
 % procedure (with a sufficient number of points in the grid)
 X=Sr.knots;
 
-nodal_values = 6-3*jacobi_eval_multidim(X,[3 2],alpha,beta,a,b)+ 7*jacobi_eval_multidim(X,[4 1],alpha,beta,a,b);
+nodal_values = 6-3*jacobi_prob_eval_multidim(X,[3 2],alpha,beta,a,b)+ 7*jacobi_prob_eval_multidim(X,[4 1],alpha,beta,a,b);
 
 domain=[alpha;beta;a;b];
 [modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,'jacobi');
