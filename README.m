@@ -1,6 +1,6 @@
 %----------------------------------------------------------------------------------
 % Sparse Grids Matlab Kit
-% Copyright (c) 2009-2022 L. Tamellini, F. Nobile
+% Copyright (c) 2009-2022 L. Tamellini, F. Nobile, C. Piazzola
 % See LICENSE.txt for license
 %----------------------------------------------------------------------------------
 
