@@ -37,7 +37,7 @@ function [x,w] = knots_gamma_leja(n,alpha,beta,saving_flag)
 %
 %-------------------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2018 L. Tamellini, F. Nobile, C. Piazzola
+% Copyright (c) 2009-2022 L. Tamellini, F. Nobile, C. Piazzola
 % See LICENSE.txt for license
 %-------------------------------------------------------------
 

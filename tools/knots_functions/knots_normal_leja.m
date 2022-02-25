@@ -42,7 +42,7 @@ function [x,w]=knots_normal_leja(n,mi,sigma,type)
 
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2018 L. Tamellini, F. Nobile, B. Sprungk, C. Piazzola
+% Copyright (c) 2009-2022 L. Tamellini, F. Nobile, B. Sprungk, C. Piazzola
 % See LICENSE.txt for license
 %----------------------------------------------------
 

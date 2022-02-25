@@ -55,7 +55,7 @@ function [modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,flags,~)
 
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2018 L. Tamellini, F. Nobile, B. Sprungk
+% Copyright (c) 2009-2022 L. Tamellini, F. Nobile, B. Sprungk
 % See LICENSE.txt for license
 %----------------------------------------------------
 

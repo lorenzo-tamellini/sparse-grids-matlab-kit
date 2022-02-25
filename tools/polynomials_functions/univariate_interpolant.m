@@ -15,7 +15,7 @@ function f_values = univariate_interpolant(grid_points,function_on_grid,non_grid
 
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2018 L. Tamellini, F. Nobile, C. Piazzola
+% Copyright (c) 2009-2022 L. Tamellini, F. Nobile, C. Piazzola
 % See LICENSE.txt for license
 %----------------------------------------------------
 

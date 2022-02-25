@@ -23,7 +23,7 @@ function [S,I,coeff] = smolyak_grid_add_multiidx(new_idx,S_in,I_in,coeff_in,knot
 
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2018 L. Tamellini, F. Nobile
+% Copyright (c) 2009-2022 L. Tamellini, F. Nobile
 % See LICENSE.txt for license
 %----------------------------------------------------
 

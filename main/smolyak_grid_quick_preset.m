@@ -15,7 +15,7 @@ function [S,Sr,C] = smolyak_grid_quick_preset(N,w)
 
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2018 L. Tamellini, F. Nobile
+% Copyright (c) 2009-2022 L. Tamellini, F. Nobile
 % See LICENSE.txt for license
 %----------------------------------------------------
 

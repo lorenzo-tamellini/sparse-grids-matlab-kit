@@ -26,7 +26,7 @@ function Hessian = hessian_sparse_grid(S,Sr,values_on_grid,domain,eval_point,h)
 
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2018 L. Tamellini, F. Nobile
+% Copyright (c) 2009-2022 L. Tamellini, F. Nobile
 % See LICENSE.txt for license
 %----------------------------------------------------
 

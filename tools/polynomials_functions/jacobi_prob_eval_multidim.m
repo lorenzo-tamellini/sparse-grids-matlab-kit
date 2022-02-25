@@ -11,7 +11,7 @@ function L = jacobi_prob_eval_multidim(X,k,alpha,beta,a,b)
 
 %-------------------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2018 L. Tamellini, F. Nobile, C. Piazzola
+% Copyright (c) 2009-2022 L. Tamellini, F. Nobile, C. Piazzola
 % See LICENSE.txt for license
 %-------------------------------------------------------------
 

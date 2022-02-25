@@ -247,7 +247,7 @@ function adapted = adapt_sparse_grid(f,N_full,knots,lev2knots,prev_adapt,control
 
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2018 L. Tamellini, F. Nobile, D. Guignard, F. Tesei, B. Sprungk
+% Copyright (c) 2009-2022 L. Tamellini, F. Nobile, D. Guignard, F. Tesei, B. Sprungk
 % See LICENSE.txt for license
 %----------------------------------------------------
 
