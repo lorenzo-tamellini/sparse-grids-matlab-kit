@@ -13,9 +13,10 @@
 % 1) Lorenzo Tamellini
 % 2) Diane Guignard
 % 3) Fabio Nobile
-% 4) Giovanni Porta
-% 5) Bjorn Sprungk
-% 6) Francesco Tesei
+% 4) Chiara Piazzola
+% 5) Giovanni Porta
+% 6) Bjorn Sprungk
+% 7) Francesco Tesei
 
 
 %---------------------------
@@ -50,21 +51,25 @@
 %---------------------------
 % 3) HOW TO USE THE TOOLKIT
 %
-% To create a sparse grids, use any of these two functions:
+% To create a sparse grids, use any of these functions:
 %
 % -> smolyak_grid
+% -> smolyak_grid_quick_preset
 % -> smolyak_grid_multiidx_set
-%
+% -> smolayk_grid_add_multiidx
+% -> adapt_sparse_grid
+
 % A number of functionalities to operate on sparse grids are provided: 
 %
-% -> adapt_sparse_grid
-% -> convert_to_modal
 % -> compute_sobol_indices_from_sparse_grid
+% -> convert_to_modal
 % -> derive_sparse_grid
-% -> export_sparse_grid_to_file
 % -> evaluate_on_sparse_grid
+% -> export_sparse_grid_to_file
+% -> hessian_sparse_grid.m
 % -> interpolate_on_sparse_grid
 % -> plot_sparse_grid
+% -> plot3_sparse_grid
 % -> plot_sparse_grid_interpolant
 % -> quadrature_on_sparse_grid
 % -> reduce_sparse_grid
@@ -82,13 +87,22 @@
 
 
 
-
 %---------------------------
 % 5) PLEASE CITE US
 
-% Please cite our toolbox by mentioning the webpage containing the package (http://csqi.epfl.ch) 
-% and adding the following reference to your work:
+% Please cite our toolbox by mentioning the webpage containing the package (https://sites.google.com/view/sparse-grids-kit/home) 
+% and adding the following references to your work (check website for the most updated citation data):
 %
+% @article{piazzola.tamellini:SGK,
+%  author = {Piazzola, C. and Tamellini, L.},
+%  title  = {{The Sparse Grids Matlab kit - a Matlab implementation of sparse grids for high-dimensional function approximation and uncertainty quantification}},
+%  journal= {},
+%  year   = {2022},
+%  volume = {},
+%  number = {},
+%  pages = {},
+%}
+% 
 % @InCollection{back.nobile.eal:comparison,
 %  author    = {B\"ack, J. and Nobile, F. and Tamellini, L. and Tempone, R.},
 %  title        = {Stochastic spectral {G}alerkin and collocation methods for {PDE}s with random coefficients: a numerical comparison},
@@ -100,5 +114,8 @@
 %  series    = {Lecture Notes in Computational Science and Engineering}, 
 %  editor    = {Hesthaven, J.S. and Ronquist, E.M.},
 %  note        = {Selected papers from the ICOSAHOM '09 conference, June 22-26, Trondheim, Norway}
-%}
+% }
+
+
+
 

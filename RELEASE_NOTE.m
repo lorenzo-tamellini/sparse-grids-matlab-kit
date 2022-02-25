@@ -4,18 +4,25 @@
 % See LICENSE.txt for license
 %----------------------------------------------------------------------------------
 %
-%                   --> KNOTS_GK returns now GK points and weights for integration 
+%
+% -> 2022, Feb. 16 --> added function SMOLYAK_GRID_QUICK_PRESET, to generate in one command a simple sparse grid
+%                      (CC knots in [-,1,1], lev2knots_doubling, idxset: @(ii) sum(ii-1) \leq w) and its reduced version
+%
+% -> 2022, Feb. 14 --> added PLOT3_SPARSE_GRID to plot 3-dimensional sparse grids (or 3-dimensional cuts of sparse grids with N>3)
+%
+% -> 2022, Feb. 11 --> added UNIVARIATE_INTERPOLANT to compute the one-dimensional Lagrangian interpolant of a scalar-valued function.
+%                   
+%                  --> added TENSOR_TO_SPARSE that converts a tensor grid structure into a sparse grid structure.
+%                      This is useful when computing quadrature and interpolation on tensor grids using 
+%                      the function evaluate/quadrature_on_sparse_grid, that contain a check whether the input is
+%                      a sparse grid or not.
+%                 
+% -> 2022, Feb. 1   --> KNOTS_GK returns now GK points and weights for integration 
 %                       w.r.t. general Gaussian densities with mean mi and standard deviation sigma.
 %
-%                   --> added UNIVARIATE_INTERPOLANT to compute the one-dimensional Lagrangian interpolant of a scalar-valued function.
-%                   
-%                   --> added TENSOR_TO_SPARSE that creates a tensor grid structure, which contains all the fields of a 
-%                       sparse grids. This is useful when computing quadrature and interpolation on tensor grids using 
-%                       the functions quadrature/interpolation_on_sparse_grid. 
-%                 
 %                   --> compatibility with GNU Octave have been partially tested. 
 %
-%                   --> added function KNOTS_BETA_LEJA, i.e. weighted Leja points (and their symmetric version) for quadrature with respect to the 
+% -> 2021, Dec 1    --> added function KNOTS_BETA_LEJA, i.e. weighted Leja points (and their symmetric version) for quadrature with respect to the 
 %                       Beta weight function with range [x_a,x_b], and parameters alpha,beta>-1. 
 %                       Added example file where Beta Leja quadrature and interpolation convergence tests for different univariate 
 %                       knots for Beta random variables are compared, TEST_CONVERGENCE_BETA_LEJA.m
@@ -50,9 +57,12 @@
 %                   --> added function KNOTS_EXPONENTIAL to generate Gauss-Laguerre knots and weights for integration
 %                       w.r.t. exponential distributions.
 %
-%                   --> KNOTS_GAUSSIAN_LEJA returns now standard and symmetric Leja points and weights for integration 
+%                   --> KNOTS_GAUSSIAN_LEJA has been renamed to KNOTS_NORMAL_LEJA and now returns both standard and symmetric Leja points+weights for integration 
 %                       w.r.t. general Gaussian densities with mean mi and standard deviation sigma. 
-%                       The function KNOTS_GAUSSIAN_LEJA requires now three inputs: n, mi, and sigma, with n the number of points required.
+%                       The function requires now four inputs: n (the number of points required), mi, and sigma of
+%                       the pdf, and the type of knots ('line'/'sym_line')
+%
+%                   --> KNOTS_GAUSSIAN has been renamed to KNOTS_NORMAL, for naming consistency
 %
 % -> 2020, Jul. 21  --> for robustness, SMOLYAK_GRID, SMOLYAK_GRID_MULTIIDX_SET no longer accepts MAP and COEFF_WEIGHTS as inputs. The knots and weights
 %                       need to be already properly rescaled beforehand, by using the optional arguments to defind correctly the 1D families of points to be used, 
@@ -91,18 +101,18 @@
 %                       as Genz--Keister. In particular: 
 %                       -- KNOTS_KPN is now KNOTS_GK; 
 %                       -- LEV2KNOTS_KPN is now LEV2KNOTS_GK; 
-%                       -- KPN_LEV_TABLE is now GK_LEV_TABLE
+%                       -- KPN_LEV_TABLE is now GK_LEV_TABLE 
 %               
 %                   --> renamed DETECT_UNSUFFICIENT_TOLERANCE to DETECT_INSUFFICIENT_TOLERANCE
 %                       
 % 
 % -> 2020, Apr. 1   --> fixed a bug in SMOLYAK_GRID_MULTIIDX_SET, which would otherwise throw an error when called as SMOLYAK_GRID_MULTIIDX_SET(C,KNOTS,LEV2KNOTS,[])
 %
-%                   --> Added more GAUSSIAN_LEJA points, we now have 150 instead of 50. Also, they are no more saved as a .mat file, 
+%                   --> Added more NORMAL_LEJA (formerly GAUSSIAN_LEJA) points, we now have 150 instead of 50. Also, they are no more saved as a .mat file, 
 %                       but pasted in ascii format in the knots_gaussian_leja, it's much faster than loading the matlab file each time
 %
 %
-% -> 2020, Mar.22   --> faster version of ADAPT_SPARSE_GRID, by using the new function SMOLYAK_GRID_ADD_MULTIIDX (see below) 
+% -> 2020, Mar. 22  --> faster version of ADAPT_SPARSE_GRID, by using the new function SMOLYAK_GRID_ADD_MULTIIDX (see below) 
 %
 %                   --> added functions to test whether two tensor grids and two sparse grids are equal, ISEQUAL_SPARSE_GRIDS and ISEQUAL_TENSOR_GRIDS
 %
@@ -114,7 +124,8 @@
 %                       a tensor grid stored in a sparse grid struct (i.e., a standard tensor with the additional fields idx and coeff) and 0 otherwise	
 %
 %
-% -> 2019, Feb.23   --> added midpoint and trapezoidal univariate quadrature/intepolation rules
+% -> 2019, Feb. 23  --> added midpoint and trapezoidal univariate quadrature/intepolation rules, and LEV2KNOTS_TRIPLING 
+%                       to obtain nested sequences of midpoint knots
 %
 %
 % -> 2019, Feb. 7   --> fixed a low-level bug in evaluate on sparse grid that would make the function stop with an error (very rare)
