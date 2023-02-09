@@ -39,7 +39,7 @@ function [x,w] = knots_beta_leja(n,alpha,beta,x_a,x_b,type,saving_flag)
 %   X_n= argmax_[x_a,x_b] prod_{k=1}^{n-1} abs(X-X_k)
 % 
 %
-% [X,W] = KNOTS_GAUSSIAN_LEJA(N,mi,sigma,'sym_line') given X(1)=0 recursively
+% [X,W] = KNOTS_BETA_LEJA(N,mi,sigma,'sym_line') given X(1)=0 recursively
 %   defines the n-th and (n+1)-th point by 
 %
 %   X_n= argmax prod_{k=1}^{n-1} abs(X-X_k)
@@ -100,7 +100,7 @@ switch type
                 % load from file
                 load(filename,'Xall','Wall');
                 if n > length(Xall)
-                    error('SparseGKit:OutOfTable',['not enough beta points computed on file. Remove files ',filename_knots,' and ',filename_weights,...
+                    error('SparseGKit:OutOfTable',['not enough beta points computed on file. Remove files ',filename,...
                         ' and run again KNOTS_BETA_LEJA with ''on_file'' option and larger n'])
                 end
                 X = Xall(1:n);
