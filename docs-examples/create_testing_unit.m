@@ -4,6 +4,8 @@
 % insieme? Ora si chiamano tutti 'test_unit.dat'
 % %% 2 - Folder tools - NO TEST per converter_functions,
 % parallel_toolbox_interface_functions, tye_and_property_check_functions
+% %% 3 - in principle we could use the function keep but I don't think it is
+% really necessary. Recomputing things is not a big problem for these tests
 % .........................................................................
 
 %% test lev2knots_functions (tools/lev2knots_functions)
@@ -269,6 +271,10 @@ end
 % %% 1 - NO TEST per plot_sparse_grid,plot_sparse_grid_interpolant,plot3_sparse_grid
 % %% 2 - perche' coeff_smolyak = combination_technique(I_smolyak) non si
 % puo' inglobare in smolyak_grid_add_multiidx?
+% %% 3 - volendo ci sarebbe anche la funzione tensor_grid.m da testare che
+% sta in src. Forse possiamo fare a meno visto che viene usata
+% internamente? 
+% %% 4 - versione "add": shall we test also check_index_admissibility?
 % .........................................................................
 
 clc
@@ -325,11 +331,121 @@ else
     end    
 end
 
-%% test on quadrature
 
+%% test on function evaluation on sparse grid (main)
+
+% .........................................................................
+% %% 1 - testiamo solo una forma di chiamata alla funzione? Domanda
+% generale!
+% .........................................................................
+
+clc
 clear
+testing_mode = true;
+
+f = @(x) sum(x);
+
+N = 2; w = 3;
+S  = smolyak_grid(N,w,@(n) knots_uniform(n,-1,1),@lev2knots_lin);
+Sr = reduce_sparse_grid(S);
+
+f_evals = evaluate_on_sparse_grid(f,Sr);
+
+if ~testing_mode
+    save('test_unit','f_evals');
+else
+    disp('testing function evaluation on sparse grid')
+    L = struct('f_evals',f_evals);
+    S = load('test_unit','f_evals');   
+    if isequal_sgmk(L,S)
+        disp('test on function evaluation on sparse grid passed')
+    end    
+end
 
 
+%% test on integration on sparse grid (main)
+
+clc
+clear
+testing_mode = true;
+
+f = @(x) prod(1./sqrt(x+3));
+
+N = 4; w = 4;
+knots=@(n) knots_CC(n,-1,1,'nonprob');
+S = smolyak_grid(N,w,knots,@lev2knots_doubling);
+Sr = reduce_sparse_grid(S);
+
+f_quad = quadrature_on_sparse_grid(f,Sr); 
+
+if ~testing_mode
+    save('test_unit','f_quad');
+else
+    disp('testing integration on sparse grid')
+    L = struct('f_quad',f_quad);
+    S = load('test_unit','f_quad');   
+    if isequal_sgmk(L,S)
+        disp('test on integration on sparse grid passed')
+    end    
+end
+
+
+%% test on interpolation on sparse grid (main)
+
+clc
+clear
+testing_mode = true;
+
+f = @(x) prod(1./sqrt(x+3)); 
+
+N = 2; w = 4;
+knots=@(n) knots_CC(n,-1,1,'nonprob');
+S = smolyak_grid(N,w,knots,@lev2knots_doubling);
+Sr = reduce_sparse_grid(S);
+
+non_grid_points = zeros(N,1); 
+f_on_grid       = evaluate_on_sparse_grid(f, Sr);
+f_values        = interpolate_on_sparse_grid(S,Sr,f_on_grid,non_grid_points);
+
+if ~testing_mode
+    save('test_unit','f_values');
+else
+    disp('testing interpolation on sparse grid')
+    L = struct('f_values',f_values);
+    S = load('test_unit','f_values');   
+    if isequal_sgmk(L,S)
+        disp('test on interolation on sparse grid passed')
+    end    
+end
+
+
+%% test on generalized Polynomial Chaos Expansion (gPCE) 
+
+clc
+clear
+testing_mode = true;
+
+N = 2; w = 5;
+knots     = @(n) knots_uniform(n,-1,1,'nonprob'); 
+lev2knots = @lev2knots_lin; 
+idxset    = @(i) prod(i); 
+S         = smolyak_grid(N,w,knots,lev2knots,idxset);
+Sr        = reduce_sparse_grid(S);
+% the domain of the grid
+domain=[-ones(1,N); ones(1,N)];
+
+% compute a legendre polynomial over the sparse grid
+X=Sr.knots;
+nodal_values = 4*lege_eval_multidim(X,[4 0],-1,1)+ 2*lege_eval_multidim(X,[1 1],-1,1);
+
+% conversion from the points to the legendre polynomial. I should recover it exactly
+[modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,'legendre');
+
+[K,modal_coeffs] %#ok<NOPTS>
+
+%% test on Sobol indices 
+
+%% test on gradient and Hessian
 
 
 
