@@ -134,25 +134,29 @@ N = 2;
 [~,rule_TD]       = define_functions_for_rule('TD',N);
 [~,rule_HC]       = define_functions_for_rule('HC',N);
 [~,rule_SM]       = define_functions_for_rule('SM',N);
+rates = [2,3]; 
+[~,rule_SM_aniso] = define_functions_for_rule('SM',rates);
 
 base = 1; w = 3; 
-multi_idx_TP      = multiidx_gen(N,rule_TP,w,base); 
-multi_idx_TD      = multiidx_gen(N,rule_TD,w,base); 
-multi_idx_HC      = multiidx_gen(N,rule_HC,w,base); 
-multi_idx_SM      = multiidx_gen(N,rule_SM,w,base);
+multi_idx_TP       = multiidx_gen(N,rule_TP,w,base); 
+multi_idx_TD       = multiidx_gen(N,rule_TD,w,base); 
+multi_idx_HC       = multiidx_gen(N,rule_HC,w,base); 
+multi_idx_SM       = multiidx_gen(N,rule_SM,w,base);
+multi_idx_SM_aniso = multiidx_gen(N,rule_SM,w,base);
 
 multi_idx_TD_fast = fast_TD_set(N,w); 
 
 if ~testing_mode
     save('test_unit','multi_idx_box','multi_idx_TP','multi_idx_TD',...
-         'multi_idx_HC','multi_idx_SM','multi_idx_TD_fast','-append');
+         'multi_idx_HC','multi_idx_SM','multi_idx_SM_aniso','multi_idx_TD_fast','-append');
 else
     disp('testing multi-index sets')
     L = struct('multi_idx_box',multi_idx_box,'multi_idx_TP',multi_idx_TP,....
-               'multi_idx_TD',multi_idx_TD, 'multi_idx_HC',multi_idx_HC,...
-               'multi_idx_SM',multi_idx_SM, 'multi_idx_TD_fast',multi_idx_TD_fast);
-    S = load('test_unit',...
-             'multi_idx_box','multi_idx_TP','multi_idx_TD','multi_idx_HC','multi_idx_SM','multi_idx_TD_fast');   
+               'multi_idx_TD',multi_idx_TD,'multi_idx_HC',multi_idx_HC,...
+               'multi_idx_SM',multi_idx_SM,'multi_idx_SM_aniso',multi_idx_SM_aniso,...
+               'multi_idx_TD_fast',multi_idx_TD_fast);
+    S = load('test_unit','multi_idx_box','multi_idx_TP','multi_idx_TD',...
+             'multi_idx_HC','multi_idx_SM','multi_idx_SM_aniso','multi_idx_TD_fast');   
     if isequal_sgmk(L,S)
         disp('test on multi-index sets passed')
     end    
@@ -288,21 +292,21 @@ I = [
     2 1;
     3 1;
 ];
-knots1 = @(n) knots_uniform(n,0,1);
-knots2 = @(n) knots_leja(n,-1,1,'line');
-lev2knots = @lev2knots_lin; 
+knots1           = @(n) knots_uniform(n,0,1);
+knots2           = @(n) knots_leja(n,-1,1,'line');
+lev2knots        = @lev2knots_lin; 
 S_given_multiidx = smolyak_grid_multiidx_set(I,{knots1,knots2},lev2knots); 
 
 % given the rule 
 N=2; w=3;
-knots = @(n) knots_CC(n,-1,1); 
-[lev2knots,rule] = define_functions_for_rule('SM',N); 
+knots                 = @(n) knots_CC(n,-1,1); 
+[lev2knots,rule]      = define_functions_for_rule('SM',N); 
 [S_smolyak,I_smolyak] = smolyak_grid(N,w,knots,lev2knots,rule);
-Sr_smolyak = reduce_sparse_grid(S_smolyak); 
+Sr_smolyak            = reduce_sparse_grid(S_smolyak); 
 
 % adding one multi-index to S_smolyak
 new_idx = [5 1];
-coeff_smolyak = combination_technique(I_smolyak); 
+coeff_smolyak           = combination_technique(I_smolyak); 
 [S_add,I_add,coeff_add] = smolyak_grid_add_multiidx(new_idx,S_smolyak,I_smolyak,coeff_smolyak,knots,lev2knots); 
 
 % quick preset
@@ -316,7 +320,7 @@ if ~testing_mode
          'S_add','I_add','coeff_add',...
          'S_quick','Sr_quick','-append');
 else
-    disp('testing sparse grid generation')
+    disp('testing sparse grid generation and reduction')
     L = struct('S_given_multiidx',S_given_multiidx,...
                'S_smolyak',S_smolyak,'I_smolyak',I_smolyak,'Sr_smolyak',Sr_smolyak,...
                'S_add',S_add,'I_add',I_add,'coeff_add',coeff_add,...
@@ -327,7 +331,7 @@ else
              'S_add','I_add','coeff_add', ...
              'S_quick','Sr_quick');   
     if isequal_sgmk(L,S)
-        disp('test on sparse grid generation passed')
+        disp('test on sparse grid generation and reduction passed')
     end    
 end
 
@@ -337,6 +341,8 @@ end
 % .........................................................................
 % %% 1 - testiamo solo una forma di chiamata alla funzione? Domanda
 % generale!
+% %% 2 - qui, nei polinomi e derivata/hessiana basterebbe fare il test su
+% un punto solo no?
 % .........................................................................
 
 clc
@@ -345,7 +351,7 @@ testing_mode = true;
 
 f = @(x) sum(x);
 
-N = 2; w = 3;
+N=2; w=3;
 S  = smolyak_grid(N,w,@(n) knots_uniform(n,-1,1),@lev2knots_lin);
 Sr = reduce_sparse_grid(S);
 
@@ -365,16 +371,21 @@ end
 
 %% test on integration on sparse grid (main)
 
+% .........................................................................
+% %% 1 - direi che possiamo usare CC/uniformi di tipo 'prob', no? Anche per
+% tutte i test che seguono
+% .........................................................................
+
 clc
 clear
 testing_mode = true;
 
 f = @(x) prod(1./sqrt(x+3));
 
-N = 4; w = 4;
-knots=@(n) knots_CC(n,-1,1,'nonprob');
-S = smolyak_grid(N,w,knots,@lev2knots_doubling);
-Sr = reduce_sparse_grid(S);
+N=4; w=4;
+knots = @(n) knots_CC(n,-1,1);
+S     = smolyak_grid(N,w,knots,@lev2knots_doubling);
+Sr    = reduce_sparse_grid(S);
 
 f_quad = quadrature_on_sparse_grid(f,Sr); 
 
@@ -398,12 +409,14 @@ testing_mode = true;
 
 f = @(x) prod(1./sqrt(x+3)); 
 
-N = 2; w = 4;
-knots=@(n) knots_CC(n,-1,1,'nonprob');
-S = smolyak_grid(N,w,knots,@lev2knots_doubling);
-Sr = reduce_sparse_grid(S);
+N=2; w=4;
+knots = @(n) knots_CC(n,-1,1);
+S     = smolyak_grid(N,w,knots,@lev2knots_doubling);
+Sr    = reduce_sparse_grid(S);
 
-non_grid_points = zeros(N,1); 
+x_temp          = linspace(-1,1,10); 
+[x1,x2]         = meshgrid(x_temp,x_temp); 
+non_grid_points = [x1(:),x2(:)]'; 
 f_on_grid       = evaluate_on_sparse_grid(f, Sr);
 f_values        = interpolate_on_sparse_grid(S,Sr,f_on_grid,non_grid_points);
 
@@ -414,44 +427,113 @@ else
     L = struct('f_values',f_values);
     S = load('test_unit','f_values');   
     if isequal_sgmk(L,S)
-        disp('test on interolation on sparse grid passed')
+        disp('test on interpolation on sparse grid passed')
     end    
 end
 
 
 %% test on generalized Polynomial Chaos Expansion (gPCE) 
 
+% .........................................................................
+% %% 1 - non capisco cosa si fa nel tutorial. Controllare! 
+% %% 2 - verificare per tutti i polinomi? Anche no, tanto abbiamo
+% fatto il test per i polinomi
+% .........................................................................
+
 clc
 clear
 testing_mode = true;
 
-N = 2; w = 5;
-knots     = @(n) knots_uniform(n,-1,1,'nonprob'); 
+f = @(x) prod(1./sqrt(x+3));
+
+N=2; w=5; a=-1; b=1; 
+knots     = @(n) knots_uniform(n,a,b); 
 lev2knots = @lev2knots_lin; 
 idxset    = @(i) prod(i); 
 S         = smolyak_grid(N,w,knots,lev2knots,idxset);
 Sr        = reduce_sparse_grid(S);
-% the domain of the grid
-domain=[-ones(1,N); ones(1,N)];
+f_on_grid = evaluate_on_sparse_grid(f,Sr);
 
-% compute a legendre polynomial over the sparse grid
-X=Sr.knots;
-nodal_values = 4*lege_eval_multidim(X,[4 0],-1,1)+ 2*lege_eval_multidim(X,[1 1],-1,1);
+[PCE_coeffs,PCE_multiidx] = convert_to_modal(S,Sr,f_on_grid,[a a; b b],'legendre');
 
-% conversion from the points to the legendre polynomial. I should recover it exactly
-[modal_coeffs,K] = convert_to_modal(S,Sr,nodal_values,domain,'legendre');
+if ~testing_mode
+    save('test_unit','PCE_coeffs','PCE_multiidx');
+else
+    disp('testing gPCE')
+    L = struct('PCE_coeffs',PCE_coeffs,'PCE_multiidx',PCE_multiidx);
+    S = load('test_unit','PCE_coeffs','PCE_multiidx');   
+    if isequal_sgmk(L,S)
+        disp('test on gPCE passed')
+    end    
+end
 
-[K,modal_coeffs] %#ok<NOPTS>
 
 %% test on Sobol indices 
 
+clc
+clear
+testing_mode = true;
+
+f = @(x) 1./(1 + 5*x(1,:).^2 + x(2,:).^2 + x(3,:).^2); 
+
+N=3; w=5; a=-1; b=1; 
+knots     = @(n) knots_uniform(n,a,b); 
+lev2knots = @lev2knots_lin; 
+idxset    = @(i) prod(i); 
+S         = smolyak_grid(N,w,knots,lev2knots,idxset);
+Sr        = reduce_sparse_grid(S);
+f_on_grid = evaluate_on_sparse_grid(f,Sr);
+
+[Sob_i,Tot_Sob_i,Mean,Var] = compute_sobol_indices_from_sparse_grid(S,Sr,f_on_grid,[a a a; b b b],'legendre');
+
+if ~testing_mode
+    save('test_unit','Sob_i','Tot_Sob_i','Mean','Var');
+else
+    disp('testing Sobol indices')
+    L = struct('Sob_i',Sob_i,'Tot_Sob_i',Tot_Sob_i,'Mean',Mean,'Var',Var);
+    S = load('test_unit','Sob_i','Tot_Sob_i','Mean','Var');   
+    if isequal_sgmk(L,S)
+        disp('test on Sobol indices passed')
+    end    
+end
+
+
 %% test on gradient and Hessian
 
+clc
+clear
+testing_mode = true;
 
+f = @(x) 1./(1+0.5*sum(x.^2)); 
+
+N=2; aa=[4 1]; bb=[6 5]; domain=[aa; bb]; w=4;
+knots1    = @(n) knots_CC(n,aa(1),bb(1));
+knots2    = @(n) knots_CC(n,aa(2),bb(2));
+S         = smolyak_grid(N,w,{knots1,knots2},@lev2knots_doubling);
+Sr        = reduce_sparse_grid(S);
+f_on_grid = evaluate_on_sparse_grid(f,Sr);
+
+x1_temp     = linspace(aa(1),bb(1),10);
+x2_temp     = linspace(aa(2),bb(2),30);
+[x1,x2]     = meshgrid(x1_temp,x2_temp); 
+eval_points = [x1(:),x2(:)]'; 
+
+grad = derive_sparse_grid(S,Sr,f_on_grid,domain,eval_points);
+eval_point_hess = eval_points(:,10); % pick one point
+Hess = hessian_sparse_grid(S,Sr,f_on_grid,domain,eval_point_hess);
+
+if ~testing_mode
+    save('test_unit','grad','Hess');
+else
+    disp('testing gradients and derivatives')
+    L = struct('grad',grad,'Hess',Hess);
+    S = load('test_unit','grad','Hess');   
+    if isequal_sgmk(L,S)
+        disp('test on gradients and derivatives passed')
+    end    
+end
 
 %%%%%%%%%%%% USE KEEP.M AND GIVE CREDIT  %%%%%%%%%%%%%%%%%
-
-
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
