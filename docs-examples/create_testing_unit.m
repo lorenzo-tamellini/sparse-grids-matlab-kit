@@ -263,6 +263,72 @@ else
 end
 
 
+%% test sparse grid generation and reduction (main)
+
+% .........................................................................
+% %% 1 - NO TEST per plot_sparse_grid,plot_sparse_grid_interpolant,plot3_sparse_grid
+% %% 2 - perche' coeff_smolyak = combination_technique(I_smolyak) non si
+% puo' inglobare in smolyak_grid_add_multiidx?
+% .........................................................................
+
+clc
+clear
+testing_mode = true;
+
+% given the multi-index set 
+I = [
+    1 1;
+    1 2;
+    2 1;
+    3 1;
+];
+knots1 = @(n) knots_uniform(n,0,1);
+knots2 = @(n) knots_leja(n,-1,1,'line');
+lev2knots = @lev2knots_lin; 
+S_given_multiidx = smolyak_grid_multiidx_set(I,{knots1,knots2},lev2knots); 
+
+% given the rule 
+N=2; w=3;
+knots = @(n) knots_CC(n,-1,1); 
+[lev2knots,rule] = define_functions_for_rule('SM',N); 
+[S_smolyak,I_smolyak] = smolyak_grid(N,w,knots,lev2knots,rule);
+Sr_smolyak = reduce_sparse_grid(S_smolyak); 
+
+% adding one multi-index to S_smolyak
+new_idx = [5 1];
+coeff_smolyak = combination_technique(I_smolyak); 
+[S_add,I_add,coeff_add] = smolyak_grid_add_multiidx(new_idx,S_smolyak,I_smolyak,coeff_smolyak,knots,lev2knots); 
+
+% quick preset
+N = 2; w = 3;
+[S_quick,Sr_quick] = smolyak_grid_quick_preset(N,w);
+
+if ~testing_mode
+    save('test_unit',...
+         'S_given_multiidx',...
+         'S_smolyak','I_smolyak','Sr_smolyak',...
+         'S_add','I_add','coeff_add',...
+         'S_quick','Sr_quick','-append');
+else
+    disp('testing sparse grid generation')
+    L = struct('S_given_multiidx',S_given_multiidx,...
+               'S_smolyak',S_smolyak,'I_smolyak',I_smolyak,'Sr_smolyak',Sr_smolyak,...
+               'S_add',S_add,'I_add',I_add,'coeff_add',coeff_add,...
+               'S_quick',S_quick,'Sr_quick',Sr_quick);
+    S = load('test_unit',...
+             'S_given_multiidx',...
+             'S_smolyak','I_smolyak','Sr_smolyak',...
+             'S_add','I_add','coeff_add', ...
+             'S_quick','Sr_quick');   
+    if isequal_sgmk(L,S)
+        disp('test on sparse grid generation passed')
+    end    
+end
+
+%% test on quadrature
+
+clear
+
 
 
 
