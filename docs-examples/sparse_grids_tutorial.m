@@ -247,7 +247,6 @@ legend show
 % 1/sqrt(2 sig^2 pi) \int_R f(x) e^{ -(x-mi)^2 / (2 sig^2) } dx 
 
 
-
 % Gauss-Hermite points 
 n=9; mu=0; sig=1;
 x=knots_normal(n,mu,sig);
@@ -267,17 +266,16 @@ n=9;
 x=knots_GK(n,0,1);
 plot(x, 2 + 0*x,'ob','MarkerFaceColor','b','DisplayName','9 GK points')
 
-
 % Normal-Leja : nested quadrature points to approximate integrals as the previous
 
 hold on
 n=3; 
 x=knots_normal_leja(n,mu,sig,'line'); % another option here is 'sym_line'
-plot(x,3 + 0*x,'xr','LineWidth',2,'MarkerFaceColor','r','MarkerSize',8,'DisplayName','3 Normal-Leja points')
+plot(x,3 + 0*x,'xr','LineWidth',2,'MarkerFaceColor','r','DisplayName','3 Normal-Leja points')
 
 n=9; 
 x=knots_normal_leja(n, mu,sig,'line');
-plot(x, 4 + 0*x,'xb','LineWidth',2,'MarkerFaceColor','b','MarkerSize',8,'DisplayName','9 Normal-Leja points')
+plot(x, 4 + 0*x,'xb','LineWidth',2,'MarkerFaceColor','b','DisplayName','9 Normal-Leja points')
 
 ylim([-1.5 7])
 legend show
@@ -296,12 +294,16 @@ x=knots_exponential(n,lambda);
 
 figure
 plot(x,0*x,'ok','MarkerFaceColor','k','DisplayName','12 Gauss-Laguerre points')
-grid on
-legend show
 
 % and their Leja Counter part
-% TBC
 
+hold on 
+x=knots_exponential_leja(n,lambda);
+plot(x,1 + 0*x,'or','LineWidth',2,'MarkerFaceColor','r','DisplayName','12 Exponential-Leja points')
+
+grid on
+ylim([-0.5 1.5])
+legend show
 
 %% quadrature points to approximate integrals with gamma pdf, like 
 %
@@ -316,11 +318,16 @@ x=knots_gamma(n,alpha,beta);
 
 figure
 plot(x,0*x,'ok','MarkerFaceColor','k','DisplayName','12 Generalized Gauss-Laguerre points')
-grid on
-legend show
 
 % and their Leja Counter part
 
+hold on 
+x=knots_gamma_leja(n,alpha,beta);
+plot(x,1 + 0*x,'or','LineWidth',2,'MarkerFaceColor','r','DisplayName','12 Gamma-Leja points')
+
+grid on
+ylim([-0.5 1.5])
+legend show
 
 
 %% quadrature points to approximate integrals with beta pdf, like 
@@ -337,14 +344,21 @@ x=knots_beta(n,alpha,beta,x_a,x_b);
 
 figure
 plot(x,0*x,'ok','MarkerFaceColor','k','DisplayName','12 Gauss-Jacobi points')
-grid on
-legend show
 
 % and their Leja Counter part
 
+hold on
+n=12; 
+x=knots_beta_leja(n,alpha,beta,x_a,x_b,'line'); 
+plot(x,1 + 0*x,'or','LineWidth',2,'MarkerFaceColor','r','DisplayName','12 Beta-Leja points')
 
+n=12; 
+x=knots_beta_leja(n,alpha,beta,x_a,x_b,'sym_line'); % recommended only if alpha = beta 
+plot(x,2 + 0*x,'ob','LineWidth',2,'MarkerFaceColor','b','DisplayName','12 Sym. Beta-Leja points')
 
-
+grid on
+ylim([-0.5 3])
+legend show
 
 %% PART 1: INTRODUCTION - INGREDIENTS OF A SPARSE GRID. LEV2KNOTS FUNCTION.
 
