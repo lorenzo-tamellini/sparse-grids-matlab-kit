@@ -504,9 +504,9 @@ axis([-1 1 -1 1])
 % a) MULTIIDX_BOX_SET generates all multiindices jj that are component-wise less than or
 % equal to some other index ii. The minimal value of the components of the indices to be generated can be either 0 or 1. For instance
 
-jj=[2 3];
-C=multiidx_box_set([2 3],0);
-D=multiidx_box_set([2 3],1);
+jj=[2 3]; 
+C=multiidx_box_set(jj,0);
+D=multiidx_box_set(jj,1);
 
 % the package comes with a convenience function to plot a multiidx set
 
