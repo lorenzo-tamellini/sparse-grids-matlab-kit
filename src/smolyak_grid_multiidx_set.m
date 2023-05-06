@@ -1,5 +1,9 @@
 function S = smolyak_grid_multiidx_set(C,knots,lev2knots,S2,arg5) %#ok<INUSD>
 
+% S = smolyak_grid_multiidx_set(C,knots,lev2knots,S2,arg5) 
+%
+% DEPRECATED!! This function has been replaced by CREATE_SPARSE_GRID_MULTIIDX_SET in release 23.5 and will disappear in future releases
+%
 % SMOLYAK_GRID_MULTIIDX_SET produces a sparse grid starting from a multiindex-set rather than
 % from a rule IDXSET(I) <= W.
 %
@@ -23,7 +27,8 @@ function S = smolyak_grid_multiidx_set(C,knots,lev2knots,S2,arg5) %#ok<INUSD>
 % See LICENSE.txt for license
 %----------------------------------------------------
 
-
+error('SparseGKit:RenamedFunction', ['smolyak_grid_multiidx_set has been replaced by create_sparse_grid_multiidx_set in release 23.5.'...
+    ' This message will disappear in future releases of the sparse-grid-matlab-kit.'])
 
 % declare a global variable controlling verbosity
 global MATLAB_SPARSE_KIT_VERBOSE

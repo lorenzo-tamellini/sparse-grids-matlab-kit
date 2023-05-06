@@ -1,18 +1,18 @@
-function [S,I,coeff] = smolyak_grid_add_multiidx(new_idx,S_in,I_in,coeff_in,knots,lev2knots)
+function [S,I,coeff] = create_sparse_grid_add_multiidx(new_idx,S_in,I_in,coeff_in,knots,lev2knots)
 
-% SMOLYAK_GRID_ADD_MULTIIDX produces a grid obtained by adding a single multi-idx to a previously existing grid.
+% CREATE_SPARSE_GRID_ADD_MULTIIDX produces a grid obtained by adding a single multi-idx to a previously existing grid.
 %
-% [S,I,COEFF] = SMOLYAK_GRID_ADD_MULTIIDX(NEW_IDX,S_IN,I_IN,COEFF_IN,KNOTS,LEV2KNOTS) takes as inputs:
+% [S,I,COEFF] = CREATE_SPARSE_GRID_ADD_MULTIIDX(NEW_IDX,S_IN,I_IN,COEFF_IN,KNOTS,LEV2KNOTS) takes as inputs:
 %       --> an index NEW_IDX. It must be admissible wrt to the index set I_IN described below, and this condition **won't** be checked
 %           by the function
 %       --> a sparse grid S_IN to which NEW_IDX should be added
-%       --> the index set I_IN that was used to create S_IN, either implicitly (by defining the rule in SMOLYAK_GRID)
-%           or explicitely (by using SMOLYAK_GRID_MULTIIDX). Note that this cannot be produced as the union of the indices S_IN.idx,
+%       --> the index set I_IN that was used to create S_IN, either implicitly (by defining the rule in CREATE_SPARSE_GRID)
+%           or explicitely (by using CREATE_SPARSE_GRID_MULTIIDX). Note that this cannot be produced as the union of the indices S_IN.idx,
 %           because S_IN contains only tensors whose coefficient in the combination technique is non-zero, while here we need them all.
 %       --> COEFF_IN is the vector of coefficients of the combination technique obtained on I_IN. Note that this
 %           vector of coefficients *MUST* include also zeros if a row of I_IN has coeff zero in the combination technique.
 %           Therefore, COEFF_IN cannot be taken as [S_in.coeff]. Instead, use COEFF_IN = COMBINATION_TECHNIQUE(I_IN)           
-%       --> KNOTS, LEV2KNOTS are the usual arguments to specify knots and lev2knots (see e.g. SMOLYAK_GRID)
+%       --> KNOTS, LEV2KNOTS are the usual arguments to specify knots and lev2knots (see e.g. CREATE_SPARSE_GRID)
 %
 %       The function outputs:
 %
@@ -115,7 +115,7 @@ ss=1;
 % in S_old as follows
 
 if MATLAB_SPARSE_KIT_VERBOSE
-    disp('build smolyak grid with tensor grid recycling')
+    disp('build sparse grid with tensor grid recycling')
 end
 
 nb_S_old_grids = length(S_in);

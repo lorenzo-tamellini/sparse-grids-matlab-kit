@@ -1,11 +1,11 @@
-function [S,C] = smolyak_grid(N,w,knots,lev2knots,idxset,S2,arg7) %#ok<INUSD>
+function [S,C] = create_sparse_grid(N,w,knots,lev2knots,idxset,S2,arg7) %#ok<INUSD>
 
 
-%  SMOLYAK_GRID generates a Smolyak sparse grid (and corresponding quadrature weights)
+%  CREATE_SPARSE_GRID generates a sparse grid (and corresponding quadrature weights)
 %  as a linear combination of full tensor grids, employing formula (2.9)
 %  of [Nobile-Tempone-Webster, SINUM 46/5, pages 2309-2345] 
 %
-%  [S,C] = SMOLYAK_GRID(N,W,KNOTS,LEV2KNOTS,IDXSET) creates a sparse grid in N dimensions
+%  [S,C] = CREATE_SPARSE_GRID(N,W,KNOTS,LEV2KNOTS,IDXSET) creates a sparse grid in N dimensions
 %       using the multiindex set defined by
 %
 %       IDXSET(I) <= W,   
@@ -42,7 +42,7 @@ function [S,C] = smolyak_grid(N,w,knots,lev2knots,idxset,S2,arg7) %#ok<INUSD>
 %           S(j).idx: the multiidx vector corresponding to the current grid, whose number of points
 %               is defined by lev2knots(i)
 %
-%       The outputs of SMOLYAK_GRID are 
+%       The outputs of CREATE_SPARSE_GRID are 
 %       S: structure containing the information on the sparse grid (vector of tensor grids; see above)
 %       C: multi-index set used to generate the sparse grid. It is sorted lexicographically and contains all
 %           multi-indices, even those whose coefficient in the combination technique is 0. 
@@ -55,9 +55,9 @@ function [S,C] = smolyak_grid(N,w,knots,lev2knots,idxset,S2,arg7) %#ok<INUSD>
 %
 %
 %
-% [S,C] = SMOLYAK_GRID(N,W,KNOTS,LEV2KNOTS,IDXSET,S2), where S2 is another Smolyak grid, 
+% [S,C] = CREATE_SPARSE_GRID(N,W,KNOTS,LEV2KNOTS,IDXSET,S2), where S2 is another sparse grid, 
 %       tries to recycle tensor grids from S2 to build those of S instead of recomputing them.
-%       This can be helpful whenever sequences of Smolyak grid are generates. Note that *NO* check
+%       This can be helpful whenever sequences of sparse grids are generated. Note that *NO* check
 %       will performed whether S2 was generated with the same lev2knots as the one given as input.
 %       S2 can also be empty, S2=[]. To use the default IDXSET, use IDXSET=[];
 
@@ -99,14 +99,6 @@ if isa(lev2knots,'function_handle')
     for i=1:N
         lev2knots{i}=f_lev2knots;
     end
-end
-
-
-% throw an error if called in the old way
-% [S,C] = SMOLYAK_GRID(N,W,KNOTS,LEV2KNOTS,IDXSET,MAP,WEIGHTS_COEFF) 
-
-if nargin > 5 && isa(S2,'function_handle')
-   error('SparseGKit:WrongInput','Since release 22.2, SMOLYAK_GRID no longer accepts MAP and WEIGHTS_COEFF as inputs') 
 end
 
 
@@ -214,7 +206,7 @@ else
     % for each nonzero coeff, generate the tensor grid and store it. If possible, recycle from S2.
     if exist('C2','var') && ~isempty(C2)
         if MATLAB_SPARSE_KIT_VERBOSE
-            disp('build smolyak grid with tensor grid recycling')
+            disp('build sparse grid with tensor grid recycling')
         end
         for j=1:nn
             if coeff(j)~=0
