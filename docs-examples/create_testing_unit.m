@@ -295,19 +295,19 @@ I = [
 knots1           = @(n) knots_uniform(n,0,1);
 knots2           = @(n) knots_leja(n,-1,1,'line');
 lev2knots        = @lev2knots_lin; 
-S_given_multiidx = smolyak_grid_multiidx_set(I,{knots1,knots2},lev2knots); 
+S_given_multiidx = create_sparse_grid_multiidx_set(I,{knots1,knots2},lev2knots); 
 
 % given the rule 
 N=2; w=3;
 knots                 = @(n) knots_CC(n,-1,1); 
 [lev2knots,rule]      = define_functions_for_rule('SM',N); 
-[S_smolyak,I_smolyak] = smolyak_grid(N,w,knots,lev2knots,rule);
+[S_smolyak,I_smolyak] = create_sparse_grid(N,w,knots,lev2knots,rule);
 Sr_smolyak            = reduce_sparse_grid(S_smolyak); 
 
 % adding one multi-index to S_smolyak
 new_idx = [5 1];
 coeff_smolyak           = combination_technique(I_smolyak); 
-[S_add,I_add,coeff_add] = smolyak_grid_add_multiidx(new_idx,S_smolyak,I_smolyak,coeff_smolyak,knots,lev2knots); 
+[S_add,I_add,coeff_add] = create_sparse_grid_add_multiidx(new_idx,S_smolyak,I_smolyak,coeff_smolyak,knots,lev2knots); 
 
 % quick preset
 N = 2; w = 3;
@@ -352,7 +352,7 @@ testing_mode = true;
 f = @(x) sum(x);
 
 N=2; w=3;
-S  = smolyak_grid(N,w,@(n) knots_uniform(n,-1,1),@lev2knots_lin);
+S  = create_sparse_grid(N,w,@(n) knots_uniform(n,-1,1),@lev2knots_lin);
 Sr = reduce_sparse_grid(S);
 
 f_evals = evaluate_on_sparse_grid(f,Sr);
@@ -384,7 +384,7 @@ f = @(x) prod(1./sqrt(x+3));
 
 N=4; w=4;
 knots = @(n) knots_CC(n,-1,1);
-S     = smolyak_grid(N,w,knots,@lev2knots_doubling);
+S     = create_sparse_grid(N,w,knots,@lev2knots_doubling);
 Sr    = reduce_sparse_grid(S);
 
 f_quad = quadrature_on_sparse_grid(f,Sr); 
@@ -411,7 +411,7 @@ f = @(x) prod(1./sqrt(x+3));
 
 N=2; w=4;
 knots = @(n) knots_CC(n,-1,1);
-S     = smolyak_grid(N,w,knots,@lev2knots_doubling);
+S     = create_sparse_grid(N,w,knots,@lev2knots_doubling);
 Sr    = reduce_sparse_grid(S);
 
 x_temp          = linspace(-1,1,10); 
@@ -450,7 +450,7 @@ N=2; w=5; a=-1; b=1;
 knots     = @(n) knots_uniform(n,a,b); 
 lev2knots = @lev2knots_lin; 
 idxset    = @(i) prod(i); 
-S         = smolyak_grid(N,w,knots,lev2knots,idxset);
+S         = create_sparse_grid(N,w,knots,lev2knots,idxset);
 Sr        = reduce_sparse_grid(S);
 f_on_grid = evaluate_on_sparse_grid(f,Sr);
 
@@ -480,7 +480,7 @@ N=3; w=5; a=-1; b=1;
 knots     = @(n) knots_uniform(n,a,b); 
 lev2knots = @lev2knots_lin; 
 idxset    = @(i) prod(i); 
-S         = smolyak_grid(N,w,knots,lev2knots,idxset);
+S         = create_sparse_grid(N,w,knots,lev2knots,idxset);
 Sr        = reduce_sparse_grid(S);
 f_on_grid = evaluate_on_sparse_grid(f,Sr);
 
@@ -509,7 +509,7 @@ f = @(x) 1./(1+0.5*sum(x.^2));
 N=2; aa=[4 1]; bb=[6 5]; domain=[aa; bb]; w=4;
 knots1    = @(n) knots_CC(n,aa(1),bb(1));
 knots2    = @(n) knots_CC(n,aa(2),bb(2));
-S         = smolyak_grid(N,w,{knots1,knots2},@lev2knots_doubling);
+S         = create_sparse_grid(N,w,{knots1,knots2},@lev2knots_doubling);
 Sr        = reduce_sparse_grid(S);
 f_on_grid = evaluate_on_sparse_grid(f,Sr);
 
