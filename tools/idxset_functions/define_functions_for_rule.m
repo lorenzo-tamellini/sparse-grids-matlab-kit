@@ -2,12 +2,12 @@ function [lev2nodes,idxset] = define_functions_for_rule(rule,input2)
 
 % [lev2nodes,idxset] = DEFINE_FUNCTIONS_FOR_RULE(rule,N)
 %
-% sets the functions lev2nodes and idxset to use in smolyak_grid.m to build the desired ISOTROPIC sparse grid.
+% sets the functions lev2nodes and idxset to use in create_sparse_grid.m to build the desired ISOTROPIC sparse grid.
 % N is the number of variables.
 %
 % [lev2nodes,idxset] = DEFINE_FUNCTIONS_FOR_RULE(rule,rates)
 %
-% sets the functions lev2nodes and idxset to use in smolyak_grid.m to build the desired ANISOTROPIC sparse grid 
+% sets the functions lev2nodes and idxset to use in create_sparse_grid.m to build the desired ANISOTROPIC sparse grid 
 % with specified rates. 
 %
 % rule can be any of the following: 'TP', 'TD', 'HC', 'SM'

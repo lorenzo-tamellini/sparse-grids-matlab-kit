@@ -120,7 +120,7 @@ switch nargin
         % 
         % raise an error in these cases, which can be recognized because the second input is 
         % not a sparse grid but a reduced sparse grid already
-        if ~issmolyak(S)
+        if ~issparse(S)
             errmsg = 'The second input of EVALUATE_ON_SPARSE_GRID must be a non-reduced sparse grid if the function is called with 6 inputs.';
             error('SparseGKit:WrongInput',errmsg)
         end

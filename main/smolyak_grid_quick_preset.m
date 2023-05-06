@@ -9,7 +9,7 @@ function [S,Sr,C] = smolyak_grid_quick_preset(N,w)
 %       In practice, it is a short-hand for
 %
 %       knots = @(n) knots_CC(n,-1,1);
-%       [S,C] = smolyak_grid(N,w,knots,@lev2knots_doubling);
+%       [S,C] = create_sparse_grid(N,w,knots,@lev2knots_doubling);
 %       Sr = reduce_sparse_grid(S);
 
 
@@ -21,6 +21,6 @@ function [S,Sr,C] = smolyak_grid_quick_preset(N,w)
 
 knots = @(n) knots_CC(n,-1,1);
 
-[S,C] = smolyak_grid(N,w,knots,@lev2knots_doubling);
+[S,C] = create_sparse_grid(N,w,knots,@lev2knots_doubling);
 
 Sr = reduce_sparse_grid(S);

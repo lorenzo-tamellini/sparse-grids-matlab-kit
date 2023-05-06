@@ -1,6 +1,6 @@
 function Sr=reduce_sparse_grid(S,tol)
 
-% REDUCE_SPARSE_GRID given a sparse grid stored as a list of tensor grids (see also SMOLYAK_GRID)
+% REDUCE_SPARSE_GRID given a sparse grid stored as a list of tensor grids (see also CREATE_SPARSE_GRID)
 % generates a reduced structure containing only non repeated points and corresponding weights.
 %
 % SR = REDUCE_SPARSE_GRID(S) operate on the sparse grid S and returns SR, i.e.

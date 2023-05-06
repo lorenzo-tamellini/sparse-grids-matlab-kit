@@ -1,6 +1,6 @@
 function S = tensor_to_sparse(T,idx)
 
-% TENSOR_TO_SPARSE converts a tensor grid into a sparse grid structure of the same type of SMOLYAK_GRID, by adding the missing fields
+% TENSOR_TO_SPARSE converts a tensor grid into a sparse grid structure of the same type of CREATE_SPARSE_GRID, by adding the missing fields
 % 
 % S = TENSOR_TO_SPARSE(T) copies the fields of T in S and adds the following
 %           S.coeff = 1

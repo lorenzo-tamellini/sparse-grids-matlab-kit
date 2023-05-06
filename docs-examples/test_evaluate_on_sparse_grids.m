@@ -21,7 +21,7 @@ Sr_old=[];
 
 for w=0:4
     
-    S=smolyak_grid(N,w,@(n) knots_uniform(n,-1,1),@lev2knots_lin);
+    S=create_sparse_grid(N,w,@(n) knots_uniform(n,-1,1),@lev2knots_lin);
     Sr= reduce_sparse_grid(S);
 
     evals_rec = evaluate_on_sparse_grid(fs,S,Sr,previous_evals,S_old,Sr_old);    
@@ -46,11 +46,11 @@ clear
 f=@(x) sum(x);
 
 N=2; w=4;
-S=smolyak_grid(N,w,@(n) knots_uniform(n,-1,1),@lev2knots_lin);
+S=create_sparse_grid(N,w,@(n) knots_uniform(n,-1,1),@lev2knots_lin);
 Sr= reduce_sparse_grid(S);
 
 w=5;
-T=smolyak_grid(N,w,@(n) knots_uniform(n,-1,1),@lev2knots_lin);
+T=create_sparse_grid(N,w,@(n) knots_uniform(n,-1,1),@lev2knots_lin);
 Tr= reduce_sparse_grid(T);
 
 
@@ -69,11 +69,11 @@ clear
 f=@(x) sum(x);
 
 N=2; w=3;
-S=smolyak_grid(N,w,@(n) knots_uniform(n,-1,1),@lev2knots_lin);
+S=create_sparse_grid(N,w,@(n) knots_uniform(n,-1,1),@lev2knots_lin);
 Sr= reduce_sparse_grid(S);
 
 w=4;
-T=smolyak_grid(N,w,@(n) knots_uniform(n,-1,1),@lev2knots_lin);
+T=create_sparse_grid(N,w,@(n) knots_uniform(n,-1,1),@lev2knots_lin);
 Tr= reduce_sparse_grid(T);
 
 evals_nr=evaluate_on_sparse_grid(f,Sr);

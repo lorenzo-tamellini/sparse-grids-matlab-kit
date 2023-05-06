@@ -32,7 +32,7 @@ switch nargin
         S2 = varargin{2};
         Tol = 1e-14;
 
-        if ~issmolyak(S1) || ~issmolyak(S2)
+        if ~issparse(S1) || ~issparse(S2)
             error('SparseGKit:WrongInput','S1 or S2 not sparse grids in isequal_sparse_grids')
         end
         
@@ -43,7 +43,7 @@ switch nargin
         S2 = varargin{2};
         Tol = varargin{3};
 
-        if ~issmolyak(S1) || ~issmolyak(S2)
+        if ~issparse(S1) || ~issparse(S2)
             error('SparseGKit:WrongInput','S1 or S2 not sparse grids in isequal_sparse_grids')
         end        
         

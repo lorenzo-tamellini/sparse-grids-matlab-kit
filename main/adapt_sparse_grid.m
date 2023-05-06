@@ -283,7 +283,7 @@ controls = default_controls(controls,N_full);
 % --> nb_pts_visited : the number of points visited during the sparse grid construction
 % --> num_evals : the number of function evaluations performed
 % --> nb_pts_log: for each iteration, the current nb_pts
-% --> S         : smolyak_grid_multiidx_set(G,knots,lev2knots);
+% --> S         : create_sparse_grid_multiidx_set(G,knots,lev2knots);
 % --> Sr        : reduce_sparse_grid(S);
 % --> f_on_Sr   : evaluate_on_sparse_grid(f,Sr);
 % --> var_with_pts: vector of variables in which we have actually put points. 
@@ -348,9 +348,9 @@ while nb_pts < controls.max_pts   %while nb_pts_wrong_count < controls.max_pts
         jj = Ng(m,:);
             
         G_log = [G_log; jj];
-        [T,G,coeff_G] = smolyak_grid_add_multiidx(jj,S,G,coeff_G,knots,lev2knots);
+        [T,G,coeff_G] = create_sparse_grid_add_multiidx(jj,S,G,coeff_G,knots,lev2knots);
 
-        % T = smolyak_grid_multiidx_set(G,knots,lev2knots,S); % recycle tensor grids from previous sparse
+        % T = create_sparse_grid_multiidx_set(G,knots,lev2knots,S); % recycle tensor grids from previous sparse
         Tr = reduce_sparse_grid(T,controls.pts_tol);
 
         [nb_pts,num_evals,nb_pts_log,Prof_temp(m),f_on_Tr,Hr,f_on_Hr,intnew] = ...
@@ -476,9 +476,9 @@ while nb_pts < controls.max_pts   %while nb_pts_wrong_count < controls.max_pts
                 G_log = [G_log; Ng];  %#ok<AGROW>
                 
                 % G = sortrows([G; Ng]);
-                % T = smolyak_grid_multiidx_set(G,knots,lev2knots,S); % recycle tensor grids from previos sparse
+                % T = create_sparse_grid_multiidx_set(G,knots,lev2knots,S); % recycle tensor grids from previos sparse
 
-                [T,G,coeff_G] = smolyak_grid_add_multiidx(Ng,S,G,coeff_G,knots,lev2knots);
+                [T,G,coeff_G] = create_sparse_grid_add_multiidx(Ng,S,G,coeff_G,knots,lev2knots);
 
                 Tr = reduce_sparse_grid(T,controls.pts_tol);
 
@@ -679,7 +679,7 @@ function [N,N_log,var_with_pts,S,Sr,f_on_Sr,I,I_log,idx,maxprof,idx_bin,profits,
 % --> nb_pts    : the number of points in the grid
 % --> num_evals : the number of function evaluations
 % --> nb_pts_log: for each iteration, the current nb_pts
-% --> S         : smolyak_grid_multiidx_set(G,knots,lev2knots);
+% --> S         : create_sparse_grid_multiidx_set(G,knots,lev2knots);
 % --> Sr        : reduce_sparse_grid(S);
 % --> f_on_Sr   : evaluate_on_sparse_grid(f,Sr);
 % --> intf      : approx of integral of f using Sr
@@ -714,7 +714,7 @@ if isempty(prev_adapt)
     G = I;    
     G_log = G;
     coeff_G = 1;
-    S  = smolyak_grid_multiidx_set(G,knots,lev2knots);
+    S  = create_sparse_grid_multiidx_set(G,knots,lev2knots);
     Sr = reduce_sparse_grid(S,controls.pts_tol);
     f_on_Sr = evaluate_on_sparse_grid(f,Sr); % here we don't need controls.pts_tol, there is no check on new/old points
 

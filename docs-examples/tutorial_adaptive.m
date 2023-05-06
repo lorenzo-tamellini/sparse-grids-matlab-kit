@@ -555,12 +555,12 @@ adapt = adapt_sparse_grid(f,N,knots,lev2knots,prev_adapt,controls);
 adapt.intf
 
 G = adapt.private.G;
-S = smolyak_grid_multiidx_set(G,knots,lev2knots);
+S = create_sparse_grid_multiidx_set(G,knots,lev2knots);
 Sr = reduce_sparse_grid(S);
 Q1 = quadrature_on_sparse_grid(f,Sr)
 
 
-S2 = smolyak_grid_multiidx_set(fast_TD_set(N,8),knots,lev2knots);
+S2 = create_sparse_grid_multiidx_set(fast_TD_set(N,8),knots,lev2knots);
 Sr2 = reduce_sparse_grid(S2);
 Q2 = quadrature_on_sparse_grid(f,Sr2)
 
@@ -650,7 +650,7 @@ adapt_no_buff = adapt_sparse_grid(f,N,knotsf,lev2knots, prev_adapt, controls);
 
 % also verify with a one-shot construcution
 G = adapt_no_buff.private.G;
-S = smolyak_grid_multiidx_set(G,knotsf,lev2knots);
+S = create_sparse_grid_multiidx_set(G,knotsf,lev2knots);
 Sr = reduce_sparse_grid(S);
 Q = quadrature_on_sparse_grid(f,Sr);
 

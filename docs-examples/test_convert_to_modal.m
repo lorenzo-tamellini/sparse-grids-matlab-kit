@@ -16,7 +16,7 @@ knots=@(n) knots_uniform(n,-1,1,'nonprob');
 lev2knots=@lev2knots_lin; 
 idxset=@(i) prod(i); 
 
-S=smolyak_grid(N,w,knots,lev2knots,idxset);
+S=create_sparse_grid(N,w,knots,lev2knots,idxset);
 Sr=reduce_sparse_grid(S);
 
 % the domain of the grid
@@ -50,7 +50,7 @@ knots2=@(n) knots_uniform(n,a(2),b(2),'nonprob');
 lev2knots=@lev2knots_lin; 
 idxset=@(i) sum(i-1);
 
-[S,C]=smolyak_grid(N,w,{knots1,knots2},lev2knots,idxset);
+[S,C]=create_sparse_grid(N,w,{knots1,knots2},lev2knots,idxset);
 Sr=reduce_sparse_grid(S);
 
 % evaluate a linear combination of Legendre polynomials on the grid: it should be recovered exactly by the
@@ -86,7 +86,7 @@ knots2=@(n) knots_normal(n,mu(2),sig(2));
 lev2knots=@lev2knots_lin; 
 idxset=@(i) sum(i-1);
 
-S=smolyak_grid(N,w,{knots1,knots2},lev2knots,idxset);
+S=create_sparse_grid(N,w,{knots1,knots2},lev2knots,idxset);
 Sr=reduce_sparse_grid(S);
 
 % Same procedure as before, now with a linear comb of Hermite polynomials
@@ -119,7 +119,7 @@ knots1=@(n) knots_uniform(n,a(1),b(1),'nonprob');
 knots2=@(n) knots_uniform(n,a(2),b(2),'nonprob');
 lev2knots=@lev2knots_lin; idxset=@(i) sum(i-1);
 
-[S,C]=smolyak_grid(N,w,{knots1,knots2},lev2knots,idxset);
+[S,C]=create_sparse_grid(N,w,{knots1,knots2},lev2knots,idxset);
 Sr=reduce_sparse_grid(S);
 
 % evaluate a linear comb of Chebyshev polynomials on the grid: it should be recovered exactly by the
@@ -148,7 +148,7 @@ knots1=@(n) knots_exponential(n,lambda(1));
 knots2=@(n) knots_exponential(n,lambda(2));
 lev2knots=@lev2knots_lin; idxset=@(i) sum(i-1);
 
-[S,C]=smolyak_grid(N,w,{knots1,knots2},lev2knots,idxset);
+[S,C]=create_sparse_grid(N,w,{knots1,knots2},lev2knots,idxset);
 Sr=reduce_sparse_grid(S);
 
 % evaluate a linear comb of Chebyshev polynomials on the grid: it should be recovered exactly by the
@@ -179,7 +179,7 @@ knots1=@(n) knots_gamma(n,alpha(1),beta(1));
 knots2=@(n) knots_gamma(n,alpha(2),beta(2));
 lev2knots=@lev2knots_lin; idxset=@(i) sum(i-1);
 
-[S,C]=smolyak_grid(N,w,{knots1,knots2},lev2knots,idxset);
+[S,C]=create_sparse_grid(N,w,{knots1,knots2},lev2knots,idxset);
 Sr=reduce_sparse_grid(S);
 
 % evaluate a linear comb of Chebyshev polynomials on the grid: it should be recovered exactly by the
@@ -209,7 +209,7 @@ knots1=@(n) knots_beta(n,alpha(1),beta(1),a(1),b(1));
 knots2=@(n) knots_beta(n,alpha(2),beta(2),a(2),b(2));
 lev2knots=@lev2knots_lin; idxset=@(i) sum(i-1);
 
-[S,C]=smolyak_grid(N,w,{knots1,knots2},lev2knots,idxset);
+[S,C]=create_sparse_grid(N,w,{knots1,knots2},lev2knots,idxset);
 Sr=reduce_sparse_grid(S);
 
 % evaluate a linear comb of Chebyshev polynomials on the grid: it should be recovered exactly by the
@@ -241,7 +241,7 @@ knots={ @(n) knots_uniform(n,a,b,'prob'), @(n) knots_normal(n,mu,sig),...
         @(n) knots_uniform(n,a2,b2,'prob'), @(n) knots_exponential(n,lambda)};
 lev2knots={@lev2knots_lin, @lev2knots_lin, @lev2knots_lin, @lev2knots_lin}; 
 idxset=@(i) sum(i-1);
-[S,C]=smolyak_grid(N,w,knots,lev2knots,idxset);
+[S,C]=create_sparse_grid(N,w,knots,lev2knots,idxset);
 Sr=reduce_sparse_grid(S);
 
 
@@ -291,7 +291,7 @@ knots1=@(n) knots_normal(n,mu(1),sig(1));
 knots2=@(n) knots_normal(n,mu(2),sig(2)); 
 lev2knots=@lev2knots_lin; 
 idxset=@(i) sum(i-1);
-S=smolyak_grid(N,w,{knots1,knots2},lev2knots,idxset);
+S=create_sparse_grid(N,w,{knots1,knots2},lev2knots,idxset);
 Sr=reduce_sparse_grid(S);
 
 

@@ -43,7 +43,7 @@ for w=0:w_max
     disp(w)
 
     % create grid
-    [S,C]=smolyak_grid(N,w,knots,lev2knots,idxset,S_old);
+    [S,C]=create_sparse_grid(N,w,knots,lev2knots,idxset,S_old);
     S_old = S;
     
     Sr=reduce_sparse_grid(S);

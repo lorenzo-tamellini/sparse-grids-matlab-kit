@@ -40,7 +40,7 @@ for w=0:w_max
     disp(w)
 
     % create grid
-    [S,C]=smolyak_grid(N,w,knots,lev2knots,idxset);
+    [S,C]=create_sparse_grid(N,w,knots,lev2knots,idxset);
     Sr=reduce_sparse_grid(S);
 
     [I,evals_old]=quadrature_on_sparse_grid(@(x)f(x,b),S,Sr,evals_old,S_old,Sr_old);
@@ -108,7 +108,7 @@ evals_old=[];
 % convergence loop
 for w=1:w_max       
     
-    S = smolyak_grid(N,w,points,@lev2knots_lin, @(i) sum(i-1), S_old);
+    S = create_sparse_grid(N,w,points,@lev2knots_lin, @(i) sum(i-1), S_old);
     Sr = reduce_sparse_grid(S);    
     [res, evals]  = quadrature_on_sparse_grid(f, S, Sr, evals_old, S_old, Sr_old);
     quad(w) = res;
@@ -120,7 +120,7 @@ for w=1:w_max
 end
 
 % exact integral
-S = smolyak_grid(N,w_max+4,points,@lev2knots_lin,@(i) sum(i-1),S_old);
+S = create_sparse_grid(N,w_max+4,points,@lev2knots_lin,@(i) sum(i-1),S_old);
 Sr = reduce_sparse_grid(S);
 exact = quadrature_on_sparse_grid(f,S,Sr,evals_old,S_old,Sr_old);
 

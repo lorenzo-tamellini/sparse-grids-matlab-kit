@@ -257,7 +257,7 @@ for w=1:w_max
     disp(w); %#ok<*NOEFF>
     
     disp('Leja');
-    S_Lj = smolyak_grid(N,w,knots_Lj,@lev2knots_2step, @(i) sum(i-1), S_Lj_old); %using 2step rule to ramp faster to rules with high number of points
+    S_Lj = create_sparse_grid(N,w,knots_Lj,@lev2knots_2step, @(i) sum(i-1), S_Lj_old); %using 2step rule to ramp faster to rules with high number of points
     Sr_Lj = reduce_sparse_grid(S_Lj);
     [res,evals]= quadrature_on_sparse_grid(f, S_Lj, Sr_Lj, evals_Lj_old, S_Lj_old, Sr_Lj_old);
     quad_Lj(w) = res;
@@ -267,7 +267,7 @@ for w=1:w_max
     nb_pts_Lj(w) = Sr_Lj.size;
 
     disp('Gauss Hermite');
-    S_GH = smolyak_grid(N,w,knots_GH,@lev2knots_lin, @(i) sum(i-1), S_GH_old);
+    S_GH = create_sparse_grid(N,w,knots_GH,@lev2knots_lin, @(i) sum(i-1), S_GH_old);
     Sr_GH = reduce_sparse_grid(S_GH);    
     [res, evals]  = quadrature_on_sparse_grid(f, S_GH, Sr_GH, evals_GH_old, S_GH_old, Sr_GH_old);
     quad_GH(w) = res;
@@ -297,7 +297,7 @@ for w=1:w_max_GK
     
     disp(w);
     disp('GK knots');
-    S_GK = smolyak_grid(N,w,knots_GK,@lev2knots_GK, @(i) sum(i-1), S_GK_old);
+    S_GK = create_sparse_grid(N,w,knots_GK,@lev2knots_GK, @(i) sum(i-1), S_GK_old);
     Sr_GK = reduce_sparse_grid(S_GK);
     [res, evals] = quadrature_on_sparse_grid(f,S_GK,Sr_GK,evals_GK_old,S_GK_old,Sr_GK_old);
     quad_GK(w) = res;
@@ -310,7 +310,7 @@ end
 
 % exact integral
 disp('computing reference solution');
-S_GH = smolyak_grid(N,w_max+2,knots_GH,@lev2knots_lin, @(i) sum(i-1), S_GH_old);
+S_GH = create_sparse_grid(N,w_max+2,knots_GH,@lev2knots_lin, @(i) sum(i-1), S_GH_old);
 Sr_GH = reduce_sparse_grid(S_GH);
 exact = quadrature_on_sparse_grid(f,S_GH,Sr_GH,evals_GH_old,S_GH_old,Sr_GH_old);
 
@@ -461,7 +461,7 @@ for w=1:w_max
     disp(w); %#ok<*NOEFF>
     
     disp('Leja');
-    S_Lj = smolyak_grid(N,w,knots_Lj,@lev2knots_2step, @(i) sum(i-1), S_Lj_old); %using 2step rule to ramp faster to rules with high number of points
+    S_Lj = create_sparse_grid(N,w,knots_Lj,@lev2knots_2step, @(i) sum(i-1), S_Lj_old); %using 2step rule to ramp faster to rules with high number of points
     Sr_Lj = reduce_sparse_grid(S_Lj);
     evals_Lj = evaluate_on_sparse_grid(f, S_Lj, Sr_Lj, evals_Lj_old, S_Lj_old, Sr_Lj_old);
     err_Lj(w) = max(abs(f_sampled - interpolate_on_sparse_grid(S_Lj,Sr_Lj,evals_Lj,sampleset)));
@@ -471,7 +471,7 @@ for w=1:w_max
     nb_pts_Lj(w) = Sr_Lj.size;
 
     disp('Gauss Hermite');
-    S_GH = smolyak_grid(N,w,knots_GH,@lev2knots_lin, @(i) sum(i-1), S_GH_old);
+    S_GH = create_sparse_grid(N,w,knots_GH,@lev2knots_lin, @(i) sum(i-1), S_GH_old);
     Sr_GH = reduce_sparse_grid(S_GH);    
     evals_GH = evaluate_on_sparse_grid(f, S_GH, Sr_GH, evals_GH_old, S_GH_old, Sr_GH_old);
     err_GH(w) = max(abs(f_sampled - interpolate_on_sparse_grid(S_GH,Sr_GH,evals_GH,sampleset)));
@@ -502,7 +502,7 @@ for w=1:w_max_GK
     
     disp(w);
     disp('GK knots');
-    S_GK = smolyak_grid(N,w,knots_GK,@lev2knots_GK, @(i) sum(i-1), S_GK_old);
+    S_GK = create_sparse_grid(N,w,knots_GK,@lev2knots_GK, @(i) sum(i-1), S_GK_old);
     Sr_GK = reduce_sparse_grid(S_GK);
     evals_GK = evaluate_on_sparse_grid(f, S_GK, Sr_GK, evals_GK_old, S_GK_old, Sr_GK_old);
     err_GK(w) = max(abs(f_sampled - interpolate_on_sparse_grid(S_GK,Sr_GK,evals_GK,sampleset)));   
