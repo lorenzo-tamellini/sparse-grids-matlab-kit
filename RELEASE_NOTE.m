@@ -3,7 +3,15 @@
 % Copyright (c) 2009-2022 L. Tamellini, F. Nobile, C. Piazzola
 % See LICENSE.txt for license
 %----------------------------------------------------------------------------------
-%
+% 
+% -> 2023, May 7   --> added testing unit
+% 
+% -> 2023, May 7   --> added function KNOTS_TRIANGULAR_LEJA i.e., weighted Leja for quadrature with respect to the
+%                      triangular pdf
+% 
+% -> 2023, May 6   --> renaming SMOLYAK_GRID, SMOLYAK_GRID_MULTIIDX_SET, SMOLYAK_GRID_ADD_MULTIIDX to CREATE_SPARSE_GRID,
+%                      CREATE_SPARSE_GRID_MULTIIDX_SET, CREATE_SPARSE_GRID_ADD_MULTIIDX, and ISSMOLYAK to
+%                      ISSPARSE to avoid using misleading function names 
 %
 % -> 2022, Feb. 16 --> added function SMOLYAK_GRID_QUICK_PRESET, to generate in one command a simple sparse grid
 %                      (CC knots in [-,1,1], lev2knots_doubling, idxset: @(ii) sum(ii-1) \leq w) and its reduced version
