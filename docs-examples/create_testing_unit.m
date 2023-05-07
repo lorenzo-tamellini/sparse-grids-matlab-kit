@@ -6,6 +6,7 @@
 % parallel_toolbox_interface_functions, tye_and_property_check_functions
 % %% 3 - in principle we could use the function keep but I don't think it is
 % really necessary. Recomputing things is not a big problem for these tests
+%%%%%%%%%%%% USE KEEP.M AND GIVE CREDIT  %%%%%%%%%%%%%%%%%
 % .........................................................................
 
 %% test lev2knots_functions (tools/lev2knots_functions)
@@ -40,10 +41,11 @@ end
  
 % .........................................................................
 % %% 2 - cosa facciamo con i triangular leja? Al momento non ci sono ne' nel
-% tutorial ne' nella testing uni
+% tutorial ne' nella testing unit
 % %% 3 - controllare tutorial "equispaced (trapezoidal quadrature rule) and
 % midpoint", simboli nel plot fatti di proposito uguali?
 % %% 4 - ho aggiunto leja per exp, gamma e beta nel tutorial
+% %% 5 - a cosa serve '-append'?
 % .........................................................................
 
 clc
@@ -533,7 +535,85 @@ else
     end    
 end
 
-%%%%%%%%%%%% USE KEEP.M AND GIVE CREDIT  %%%%%%%%%%%%%%%%%
+
+%% test on adaptive algorithm
+
+% .........................................................................
+% %% 1 - test per i diversi profitti e buffering? Sufficiente? 
+% %% 2 - perchè cambiare funzione per il buffering?
+% .........................................................................
+
+clc
+clear
+testing_mode = true;
+
+f=@(x) 1./(x(1)^2+x(2)^2 + 0.3);
+
+N=2; 
+a=-1; b=1;
+knots=@(n) knots_CC(n,a,b);
+lev2knots=@lev2knots_doubling;
+
+controls.paral     = NaN;
+controls.max_pts   = 200;
+controls.prof_toll = 1e-10;
+prev_adapt         = [];
+controls.nested    = true;
+
+% different profit indicators 
+controls.profit    = 'Linf'; 
+S_Linf = adapt_sparse_grid(f,N,knots,lev2knots,prev_adapt,controls);
+
+controls.profit    = 'Linf/new_points'; 
+S_Linf_newpts = adapt_sparse_grid(f,N,knots,lev2knots,prev_adapt,controls);
+
+controls.profit    = 'weighted Linf'; 
+S_weighLinf = adapt_sparse_grid(f,N,knots,lev2knots,prev_adapt,controls);
+
+controls.profit    = 'weighted Linf/new_points'; 
+S_weighLinf_newpts = adapt_sparse_grid(f,N,knots,lev2knots,prev_adapt,controls);
+
+controls.profit    = 'deltaint'; 
+S_deltaint = adapt_sparse_grid(f,N,knots,lev2knots,prev_adapt,controls);
+
+controls.profit    = 'deltaint/new_points'; 
+S_deltaint_newpts = adapt_sparse_grid(f,N,knots,lev2knots,prev_adapt,controls);
+
+% buffering 
+f = @(x) 1./exp(sum(x));
+knots1 = @(n) knots_CC(n, -0.5, 0.5);
+knots2 = @(n) knots_CC(n, -0.5, 0.5);
+knots3 = @(n) knots_CC(n, -0.2, 0.2);
+knotsf = {knots1 knots2 knots3};
+lev2knots=@lev2knots_doubling;
+controls.nested=true;
+
+controls.paral = NaN; 
+controls.max_pts = 200;
+controls.prof_toll = 1e-10;
+prev_adapt = [];
+controls.plot = false;
+
+controls.var_buffer_size = 2;
+S_buff = adapt_sparse_grid(f,N,knotsf, lev2knots, prev_adapt, controls);
+
+if ~testing_mode
+    save('test_unit','S_Linf','S_Linf_newpts',...
+        'S_weighLinf','S_weighLinf_newpts',...
+        'S_deltaint','S_deltaint_newpts','S_buff');
+else
+    disp('testing adaptive algorithm for sparse grid generation')
+    L = struct('S_Linf',S_Linf,'S_Linf_newpts',S_Linf_newpts,...
+               'S_weighLinf',S_weighLinf,'S_weighLinf_newpts',S_weighLinf_newpts,...
+               'S_deltaint',S_deltaint,'S_deltaint_newpts',S_deltaint_newpts,...
+               'S_buff',S_buff);
+    S = load('test_unit','S_Linf','S_Linf_newpts',...
+             'S_weighLinf','S_weighLinf_newpts',...
+             'S_deltaint','S_deltaint_newpts','S_buff');   
+    if isequal_sgmk(L,S)
+        disp('test on adaptive algorithm for sparse grid generation passed')
+    end    
+end
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
