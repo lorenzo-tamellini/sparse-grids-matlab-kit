@@ -360,6 +360,21 @@ grid on
 ylim([-0.5 3])
 legend show
 
+%% quadrature points to approximate integrals with triangular pdf
+% (i.e. a linear decreasing pdf over the interval [a,b]), like 
+%
+%  \int_[a,b] f(x) * 2/(b-a)^2 * (b-x) dx
+
+n = 12; 
+a = 0; b = 2;
+x=knots_triangular_leja(n,a,b);
+
+figure
+plot(x,0*x,'ok','MarkerFaceColor','k','DisplayName','12 Triangular-Leja points')
+grid on
+legend show
+
+
 %% PART 1: INTRODUCTION - INGREDIENTS OF A SPARSE GRID. LEV2KNOTS FUNCTION.
 
 % in view of building sparse grids, it is useful to order quadrature/interpolation rules in sequences, i.e. to
