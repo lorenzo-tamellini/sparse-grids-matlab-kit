@@ -108,11 +108,13 @@ end
 
 % Quadrature error for polynomials
 imax = 50;
-err = zeros(1+p_max,imax);
-errGH = zeros(1+p_max,imax);
+rel_err = zeros(1+p_max,imax);
+rel_errGH = zeros(1+p_max,imax);
 
 % for each formula, we test its approximation of increasing moments
-for n=1:50
+
+disp('plotting relative error for several quadrature rules just generated - press ENTER to move to the next plot or CTRL+C to stop')
+for n=10:5:50
     % Normal-Leja quadrature rule using n nodes
     [x_Lj,w_Lj] = knots_normal_leja(n,0,1,'line');
     
@@ -120,24 +122,21 @@ for n=1:50
     [x_GH,w_GH] = knots_normal(ceil(n/2),0,1);
     
     for p=0:p_max
-        if p<n+5 % if the degree is "not too much" compute error
-            err(1+p,n) = abs(mom(1+p) - dot(x_Lj.^p,w_Lj) );
-            errGH(1+p,n) = abs(mom(1+p) - dot(x_GH.^p,w_GH) );
-        else % otherwise,  error is just too much,  we  set it to NaN
-            err(1+p,n) = NaN;
-            errGH(1+p,n) = NaN;    
-        end
+        rel_err(1+p,n) = (abs(mom(1+p) - dot(x_Lj.^p,w_Lj) ))./mom(1+p);
+        rel_errGH(1+p,n) = (abs(mom(1+p) - dot(x_GH.^p,w_GH) ))./mom(1+p);
     end
     
     % Plotting errors
     figure
-    semilogy(0:p_max, err(:,n),'o',0:p_max, errGH(:,n),'+','LineWidth',2)
+    semilogy(0:p_max, rel_err(:,n),'o',0:p_max, rel_errGH(:,n),'+','LineWidth',2)
     grid on
+    ylim([1e-20 1e5])
     set(gca,'FontSize',14)
     legend(sprintf('Normal-Leja (n=%i)',n),sprintf('Gauss-Hermite (n=%i)',ceil(n/2)))
-    set(legend,'Location','NorthWest')
+    set(legend,'Location','SouthOutside')
     xlabel('Polynomial degree p')
-    ylabel('Absolute quadrature error')
+    ylabel('Relative quadrature error')
+    title('paused - press ENTER to move to the next plot or CTRL+C to stop','FontSize',10)
     
     pause
     
