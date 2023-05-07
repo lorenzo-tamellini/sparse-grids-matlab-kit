@@ -41,7 +41,7 @@
 %
 % at the beginning of the Matlab session. Consider launching Matlab as  
 %
-% matlab -r addpath(genpath(pwd))
+% matlab -r "addpath(genpath(pwd))"
 %
 % under Unix, it will run add_to_path during the start-up
 
