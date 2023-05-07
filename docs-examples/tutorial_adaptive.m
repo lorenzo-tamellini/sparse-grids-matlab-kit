@@ -136,17 +136,23 @@ knots=@(n) knots_GK(n,0,1);
 lev2knots=@lev2knots_GK;
 
 controls.paral=NaN; 
-controls.max_pts=1500;
+controls.max_pts=300;
 controls.prof_toll = 1e-10;
 controls.pdf = @(Y) exp(-0.5*sum(Y.^2,1)); % define the weight for the profit. Not doing this will raise an error
 controls.prof='weighted Linf/new_points';
 prev_adapt = [];
 controls.nested=true;
 
+try
 adapt1 = adapt_sparse_grid(f,N,knots,lev2knots,prev_adapt,controls);
+catch ME
+    disp('-------------------------------')
+    disp('we are asking too many points (level beyond 5).')
+    disp(['lev2knots_GK would return Inf and we would get get an error:',ME.message])
+    disp('To fix this, set a lower number in control.max_pts, e.g. control.max_pts=300')
+    disp('-------------------------------')
+end
 
-
-plot_idx_status(adapt1.private.G,adapt1.private.I,adapt1.private.idx_bin,adapt1.private.idx)
 
 
 
