@@ -1,6 +1,6 @@
-function iss = issparse(S)
+function iss = is_sparse_grid(S)
 
-% ISSPARSE(S) returns 1 if S is a sparse grid. A sparse grid is a vector of structs with fields 
+% IS_SPARSE_GRID(S) returns 1 if S is a sparse grid. A sparse grid is a vector of structs with fields 
 % 'knots','weights','size','knots_per_dim','m','coeff','idx'.
 
 

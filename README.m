@@ -53,10 +53,10 @@
 %
 % To create a sparse grids, use any of these functions:
 %
-% -> smolyak_grid
-% -> smolyak_grid_quick_preset
-% -> smolyak_grid_multiidx_set
-% -> smolayk_grid_add_multiidx
+% -> create_sparse_grid
+% -> create_sparse_grid_quick_preset
+% -> create_sparse_grid_multiidx_set
+% -> create_sparse_grid_add_multiidx
 % -> adapt_sparse_grid
 
 % A number of functionalities to operate on sparse grids are provided: 

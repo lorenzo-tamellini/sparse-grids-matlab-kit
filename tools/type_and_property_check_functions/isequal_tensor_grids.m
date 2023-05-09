@@ -29,7 +29,7 @@ if nargin == 2
 end
 
 
-if istensor(T1)==0 || istensor(T2)==0 % (1 is for tensor, -1 is for tensor as parts of sparse grids)
+if is_tensor_grid(T1)==0 || is_tensor_grid(T2)==0 % (1 is for tensor, -1 is for tensor as parts of sparse grids)
     error('SparseGKit:WrongInput','T1 or T2 not tensor grids in isequal_tensor_grids')
 end
 

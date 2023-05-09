@@ -978,7 +978,7 @@ S = tensor_to_sparse(T);
 % which implies S.idx = lev2knots(ii). If you want S.idx = ii, use the following call
 % S = tensor_to_sparse(T,ii);
 Sr = reduce_sparse_grid(S);
-issparse(S)
+is_sparse_grid(S)
 
 I=quadrature_on_sparse_grid(@(x)f(x,b) , Sr); % Sr must be reduced here
 

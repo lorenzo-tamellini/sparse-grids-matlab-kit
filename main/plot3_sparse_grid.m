@@ -3,7 +3,7 @@ function h= plot3_sparse_grid(S,dims,varargin)
 % h = plot3_sparse_grid(S,dims,varargin)
 %
 % PLOT3_SPARSE_GRID(S) plots S, which is a sparse grid in 3D. S can be either reduced or not. S can also be a tensor grid
-%       (use istensor(S) to verify, type HELP ISTENSOR for details)
+%       (use is_tensor_grid(S) to verify, type HELP IS_TENSOR_GRID for details)
 %
 % PLOT3_SPARSE_GRID(S,[d1 d2 d3]) plots the components d1, d2, d3 of the points in S if S is more than 3D
 %

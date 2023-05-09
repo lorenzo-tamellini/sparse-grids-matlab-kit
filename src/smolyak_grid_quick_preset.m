@@ -2,7 +2,8 @@ function [S,Sr,C] = smolyak_grid_quick_preset(N,w)
 
 % [S,Sr,C] = smolyak_grid_quick_preset(N,w)
 %
-% DEPRECATED!! This function has been replaced by CREATE_SPARSE_GRID_MULTIIDX_SET in release 23.5 and will disappear in future releases
+% DEPRECATED!! This function has been replaced by CREATE_SPARSE_GRID_QUICK_PRESET in release 23.5 and will disappear in future releases
+%
 % SMOLYAK_GRID_QUICK_PRESET is a function meant to be used for quick creation of a preset, "vanilla" sparse grid:
 %  Clenshaw--Curtis points in [-1,1] with lev2knots_doubling and multi-index set: sum(ii-1) \leq w 
 %  (cf define_functions_for_rule('SM') )
@@ -22,7 +23,7 @@ function [S,Sr,C] = smolyak_grid_quick_preset(N,w)
 % See LICENSE.txt for license
 %----------------------------------------------------
 
-error('SparseGKit:RenamedFunction', ['smolyak_grid_multiidx_set has been replaced by create_sparse_grid_multiidx_set in release 23.5.'...
+error('SparseGKit:RenamedFunction', ['smolyak_grid_quick_preset has been replaced by create_sparse_grid_quick_preset in release 23.5.'...
     ' This message will disappear in future releases of the sparse-grid-matlab-kit.'])
 
 knots = @(n) knots_CC(n,-1,1);
