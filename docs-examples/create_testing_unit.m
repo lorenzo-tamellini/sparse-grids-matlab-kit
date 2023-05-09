@@ -219,7 +219,7 @@ coeff_smolyak           = combination_technique(I_smolyak);
 
 % quick preset
 N = 2; w = 3;
-[S_quick,Sr_quick] = smolyak_grid_quick_preset(N,w);
+[S_quick,Sr_quick] = create_sparse_grid_quick_preset(N,w);
 
 save('test_unit_grid_gen_and_red',...
      'S_given_multiidx',...

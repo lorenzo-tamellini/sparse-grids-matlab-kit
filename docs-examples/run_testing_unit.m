@@ -235,7 +235,7 @@ coeff_smolyak           = combination_technique(I_smolyak);
 
 % quick preset
 N = 2; w = 3;
-[S_quick,Sr_quick] = smolyak_grid_quick_preset(N,w);
+[S_quick,Sr_quick] = create_sparse_grid_quick_preset(N,w);
 
 disp('== testing sparse grid generation and reduction ==')
 L = struct('S_given_multiidx',S_given_multiidx,...

@@ -726,7 +726,7 @@ clear
 clc
 N = 2;
 w = 3;
-[S,Sr] = smolyak_grid_quick_preset(N,w);
+[S,Sr] = create_sparse_grid_quick_preset(N,w);
 
 
 %% PART 2: EVALUATE A FUNCTION ON A SPARSE GRID - BASICS
