@@ -72,7 +72,7 @@ switch type
                % load from file
                load(filename,'Xall','Wall'); 
                if n > length(Xall)
-                   error('SparseGKit:OutOfTable',['not enough beta points computed on file. Remove files ',filename_knots,' and ',filename_weights,...
+                   error('SparseGKit:OutOfTable',['not enough beta points computed on file. Remove file ',filename,...
                        ' and run again KNOTS_BETA_LEJA with ''on_file'' option and larger n'])
                end
                X = Xall(1:n);

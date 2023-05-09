@@ -10,8 +10,7 @@ function [x,w]=knots_triangular_leja(n,a,b)
 %
 % i.e. a linear decreasing pdf over the interval [a,b]
 %
-% Knots and weights have been precomputed (up to 50) 
-% for the case lambda=1 following the work
+% Knots and weights have been precomputed (up to 50) following the work
 % 
 % A. Narayan, J. Jakeman, "Adaptive Leja sparse grid constructions for stochastic collocation and high-dimensional approximation"
 % SIAM Journal on Scientific Computing,  Vol. 36, No. 6, pp. A2952--A2983, 2014
