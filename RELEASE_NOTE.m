@@ -4,7 +4,7 @@
 % See LICENSE.txt for license
 %----------------------------------------------------------------------------------
 % 
-% -> 2023, May 7   --> added testing unit
+% -> 2023, May 7   --> added testing unit in folder docs-examples
 % 
 % -> 2023, May 7   --> added function KNOTS_TRIANGULAR_LEJA i.e., weighted Leja for quadrature with respect to the
 %                      triangular pdf

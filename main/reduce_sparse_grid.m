@@ -8,9 +8,15 @@ function Sr=reduce_sparse_grid(S,tol)
 %       -> Sr.knots:  list of non repeated knots
 %       -> Sr.weights: list of corresponding weights
 %       -> Sr.size: the number of non repeated knots
-%       -> Sr.n: says where each element of [S.knots] will be mapped to in Sr.knots, i.e. for any k [S.knots](:,Sr.m(k))==Sr.knots(:,k)
-%       -> Sr.m: for each element of Sr.knots, says where it's coming from in [S.knots], i.e. "the element in position k of [S.knots] goes in position n(k) in Sr.knots"
-%        or [S.knots](:,j)==Sr.knots(:,Sr.n(j)) and in general [S.knots](:,Sr.n==i)==Sr.knot(:,i)
+%       -> Sr.n: map from [S.knots] to Sr.knots (forward map).
+%                It has length of non-uniqued knots, i.e., length(Sr.n) = size([S.knots],2) 
+%                and says where each element of [S.knots] will be mapped to in Sr.knots, i.e. 
+%                for all j=1 ... size([S.knots],2) => [S.knots](:,j) == Sr.knots(:,Sr.n(j)) *up to Tol*
+%       -> Sr.m: map from Sr.knots to [S.knots] (inverse map) 
+%                It has length of uniqued knots, i.e., length(Sr.m) = size(Sr.knots,2) 
+%                and for each element of Sr.knots says where it's coming from in [S.knots], i.e.
+%                for all i=1 ... size(Sr.knots),2) => Sr.knots(:,i) == [S.knots](:,Sr.m(i)  *exactly*                 
+%
 %
 % SR = REDUCE_SPARSE_GRID(S,TOL) uses a tolerance TOL to identify coincident points 
 %       (default value 1e-14)
@@ -80,7 +86,7 @@ j=find([max(abs(dkk_ordered),[],2)>Tol;2*Tol]);
 kk_reduced=kk_ordered(j,:);
 
 % in the same way, I pick up only the j entries of the indeces vector i. 
-index_reduced=i(j)';
+index_reduced=i(j)'; % this will become Sr.m
 % in this way I have a mapping from the original set kk to the reduced set kk_reduced:
 % i.e. kk(index_reduced,:)==kk_reduced.
 % this means that:
@@ -95,7 +101,7 @@ index_reduced=i(j)';
 % invindex has to be of the same length than kk and kk_ordered. 
 % NB: length(i)==size(kk,1) as it is the mapping from kk to kk_ordered
 
-invindex=zeros(length(i),1); 
+invindex=zeros(length(i),1); % This will become Sr.n. Although it is called "inverse" here, it is the forward map from [S.knots] to Sr.knots
 
 k=1;  % k scrolls the vector invindex
 
