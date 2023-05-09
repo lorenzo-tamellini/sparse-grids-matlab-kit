@@ -134,7 +134,7 @@ function adapted = adapt_sparse_grid(f,N_full,knots,lev2knots,prev_adapt,control
 %
 %       controls.pts_tol   : is the tolerance used by evaluate_on_sparse_grid to check for equal points (default 1e-14)
 %
-%	controls.pdf       : pdf over Gamma \subset R^N_full, the set over which the sparse 
+%	    controls.pdf       : pdf over Gamma \subset R^N_full, the set over which the sparse 
 %                            of the random variables, to be used in weighted* profits. It must be provided
 %                            as a function handle that takes as input a matrix with N rows (for generic N), i.e. where each column is a point
 %                            where the pdf must be evaluated. For instance, if the weight is the standard gaussian
