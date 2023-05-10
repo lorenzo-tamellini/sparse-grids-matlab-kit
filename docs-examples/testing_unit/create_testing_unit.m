@@ -1,5 +1,24 @@
 
-% Create testing unit 
+% CREATE_TESTING_UNIT
+% Generates the *.mat files reported below to be used in run_testing_unit.m 
+% to verify the correctness of the code
+%
+% !! DO NOT RUN THIS SCRIPT UNLESS YOU WANT TO GENERATE TESTING FILES DIFFERENT 
+% FROM THE PROVIDED ONES !! 
+% 
+% test_unit_lev2knots.mat
+% test_unit_knots.mat
+% test_unit_multiidx_set.mat
+% test_unit_polynomials.mat
+% test_unit_grid_gen_and_red.mat
+% test_unit_evaluate.mat
+% test_unit_quadrature.mat
+% test_unit_interpolate.mat
+% test_unit_gPCE.mat
+% test_unit_sobol.mat
+% test_unit_gradient_and_hessian.mat
+% test_unit_adaptive.mat
+% 
 
 %----------------------------------------------------
 % Sparse Grid Matlab Kit

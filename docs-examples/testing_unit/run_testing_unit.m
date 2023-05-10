@@ -1,5 +1,20 @@
 
-% Run testing unit 
+% RUN_TESTING_UNIT  
+% Run the testing unit that compares function output with the corresponding
+% results stored in the following files
+% 
+% test_unit_lev2knots.mat
+% test_unit_knots.mat
+% test_unit_multiidx_set.mat
+% test_unit_polynomials.mat
+% test_unit_grid_gen_and_red.mat
+% test_unit_evaluate.mat
+% test_unit_quadrature.mat
+% test_unit_interpolate.mat
+% test_unit_gPCE.mat
+% test_unit_sobol.mat
+% test_unit_gradient_and_hessian.mat
+% test_unit_adaptive.mat
 
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
