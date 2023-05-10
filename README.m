@@ -27,9 +27,6 @@
 % -- RELEASE_NOTE.m for a detailed list of diffrences with the previous version
 %
 % -- SPARSE_GRIDS_TUTORIAL.m in the folder docs-examples for a gradual introduction to the code
-%
-% -- the slides SPARSE_GRIDS_MATLAB_KIT_TALK.pdf in the folder docs-examples also discuss basic and some advanced features of the code
-
 
 
 %---------------------------
