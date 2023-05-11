@@ -41,7 +41,7 @@ m_GK = lev2knots_GK(ii);
 disp('== testing lev2knots ==')
 L = struct('m_lin',m_lin,'m_2step',m_2step,'m_doub',m_doub,'m_trip',m_trip,'m_GK',m_GK);
 S = load('test_unit_lev2knots','m_lin','m_2step','m_doub','m_trip','m_GK');
-if isequal_sgmk(L,S)
+if isequal_sgmk(L,S) % this function is like isequal between struct but 1) it is robust to eps-machine noise and 2) gives some info on which fields are different
     disp('test on lev2knots function passed')
 end    
 
@@ -262,6 +262,8 @@ S = load('test_unit_grid_gen_and_red',...
          'S_smolyak','I_smolyak','Sr_smolyak',...
          'S_add','I_add','coeff_add', ...
          'S_quick','Sr_quick');   
+     
+
 if isequal_sgmk(L,S)
     disp('test on sparse grid generation and reduction passed')
 end    
@@ -473,6 +475,7 @@ L = struct('S_Linf',S_Linf,'S_Linf_newpts',S_Linf_newpts,...
 S = load('test_unit_adaptive','S_Linf','S_Linf_newpts',...
          'S_weighLinf','S_weighLinf_newpts',...
          'S_deltaint','S_deltaint_newpts','S_buff');   
+     
 if isequal_sgmk(L,S)
     disp('test on adaptive algorithm for sparse grid generation passed')
 end    
@@ -484,10 +487,32 @@ function iseq = isequal_sgmk(L,S)
 
     tested_fields = fieldnames(S);
     nb_tests = length(tested_fields);
+    
     for t = 1:nb_tests
-        if ~isequal(L.(tested_fields{t}), S.(tested_fields{t}) )
-            iseq = false;
-            error(['error in test of ',tested_fields{t}])
+
+        if isstruct(L.(tested_fields{t})) % unpack test on each field with recursive call 
+            len = length(L.(tested_fields{t})); % the field could be a struct array, not just a struct
+            for s = 1:len
+                iseq = isequal_sgmk(L.(tested_fields{t})(s),S.(tested_fields{t})(s));
+            end
+            
+        elseif isreal(L.(tested_fields{t})) % test up to tol
+            if max( abs( L.(tested_fields{t})-S.(tested_fields{t}) ) ) > 1e-15 
+                iseq = false;
+                error(['error in test of ',tested_fields{t}])
+            end
+            
+        elseif iscell(L.(tested_fields{t})) % this is e.g. knots per dim
+            % convert to number and compare
+            Lcell2mat = cell2mat(L.(tested_fields{t}));
+            Scell2mat = cell2mat(S.(tested_fields{t}));
+            if max(abs( Lcell2mat-Scell2mat ) ) > 1e-15 
+                iseq = false;
+                error(['error in test of ',tested_fields{t}])
+            end
+            
+        else
+            error(['the field ',tested_fields{t},' is neither struct nor number, fix this'])
         end
     end
     iseq = true;
