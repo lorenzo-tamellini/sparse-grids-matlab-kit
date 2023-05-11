@@ -4,6 +4,11 @@
 % See LICENSE.txt for license
 %----------------------------------------------------------------------------------
 % 
+%
+%
+% RELEASE NOTES version 23.05 (Robert)
+%
+%
 % -> 2023, May 7   --> added testing unit in docs-examples/testing_unit
 % 
 % -> 2023, May 7   --> added function KNOTS_TRIANGULAR_LEJA i.e., weighted Leja for quadrature with respect to the
@@ -14,6 +19,10 @@
 % 
 %                  --> renamed ISSMOLYAK to IS_SPARSE_GRID to avoid using misleading function names and ISTENSOR to IS_TENSOR_GRID 
 %                      for consistency
+%
+%
+% RELEASE NOTES version 22.02 (California)
+%
 %
 % -> 2022, Feb. 16 --> added function SMOLYAK_GRID_QUICK_PRESET, to generate in one command a simple sparse grid
 %                      (CC knots in [-,1,1], lev2knots_doubling, idxset: @(ii) sum(ii-1) \leq w) and its reduced version
