@@ -43,7 +43,7 @@ function plot_sparse_grids_interpolant(S,Sr,domain,f_values,varargin) %with_f_va
 
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2022 L. Tamellini, F. Nobile
+% Copyright (c) 2009-2023 L. Tamellini, F. Nobile
 % See LICENSE.txt for license
 %----------------------------------------------------
 

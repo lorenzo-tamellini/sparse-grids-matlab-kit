@@ -9,7 +9,7 @@ function L = generalized_lagu_eval(x,k,alpha,beta)
 
 %-------------------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2022 L. Tamellini, F. Nobile, C. Piazzola
+% Copyright (c) 2009-2023 L. Tamellini, F. Nobile, C. Piazzola
 % See LICENSE.txt for license
 %-------------------------------------------------------------
 

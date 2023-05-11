@@ -17,7 +17,7 @@ function f_values = interpolate_on_sparse_grid(S,Sr,function_on_grid,non_grid_po
 
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2022 L. Tamellini, F. Nobile
+% Copyright (c) 2009-2023 L. Tamellini, F. Nobile
 % See LICENSE.txt for license
 %----------------------------------------------------
 

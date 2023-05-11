@@ -65,7 +65,7 @@ function [S,C] = create_sparse_grid(N,w,knots,lev2knots,idxset,S2,arg7) %#ok<INU
 
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2022 L. Tamellini, F. Nobile
+% Copyright (c) 2009-2023 L. Tamellini, F. Nobile
 % See LICENSE.txt for license
 %----------------------------------------------------
 

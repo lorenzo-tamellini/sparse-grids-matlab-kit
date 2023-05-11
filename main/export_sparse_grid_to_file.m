@@ -30,7 +30,7 @@ function export_sparse_grid_to_file(Sr,filename,with_weights)
 
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2022 L. Tamellini, F. Nobile
+% Copyright (c) 2009-2023 L. Tamellini, F. Nobile
 % See LICENSE.txt for license
 %----------------------------------------------------
 

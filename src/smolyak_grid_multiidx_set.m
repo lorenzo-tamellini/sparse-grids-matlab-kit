@@ -23,7 +23,7 @@ function S = smolyak_grid_multiidx_set(C,knots,lev2knots,S2,arg5) %#ok<INUSD>
 
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2022 L. Tamellini, F. Nobile
+% Copyright (c) 2009-2023 L. Tamellini, F. Nobile
 % See LICENSE.txt for license
 %----------------------------------------------------
 

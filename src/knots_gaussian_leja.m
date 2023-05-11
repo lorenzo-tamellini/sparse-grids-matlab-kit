@@ -25,7 +25,7 @@ function [x,w]=knots_gaussian_leja(n)
 
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2022 L. Tamellini, F. Nobile, B. Sprungk
+% Copyright (c) 2009-2023 L. Tamellini, F. Nobile, B. Sprungk
 % See LICENSE.txt for license
 %----------------------------------------------------
 

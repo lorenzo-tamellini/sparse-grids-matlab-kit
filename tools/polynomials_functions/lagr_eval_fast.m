@@ -15,7 +15,7 @@ function L = lagr_eval_fast(current_knot,other_knots,ok_len,non_grid_points,ng_s
 
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2022 L. Tamellini, F. Nobile
+% Copyright (c) 2009-2023 L. Tamellini, F. Nobile
 % See LICENSE.txt for license
 %----------------------------------------------------
 

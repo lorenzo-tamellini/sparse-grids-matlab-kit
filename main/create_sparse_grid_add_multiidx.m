@@ -23,7 +23,7 @@ function [S,I,coeff] = create_sparse_grid_add_multiidx(new_idx,S_in,I_in,coeff_i
 
 %----------------------------------------------------
 % Sparse Grid Matlab Kit
-% Copyright (c) 2009-2022 L. Tamellini, F. Nobile
+% Copyright (c) 2009-2023 L. Tamellini, F. Nobile
 % See LICENSE.txt for license
 %----------------------------------------------------
 
