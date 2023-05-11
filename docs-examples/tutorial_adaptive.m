@@ -175,10 +175,16 @@ controls.prof='Linf/new_points';
 prev_adapt = [];
 controls.nested=true;
 
+try
 adapt1 = adapt_sparse_grid(f,N,knots,lev2knots,prev_adapt,controls);
+catch ME
+    disp('-------------------------------')
+    disp('we are asking too many points (level beyond 5).')
+    disp(['lev2knots_GK would return Inf and we would get get an error:',ME.message])
+    disp('To fix this, set a lower number in control.max_pts, e.g. control.max_pts=300')
+    disp('-------------------------------')
+end
 
-
-plot_idx_status(adapt1.private.G,adapt1.private.I,adapt1.private.idx_bin,adapt1.private.idx)
 
 
 
