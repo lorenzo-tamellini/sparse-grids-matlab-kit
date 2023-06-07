@@ -20,13 +20,16 @@
 
 
 %---------------------------
-% 1) QUICK START
+% 1) QUICK START / RESOURCES
 %
 % Take a look at:
 %
-% -- RELEASE_NOTE.m for a detailed list of diffrences with the previous version
+% -- RELEASE_NOTE.m for a detailed list of diffrences with the previous versions
 %
 % -- SPARSE_GRIDS_TUTORIAL.m in the folder docs-examples for a gradual introduction to the code
+%
+% -- sparse grids matlab kit USER MANUAL, available at https://sites.google.com/view/sparse-grids-kit/home
+
 
 
 %---------------------------
@@ -88,30 +91,17 @@
 % 5) PLEASE CITE US
 
 % Please cite our toolbox by mentioning the webpage containing the package (https://sites.google.com/view/sparse-grids-kit/home) 
-% and adding the following references to your work (check website for the most updated citation data):
+% and adding the following reference to your work (check website for the most updated citation data):
 %
 % @article{piazzola.tamellini:SGK,
 %  author = {Piazzola, C. and Tamellini, L.},
 %  title  = {{The Sparse Grids Matlab kit - a Matlab implementation of sparse grids for high-dimensional function approximation and uncertainty quantification}},
 %  journal= {},
-%  year   = {2022},
+%  year   = {2023},
 %  volume = {},
 %  number = {},
 %  pages = {},
 %}
-% 
-% @InCollection{back.nobile.eal:comparison,
-%  author    = {B\"ack, J. and Nobile, F. and Tamellini, L. and Tempone, R.},
-%  title        = {Stochastic spectral {G}alerkin and collocation methods for {PDE}s with random coefficients: a numerical comparison},
-%  booktitle    = {Spectral and High Order Methods for Partial Differential Equations},
-%  pages        = {43--62},
-%  publisher    = {Springer},
-%  year        = 2011,
-%  volume    = 76,
-%  series    = {Lecture Notes in Computational Science and Engineering}, 
-%  editor    = {Hesthaven, J.S. and Ronquist, E.M.},
-%  note        = {Selected papers from the ICOSAHOM '09 conference, June 22-26, Trondheim, Norway}
-% }
 
 
 
